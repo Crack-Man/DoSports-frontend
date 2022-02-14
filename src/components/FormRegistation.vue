@@ -54,7 +54,7 @@
         </v-menu>
         <v-select
             v-model="newUser.id_region"
-            :items="allRegions"
+            :items="this.regionList"
             :item-text="getRegionText"
             :item-value="'id'"
             label="Регион проживания"
@@ -119,12 +119,12 @@
 import {mapGetters, mapActions} from 'vuex';
 
 export default {
-    name: "FormRegistation",
+    name: "FormRegistration",
     data() {
         return {
             newUser: {
                 fullname: "",
-                gender: "Мужской",
+                gender: "m",
                 birthday: null,
                 id_region: 1,
                 email: "",
@@ -146,13 +146,13 @@ export default {
                 ],
                 email: [
                     v => !!v || 'Введите почту',
-                    v => /.+@.+/.test(v) || 'Введите почту',
-                    v => this.askEmailIsUnique(v) || 'Данный адрес уже существует'
+                    v => /.+@.+/.test(v) || 'Введите корректную почту',
+                    v => !this.emailList.find(obj => obj.email === v) || 'Данный адрес уже существует'
                 ],
                 login: [
                     v => !!v || 'Введите логин',
-                    v => this.askLoginIsUnique(v) || 'Данный логин уже существует',
-                    v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов'
+                    v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов',
+                    v => !this.loginList.find(obj => obj.login === v) || 'Данный логин уже существует'
                 ],
                 password: [
                     v => v.length >= 7 || 'Пароль должен состоять как минимум из 7 символов',
@@ -166,36 +166,37 @@ export default {
                     v => !!v
                 ]
             },
+            check: false,
             menu: false,
             dateFormatted: ""
         }
     },
 
     computed: {
-        ...mapGetters(['allRegions', 'msgAfterReg', 'progressReg'])
+        ...mapGetters(['regionList', 'loginList', 'emailList', 'msgAfterReg', 'progressReg']),
     },
 
     watch: {
-        'newUser.birthday' () {
+        'newUser.birthday'() {
             this.dateFormatted = this.formatDate(this.newUser.birthday);
-        },
+        }
     },
 
     methods: {
-        ...mapActions(['showRegions', 'askLoginIsUnique', 'askEmailIsUnique', 'createUser', 'setProgressReg']),
+        ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'createUser', 'setProgressReg']),
 
-        formatDate (date) {
-            if (!date) return null
+        formatDate(date) {
+            if (!date) return null;
 
-            const [year, month, day] = date.split('-')
-            return `${day}.${month}.${year}`
+            const [year, month, day] = date.split('-');
+            return `${day}.${month}.${year}`;
         },
 
-        parseDate (date) {
-            if (!date) return null
+        parseDate(date) {
+            if (!date) return null;
 
-            const [day, month, year] = date.split('.')
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+            const [day, month, year] = date.split('.');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         },
 
         getRegionText(item) {
@@ -210,7 +211,9 @@ export default {
         }
     },
     mounted() {
-        this.showRegions();
+        this.showRegionList();
+        this.showLoginList();
+        this.showEmailList();
     }
 }
 </script>

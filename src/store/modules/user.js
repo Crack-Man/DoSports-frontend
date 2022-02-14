@@ -3,23 +3,21 @@ import url from "../../services/url";
 
 export default {
     state: {
-        loginIsUnique: false,
-        emailIsUnique: false,
         msgReg: "",
-        progress: false
+        progress: false,
+        logins: [],
+        emails: []
     },
 
     actions: {
-        async askLoginIsUnique(ctx, login) {
-            const res = await axios.get(`${url}/api/users/login-is-unique/${login}`);
-            ctx.commit(`updateLoginIsUnique`, res.data);
-            return this.loginIsUnique();
+        async showLoginList(ctx) {
+            const res = await axios.get(`${url}/api/users/get-logins`);
+            ctx.commit(`updateLoginList`, res.data);
         },
 
-        async askEmailIsUnique(ctx, email) {
-            const res = await axios.get(`${url}/api/users/email-is-unique/${email}`);
-            ctx.commit(`updateEmailIsUnique`, res.data);
-            return this.emailIsUnique();
+        async showEmailList(ctx) {
+            const res = await axios.get(`${url}/api/users/get-emails`);
+            ctx.commit(`updateEmailList`, res.data);
         },
 
         async createUser(ctx, newUser) {
@@ -34,12 +32,12 @@ export default {
     },
 
     mutations: {
-        updateLoginIsUnique(state, isUnique) {
-            state.loginIsUnique = isUnique;
+        updateLoginList(state, list) {
+            state.logins = list;
         },
 
-        updateEmailIsUnique(state, isUnique) {
-            state.emailIsUnique = isUnique;
+        updateEmailList(state, list) {
+            state.emails = list;
         },
 
         updateMsgAfterReg(state, msg) {
@@ -53,12 +51,12 @@ export default {
     },
 
     getters: {
-        loginIsUnique(state) {
-            return state.loginIsUnique;
+        loginList(state) {
+            return state.logins;
         },
 
-        emailIsUnique(state) {
-            return state.emailIsUnique;
+        emailList(state) {
+            return state.emails;
         },
 
         msgAfterReg(state) {

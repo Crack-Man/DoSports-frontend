@@ -3,26 +3,26 @@ import url from "../../services/url";
 
 export default {
     state: {
-        regionList: []
+        regions: []
     },
 
     actions: {
-        async showRegions(ctx) {
+        async showRegionList(ctx) {
             await axios.get(`${url}/api/regions/get-regions`).then((res) => {
-                ctx.commit(`updateRegions`, res.data);
+                ctx.commit(`updateRegionList`, res.data);
             });
         }
     },
 
     mutations: {
-        updateRegions(state, regionList) {
-            state.regionList = regionList;
+        updateRegionList(state, regions) {
+            state.regions = regions;
         }
     },
 
     getters: {
-        allRegions(state) {
-            return state.regionList;
+        regionList(state) {
+            return state.regions;
         }
     }
 }

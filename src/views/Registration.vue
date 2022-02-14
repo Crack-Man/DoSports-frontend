@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import FormRegistation from '@/components/FormRegistation.vue'
+import FormRegistration from '@/components/FormRegistation.vue'
 
 export default {
     name: "Registration",
     components: {
-        'form-reg': FormRegistation,
+        'form-reg': FormRegistration,
     }
 }
 </script>
