@@ -41,6 +41,7 @@
                     v-bind="attrs"
                     @blur="newUser.birthday = parseDate(dateFormatted)"
                     return-masked-value
+                    placeholder="ДД.ММ.ГГГГ"
                     v-mask="'##.##.####'"
                     v-on="on"
                 ></v-text-field>
@@ -77,18 +78,20 @@
         ></v-text-field>
         <v-text-field
             label="Пароль"
-            :counter="7"
+            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPass ? 'text' : 'password'"
+            @click:append="showPass = !showPass"
             :rules="rules.password"
-            :type="'password'"
             v-model="newUser.password"
             hide-details="auto"
             required
         ></v-text-field>
         <v-text-field
             label="Повторите пароль"
-            :counter="7"
+            :append-icon="showPassRepeat ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassRepeat ? 'text' : 'password'"
+            @click:append="showPassRepeat = !showPassRepeat"
             :rules="rules.rePassword"
-            :type="'password'"
             v-model="passwordRepeat"
             hide-details="auto"
             required
@@ -100,8 +103,7 @@
         ></v-checkbox>
         <v-btn
             class="button"
-            text
-            elevation="0"
+            color="primary"
             @click="addUser"
         >
             Зарегистрироваться
@@ -131,30 +133,39 @@ export default {
                 login: "",
                 password: "",
             },
+
             passwordRepeat: "",
+
             rules: {
                 fullname: [
                     v => !!v || 'Введите ФИО',
-                    v => v.split(" ").length >= 2 || 'Введите ФИО',
+                    v => /^[а-яА-Я ]+$/.test(v) || 'Некорректный ФИО',
+                    v => v.split(" ").length >= 2 || 'Поле должно состоять как минимум из фамилии и имени',
                     v => v.length <= 50 || 'ФИО должно состоять не более чем из 50 символов'
                 ],
+
                 birthday: [
                     v => !!v || 'Введите дату рождения',
-                    v => !isNaN(Date.parse(this.parseDate(v))) || 'Введите корректную дату',
-                    v => Date.parse(this.parseDate(v)) !== "Invalid Date" || 'Введите корректную дату',
-                    v => Date.parse(this.parseDate(v)) <= new Date() || 'Введите корректную дату',
+                    v => !isNaN(Date.parse(this.parseDate(v))) || 'Некорректная дета',
+                    v => Date.parse(this.parseDate(v)) !== "Invalid Date" || 'Некорректная дета',
+                    v => Date.parse(this.parseDate(v)) <= new Date() || 'Некорректная дета',
                 ],
+
                 email: [
-                    v => !!v || 'Введите почту',
-                    v => /.+@.+/.test(v) || 'Введите корректную почту',
-                    v => !this.emailList.find(obj => obj.email === v) || 'Данный адрес уже существует'
+                    v => !!v || 'Введите email',
+                    v => /.+@.+/.test(v) || 'Некорректный email',
+                    v => !this.emailList.find(obj => obj.email === v) || 'Данный email уже существует'
                 ],
+
                 login: [
                     v => !!v || 'Введите логин',
+                    v => /^[_.\w]+$/.test(v) || 'Некорректный логин',
                     v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов',
                     v => !this.loginList.find(obj => obj.login === v) || 'Данный логин уже существует'
                 ],
+
                 password: [
+                    v => /^[^'"`]+$/.test(v) || 'Некорректный пароль',
                     v => v.length >= 7 || 'Пароль должен состоять как минимум из 7 символов',
                 ],
 
@@ -166,9 +177,12 @@ export default {
                     v => !!v
                 ]
             },
+
             check: false,
             menu: false,
-            dateFormatted: ""
+            dateFormatted: "",
+            showPass: false,
+            showPassRepeat: false
         }
     },
 
