@@ -105,14 +105,10 @@
             class="button"
             color="primary"
             @click="addUser"
+            :loading="this.regProgress"
         >
             Зарегистрироваться
         </v-btn>
-        <v-progress-circular
-            v-show="progressReg"
-            indeterminate
-            color="primary"
-        ></v-progress-circular>
         <p>{{ msgAfterReg }}</p>
     </v-form>
 </template>
@@ -187,7 +183,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['regionList', 'loginList', 'emailList', 'msgAfterReg', 'progressReg']),
+        ...mapGetters(['regionList', 'loginList', 'emailList', 'msgAfterReg', 'regProgress']),
     },
 
     watch: {
@@ -197,7 +193,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'createUser', 'setProgressReg']),
+        ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'createUser']),
 
         formatDate(date) {
             if (!date) return null;
@@ -219,7 +215,6 @@ export default {
 
         addUser() {
             if (this.$refs.form.validate()) {
-                this.setProgressReg(true);
                 this.createUser(this.newUser);
             }
         }

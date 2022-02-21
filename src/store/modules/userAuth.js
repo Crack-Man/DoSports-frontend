@@ -9,19 +9,26 @@ export default {
         msgAuth: "",
         auth: false,
         admin: false,
-        user: null
+        user: null,
+        msgRestore: "",
+        restorePassData: {name: "", text: ""},
+        restorePassStep: 1,
+        restorePassProgress: false,
     },
 
     actions: {
         async authRequest(ctx, user) {
+            ctx.commit("updateRestoreProgress", true);
             await axios.post(`${url}/api/users/auth`, user).then((res) => {
                 if (!res.data.message) {
                     ctx.commit("authSuccess", res.data.token);
                 } else {
                     ctx.commit("updateMessage", res.data.message);
                 }
+                ctx.commit("updateRestoreProgress", false)
             }).catch((err) => {
                 ctx.commit("authError", err.data);
+                ctx.commit("updateRestoreProgress", false)
             });
         },
 
@@ -75,6 +82,58 @@ export default {
                     ctx.commit("updateAdminStatus", false);
                 }
             }
+        },
+
+        async sendRestoreCode(ctx, user) {
+            axios.post("https://www.dosports.ru/api/users/restore-password/send-code", user).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("increaseRestoreStep");
+                    ctx.commit("updateRestoreMessage", res.data.text);
+                    ctx.dispatch("startTimer", 60);
+                }
+                ctx.commit("updateRestoreData", res.data);
+                ctx.dispatch("setRestoreProgress", false);
+            });
+        },
+
+        async resendRestoreCode(ctx, user) {
+            await axios.post("https://www.dosports.ru/api/users/restore-password/resend-code", user);
+        },
+
+        async changeRestoreDataName(ctx, name) {
+            ctx.commit("updateRestoreDataName", name);
+        },
+
+        async closePopupRestore(ctx) {
+            ctx.commit("initRestoreStep");
+        },
+
+        async compareCode(ctx, user) {
+            axios.post("https://www.dosports.ru/api/users/restore-password/compare-code", user).then((res) => {
+                if (res.data.name === "Success") {
+                    if (res.data.match) {
+                        ctx.commit("increaseRestoreStep");
+                    } else {
+                        res.data.text = "Неверный код";
+                    }
+                }
+                ctx.commit("updateRestoreData", res.data);
+                ctx.dispatch("setRestoreProgress", false);
+            });
+        },
+
+        async setRestoreProgress(ctx, value) {
+            ctx.commit("updateRestoreProgress", value);
+        },
+
+        async changePassword(ctx, user) {
+            axios.post("https://www.dosports.ru/api/users/restore-password/change-password", user).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("increaseRestoreStep");
+                    ctx.commit("updateRestoreData", res.data);
+                    ctx.dispatch("setRestoreProgress", false);
+                }
+            })
         }
     },
 
@@ -114,8 +173,33 @@ export default {
             state.user = user;
         },
 
+
         updateAdminStatus(state, value) {
             state.admin = value;
+        },
+
+        updateRestoreData(state, value) {
+            state.restorePassData = value;
+        },
+
+        updateRestoreDataName(state, name) {
+            state.restorePassData.name = name;
+        },
+
+        updateRestoreMessage(state, value) {
+            state.msgRestore = value;
+        },
+
+        increaseRestoreStep(state) {
+            state.restorePassStep++;
+        },
+
+        initRestoreStep(state) {
+            state.restorePassStep = 1;
+        },
+
+        updateRestoreProgress(state, value) {
+            state.restorePassProgress = value;
         }
     },
 
@@ -138,6 +222,22 @@ export default {
 
         userData(state) {
             return state.user;
+        },
+
+        restoreMessage(state) {
+            return state.msgRestore;
+        },
+
+        restoreData(state) {
+            return state.restorePassData;
+        },
+
+        restoreStep(state) {
+            return state.restorePassStep;
+        },
+
+        restoreProgress(state) {
+            return state.restorePassProgress;
         }
     }
 }

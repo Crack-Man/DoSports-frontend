@@ -3,11 +3,13 @@ import Vuex from "vuex";
 import region from "./modules/region";
 import userReg from "./modules/userReg";
 import userAuth from "./modules/userAuth";
+import timer from "./modules/timer";
+import activeStatusButton from "./modules/activeStatusButton"
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     modules: {
-        region, userReg, userAuth
+        region, userReg, userAuth, timer, activeStatusButton
     }
 })

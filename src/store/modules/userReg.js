@@ -21,13 +21,15 @@ export default {
         },
 
         async createUser(ctx, newUser) {
+            ctx.commit("updateRegProgress", true);
             axios.post(`${url}/api/users/add-user`, newUser).then((res) => {
-                ctx.commit(`updateMsgAfterReg`, res.data);
+                ctx.commit(`updateMsgAfterReg`, res.data.text);
+                ctx.commit("updateRegProgress", false);
             });
         },
 
-        async setProgressReg(ctx, value) {
-            ctx.commit(`updateProgressReg`, value);
+        async setRegProgress(ctx, value) {
+            ctx.commit(`updateRegProgress`, value);
         }
     },
 
@@ -45,7 +47,7 @@ export default {
             state.progress = false;
         },
 
-        updateProgressReg(state, value) {
+        updateRegProgress(state, value) {
             state.progress = value;
         },
     },
@@ -63,7 +65,7 @@ export default {
             return state.msgReg;
         },
 
-        progressReg(state) {
+        regProgress(state) {
             return state.progress;
         }
     }

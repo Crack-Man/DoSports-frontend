@@ -18,19 +18,25 @@
         ></v-text-field>
         <v-btn
             class="button"
+            :loading="this.restoreProgress"
             color="primary"
             @click="auth"
         >
             Войти
         </v-btn>
         {{ message }}
+        <restore-password></restore-password>
     </v-form>
 </template>
 
 <script>
+import RestorePassword from "./RestorePassword";
 import {mapGetters, mapActions} from 'vuex';
 export default {
     name: "FormAuthorization",
+    components: {
+        'restore-password': RestorePassword,
+    },
     data() {
         return {
             user: {
@@ -50,7 +56,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['authStatus', 'message']),
+        ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton"]),
     },
 
     methods: {
