@@ -65,7 +65,7 @@ export default {
                     ctx.commit("authError", err.data);
                 });
             } else {
-                ctx.commit("unauthorized");
+                ctx.dispatch("unauthorized");
             }
         },
 

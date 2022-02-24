@@ -4,6 +4,7 @@ import Home from "../views/Home.vue"
 import About from "../views/About.vue"
 import Registration from "../views/Registration.vue";
 import Authorization from "../views/Authorization.vue";
+import StartProgram from "../views/StartProgram";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
         path: '/auth',
         name: 'Authorization',
         component: Authorization
+    },
+    {
+        path: '/start-program',
+        name: 'Начало программы',
+        component: StartProgram
     }
 ]
 
