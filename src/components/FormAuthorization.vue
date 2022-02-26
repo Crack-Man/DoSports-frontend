@@ -1,12 +1,12 @@
 <template>
     <v-form>
-    <v-text-field
-        label="Адрес электронной почты или логин"
-        v-model="user.login"
-        :rules="rules.login"
-        hide-details="auto"
-        required
-    ></v-text-field>
+        <v-text-field
+            label="Адрес электронной почты или логин"
+            v-model="user.login"
+            :rules="rules.login"
+            hide-details="auto"
+            required
+        ></v-text-field>
         <v-text-field
             label="Пароль"
             :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
@@ -32,28 +32,29 @@
 <script>
 import RestorePassword from "./RestorePassword";
 import {mapGetters, mapActions} from 'vuex';
+
 export default {
     name: "FormAuthorization",
+
     components: {
         'restore-password': RestorePassword,
     },
-    data() {
-        return {
-            user: {
-                login: "",
-                password: ""
-            },
 
-            rules : {
-                login: [
-                    v => !!v || "Введите логин",
-                    v => /^[_.\-@\w]+$/.test(v) || 'Некорректный логин',
-                ]
-            },
+    data: () => ({
+        user: {
+            login: "",
+            password: ""
+        },
 
-            showPass: false,
-        }
-    },
+        rules: {
+            login: [
+                v => !!v || "Введите логин",
+                v => /^[_.\-@\w]+$/.test(v) || 'Некорректный логин',
+            ]
+        },
+
+        showPass: false,
+    }),
 
     computed: {
         ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton"]),

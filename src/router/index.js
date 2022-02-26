@@ -11,22 +11,22 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'Home',
+        name: 'Главная',
         component: Home
     },
     {
         path: '/about',
-        name: 'About',
+        name: 'О нас',
         component: About
     },
     {
         path: '/reg',
-        name: 'Registration',
+        name: 'Регистрация',
         component: Registration
     },
     {
         path: '/auth',
-        name: 'Authorization',
+        name: 'Авторизация',
         component: Authorization
     },
     {

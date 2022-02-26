@@ -6,30 +6,46 @@ export default {
         msgReg: "",
         progress: false,
         logins: [],
-        emails: []
+        emails: [],
+        status: ""
     },
 
     actions: {
         async showLoginList(ctx) {
             const res = await axios.get(`${url}/api/users/get-logins`);
-            ctx.commit(`updateLoginList`, res.data);
+            ctx.commit("updateLoginList", res.data);
         },
 
         async showEmailList(ctx) {
             const res = await axios.get(`${url}/api/users/get-emails`);
-            ctx.commit(`updateEmailList`, res.data);
+            ctx.commit("updateEmailList", res.data);
         },
 
         async createUser(ctx, newUser) {
             ctx.commit("updateRegProgress", true);
             axios.post(`${url}/api/users/add-user`, newUser).then((res) => {
-                ctx.commit(`updateMsgAfterReg`, res.data.text);
+                if (res.data.name === "Success") {
+                    ctx.dispatch("startTimer", 20);
+                }
+                ctx.commit("updateStatusAfterReg", res.data.name);
+                ctx.commit("updateMsgAfterReg", res.data.text);
                 ctx.commit("updateRegProgress", false);
             });
         },
 
         async setRegProgress(ctx, value) {
-            ctx.commit(`updateRegProgress`, value);
+            ctx.commit("updateRegProgress", value);
+        },
+
+        async initStatusAfterReg(ctx) {
+            ctx.commit("updateStatusAfterReg", "");
+        },
+
+        async resendActivateCode(ctx, email) {
+            let user = {
+                email: email
+            }
+            await axios.post(`${url}/api/users/activate/resend-code`, user);
         }
     },
 
@@ -50,6 +66,10 @@ export default {
         updateRegProgress(state, value) {
             state.progress = value;
         },
+
+        updateStatusAfterReg(state, value) {
+            state.status = value;
+        }
     },
 
     getters: {
@@ -67,6 +87,10 @@ export default {
 
         regProgress(state) {
             return state.progress;
+        },
+
+        statusAfterReg(state) {
+            return state.status
         }
     }
 }

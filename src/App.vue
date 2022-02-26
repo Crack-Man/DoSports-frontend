@@ -2,14 +2,14 @@
     <v-app>
         <v-main>
             <v-container>
-                <router-link to="/">Home</router-link>
+                <router-link to="/">Главная</router-link>
                 |
-                <router-link to="/about">About</router-link>
+                <router-link to="/about">О нас</router-link>
                 |
-                <router-link v-if="!this.userIsAuthorized" to="/reg">Registation</router-link>
+                <router-link v-if="!this.userIsAuthorized" to="/reg">Регистрация</router-link>
                 <span v-if="!this.userIsAuthorized">|</span>
-                <a style="text-decoration: underline" v-if="this.userIsAuthorized" @click="this.logout">Logout</a>
-                <router-link v-else to="/auth">Login</router-link>
+                <a style="text-decoration: underline" v-if="this.userIsAuthorized" @click="this.logout">Выйти</a>
+                <router-link v-else to="/auth">Войти</router-link>
                 <p>{{ userIsAdmin ? "Вы админ" : "" }}</p>
                 <p>{{ userData }}</p>
                 <v-spacer></v-spacer>

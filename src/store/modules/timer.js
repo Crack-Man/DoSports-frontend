@@ -13,6 +13,7 @@ export default {
                 } else {
                     ctx.commit("initTotalTime", 0);
                     ctx.commit("endTimer");
+                    ctx.dispatch("changeButtonStatus", false);
                 }
             }, 1000)
         },
@@ -30,7 +31,6 @@ export default {
         endTimer(state) {
             clearInterval(state.timer);
             state.timer = null;
-            state.NAButton = false;
         },
     },
 
