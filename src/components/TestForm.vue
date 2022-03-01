@@ -1,6 +1,7 @@
 <template>
     <div>
         <v-form ref="form" lazy-validation>
+            <span v-if="this.bmi && isFinite(this.bmi)">Ваш ИМТ - {{ this.bmi }}. У вас {{ this.weightCategory }}.</span>
             <v-text-field
                 label="Рост (см)"
                 v-model="program.height"
@@ -93,12 +94,20 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters(["lifestyleList"])
+        ...mapGetters(["lifestyleList", "weightCategoryList"]),
+        bmi() {
+            if (this.program.height && this.program.weight) return Math.round(this.program.weight / (this.program.height ** 2) * 10000 * 10) / 10
+            return 0
+        },
+
+        weightCategory() {
+            return this.weightCategoryList.find(obj => this.bmi >= obj.min_bmi && this.bmi <= obj.max_bmi).name;
+        }
     },
     methods: {
         ...mapActions(["showLifestyleList"]),
         createProgram() {
-            if(this.$refs.form.validate()){
+            if (this.$refs.form.validate()) {
                 alert()
             }
         }
