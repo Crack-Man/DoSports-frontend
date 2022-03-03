@@ -1,5 +1,5 @@
 <template>
-    <v-form>
+    <v-form ref="form">
         <v-text-field
             label="Адрес электронной почты или логин"
             v-model="user.login"
@@ -13,6 +13,7 @@
             :type="showPass ? 'text' : 'password'"
             @click:append="showPass = !showPass"
             v-model="user.password"
+            :rules="rules.password"
             hide-details="auto"
             required
         ></v-text-field>
@@ -50,6 +51,10 @@ export default {
             login: [
                 v => !!v || "Введите логин",
                 v => /^[_.\-@\w]+$/.test(v) || 'Некорректный логин',
+            ],
+
+            password: [
+                v => !!v || "Введите пароль"
             ]
         },
 
@@ -63,13 +68,15 @@ export default {
     methods: {
         ...mapActions(['authRequest', 'checkAuth']),
         auth() {
-            this.authRequest(this.user).then(() => {
-                if (this.authStatus === "Success") {
-                    this.$router.push("/").then(() => {
-                        this.checkAuth()
-                    });
-                }
-            });
+            if (this.$refs.form.validate()) {
+                this.authRequest(this.user).then(() => {
+                    if (this.authStatus === "Success") {
+                        this.$router.push("/").then(() => {
+                            this.checkAuth()
+                        });
+                    }
+                });
+            }
         }
     }
 }

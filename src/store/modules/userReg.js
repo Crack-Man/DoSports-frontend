@@ -5,8 +5,8 @@ export default {
     state: {
         msgReg: "",
         progress: false,
-        logins: [],
-        emails: [],
+        logins: [{login: ""}],
+        emails: [{email: ""}],
         status: ""
     },
 
