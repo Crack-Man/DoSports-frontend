@@ -149,32 +149,21 @@ export default {
 
             birthday: [
                 v => !!v || 'Введите дату рождения',
-                v => !isNaN(Date.parse(this.parseDate(v))) || 'Некорректная дета',
-                v => Date.parse(this.parseDate(v)) !== "Invalid Date" || 'Некорректная дета',
-                v => Date.parse(this.parseDate(v)) <= new Date() || 'Некорректная дета',
+                v => !!v && !isNaN(this.parseDate(v)) || 'Некорректная дета',
+                v => !!v && this.parseDate(v) !== "Invalid Date" || 'Некорректная дета',
+                v => !!v && this.parseDate(v) <= new Date() || 'Некорректная дета',
             ],
 
-            email: [
-                v => !!v || 'Введите email',
-                v => /.+@.+/.test(v) || 'Некорректный email',
-                v => !this.emailList.find(obj => obj.email === v) || 'Данный email уже существует'
-            ],
+            email: [],
 
-            login: [
-                v => !!v || 'Введите логин',
-                v => /^[_.\w]+$/.test(v) || 'Некорректный логин',
-                v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов',
-                v => !this.loginList.find(obj => obj.login === v) || 'Данный логин уже существует'
-            ],
+            login: [],
 
             password: [
                 v => /^[^'"`]+$/.test(v) || 'Некорректный пароль',
                 v => v.length >= 7 || 'Пароль должен состоять как минимум из 7 символов',
             ],
 
-            rePassword: [
-                v => this.newUser.password === v || 'Пароли должны совпадать'
-            ],
+            rePassword: [],
 
             checkbox: [
                 v => !!v
@@ -201,6 +190,23 @@ export default {
     methods: {
         ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'createUser']),
 
+        updateRules() {
+            this.rules.email = [
+                v => !!v || 'Введите email',
+                v => /.+@.+/.test(v) || 'Некорректный email',
+                v => !this.emailList.find(obj => obj.email === v) || 'Данный email уже существует'
+            ];
+            this.rules.login = [
+                v => !!v || 'Введите логин',
+                v => /^[_.\w]+$/.test(v) || 'Некорректный логин',
+                v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов',
+                v => !this.loginList.find(obj => obj.login === v) || 'Данный логин уже существует'
+            ];
+            this.rules.rePassword = [
+                v => this.newUser.password === v || 'Пароли должны совпадать'
+            ];
+        },
+
         formatDate(date) {
             if (!date) return null;
 
@@ -212,7 +218,7 @@ export default {
             if (!date) return null;
 
             const [day, month, year] = date.split('.');
-            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            return Date.parse(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
         },
 
         getRegionText(item) {
@@ -229,6 +235,7 @@ export default {
         this.showRegionList();
         this.showLoginList();
         this.showEmailList();
+        this.updateRules();
     }
 }
 </script>
