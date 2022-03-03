@@ -85,7 +85,7 @@ export default {
                 v => v <= 300 || "Некорректный рост",
             ],
             weight: [
-                v => v >= 0 || "Некорректный вес",
+                v => v > 0 || "Некорректный вес",
                 v => v <= 600 || "Некорректный вес",
             ],
             checkbox: [
@@ -105,7 +105,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["showLifestyleList"]),
+        ...mapActions(["showLifestyleList", "showWeightCategoryList"]),
         createProgram() {
             if (this.$refs.form.validate()) {
                 alert()
@@ -113,6 +113,7 @@ export default {
         }
     },
     mounted() {
+        this.showWeightCategoryList();
         this.showLifestyleList();
     }
 }

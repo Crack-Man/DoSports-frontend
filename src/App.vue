@@ -6,10 +6,16 @@
                 |
                 <router-link to="/about">О нас</router-link>
                 |
-                <router-link v-if="!this.userIsAuthorized" to="/reg">Регистрация</router-link>
-                <span v-if="!this.userIsAuthorized">|</span>
-                <a style="text-decoration: underline" v-if="this.userIsAuthorized" @click="this.logout">Выйти</a>
-                <router-link v-else to="/auth">Войти</router-link>
+                <span v-if="this.userIsAuthorized">
+                    <router-link to="/start-program">Начать программу</router-link>
+                    |
+                    <a style="text-decoration: underline" @click="this.logout">Выйти</a>
+                </span>
+                <span v-else>
+                    <router-link to="/reg">Регистрация</router-link>
+                    |
+                    <router-link to="/auth">Войти</router-link>
+                </span>
                 <p>{{ userIsAdmin ? "Вы админ" : "" }}</p>
                 <p>{{ userData }}</p>
                 <v-spacer></v-spacer>
