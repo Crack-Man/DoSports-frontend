@@ -17,6 +17,10 @@
             hide-details="auto"
             required
         ></v-text-field>
+        Еще нет аккаунта? <router-link to="/reg">Зарегистрироваться</router-link>
+
+        <restore-password></restore-password>
+
         <v-btn
             class="button"
             :loading="this.restoreProgress"
@@ -25,8 +29,8 @@
         >
             Войти
         </v-btn>
+        <a href="/api/vk-auth">Войти через VK</a>
         {{ message }}
-        <restore-password></restore-password>
     </v-form>
 </template>
 

@@ -3,6 +3,7 @@ import VueRouter from "vue-router"
 import Home from "../views/Home.vue"
 import About from "../views/About.vue"
 import Registration from "../views/Registration.vue";
+import RegistrationVk from "../views/RegistrationVk.vue";
 import Authorization from "../views/Authorization.vue";
 import StartProgram from "../views/StartProgram";
 
@@ -23,6 +24,11 @@ const routes = [
         path: '/reg',
         name: 'Регистрация',
         component: Registration
+    },
+    {
+        path: '/vk-reg',
+        name: 'Введите дополнительные данные',
+        component: RegistrationVk
     },
     {
         path: '/auth',

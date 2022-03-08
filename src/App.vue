@@ -12,8 +12,6 @@
                     <a style="text-decoration: underline" @click="this.logout">Выйти</a>
                 </span>
                 <span v-else>
-                    <router-link to="/reg">Регистрация</router-link>
-                    |
                     <router-link to="/auth">Войти</router-link>
                 </span>
                 <p>{{ userIsAdmin ? "Вы админ" : "" }}</p>

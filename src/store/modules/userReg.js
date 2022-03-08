@@ -7,7 +7,8 @@ export default {
         progress: false,
         logins: [{login: ""}],
         emails: [{email: ""}],
-        status: ""
+        status: "",
+        vkUser: {}
     },
 
     actions: {
@@ -23,13 +24,23 @@ export default {
 
         async createUser(ctx, newUser) {
             ctx.commit("updateRegProgress", true);
-            axios.post(`${url}/api/users/add-user`, newUser).then((res) => {
+            await axios.post(`${url}/api/users/add-user`, newUser).then((res) => {
                 if (res.data.name === "Success") {
-                    ctx.dispatch("startTimer", 20);
+                    ctx.dispatch("startTimer", 60);
                 }
                 ctx.commit("updateStatusAfterReg", res.data.name);
                 ctx.commit("updateMsgAfterReg", res.data.text);
                 ctx.commit("updateRegProgress", false);
+            });
+        },
+
+        async createUserVk(ctx, newUser) {
+            ctx.commit("updateRegProgress", true);
+            await axios.post(`${url}/api/vk-auth/add-user`, newUser).then((res) => {
+                ctx.commit("updateRegProgress", false);
+                if (res.data.name === "Success") {
+                    ctx.commit("authSuccess", res.data.token);
+                }
             });
         },
 
@@ -46,6 +57,23 @@ export default {
                 email: email
             }
             await axios.post(`${url}/api/users/activate/resend-code`, user);
+        },
+
+        async checkUserVk(ctx) {
+            await axios.get(`${url}/api/vk-auth/user`).then((res) => {
+                ctx.commit("updateUserVkData", res.data);
+            })
+        },
+
+        async checkUserVkInDb(ctx, id) {
+            let user = {id: id};
+            await axios.post(`${url}/api/vk-auth/user-in-db`, user).then((res) => {
+                if (res.data.name === "Success") {
+                    if (res.data.match) {
+                        ctx.commit("authSuccess", res.data.token);
+                    }
+                }
+            })
         }
     },
 
@@ -69,6 +97,10 @@ export default {
 
         updateStatusAfterReg(state, value) {
             state.status = value;
+        },
+
+        updateUserVkData(state, user) {
+            state.vkUser = user;
         }
     },
 
@@ -91,6 +123,10 @@ export default {
 
         statusAfterReg(state) {
             return state.status
+        },
+
+        userVkData(state) {
+            return state.vkUser;
         }
     }
 }

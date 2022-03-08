@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import FormRegistration from '@/components/FormRegistation.vue'
+import FormRegistration from '../components/FormRegistration.vue'
 
 export default {
     name: "Registration",

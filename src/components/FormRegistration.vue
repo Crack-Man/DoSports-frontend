@@ -149,9 +149,6 @@ export default {
 
             birthday: [
                 v => !!v || 'Введите дату рождения',
-                v => !!v && !isNaN(this.parseDate(v)) || 'Некорректная дета',
-                v => !!v && this.parseDate(v) !== "Invalid Date" || 'Некорректная дета',
-                v => !!v && this.parseDate(v) <= new Date() || 'Некорректная дета',
             ],
 
             email: [],
@@ -191,6 +188,13 @@ export default {
         ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'createUser']),
 
         updateRules() {
+            this.rules.birthday = [
+                v => !!v || 'Введите дату рождения',
+                v => v.length === 10 || 'Некорректная дета',
+                v => (!isNaN(Date.parse(this.parseDate(v)))) || 'Некорректная дета',
+                v => (Date.parse(this.parseDate(v)) !== "Invalid Date") || 'Некорректная дета',
+                v => (Date.parse(this.parseDate(v)) <= new Date()) || 'Некорректная дета',
+            ];
             this.rules.email = [
                 v => !!v || 'Введите email',
                 v => /.+@.+/.test(v) || 'Некорректный email',
@@ -218,7 +222,7 @@ export default {
             if (!date) return null;
 
             const [day, month, year] = date.split('.');
-            return Date.parse(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`);
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
         },
 
         getRegionText(item) {
