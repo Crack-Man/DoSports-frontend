@@ -115,8 +115,10 @@ export default {
 
     watch: {
         userVkData() {
-            this.checkUserVkInDb(this.userVkData.id);
-            this.updateUserData();
+            if (this.userVkData) {
+                this.checkUserVkInDb(this.userVkData.id);
+                this.updateUserData();
+            }
         },
 
         userIsAuthorized() {
@@ -146,13 +148,11 @@ export default {
         },
 
         updateUserData() {
-            if (this.userVkData) {
-                this.newUser.fullname = this.userVkData.displayName
-                this.newUser.login = this.userVkData.username;
-                this.newUser.gender = this.userVkData.gender;
-                this.newUser.id_vk = this.userVkData.id;
-                this.newUser.email = this.userVkData.emails ? this.userVkData.emails[0].value : "";
-            }
+            this.newUser.fullname = this.userVkData.displayName
+            this.newUser.login = this.userVkData.username;
+            this.newUser.gender = this.userVkData.gender;
+            this.newUser.id_vk = this.userVkData.id;
+            this.newUser.email = this.userVkData.email ?? "";
         },
 
         updateRules() {

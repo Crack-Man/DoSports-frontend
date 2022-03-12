@@ -8,7 +8,8 @@ export default {
         logins: [{login: ""}],
         emails: [{email: ""}],
         status: "",
-        vkUser: {}
+        vkUser: {},
+        tokenVk: localStorage.getItem("vk-token") || ""
     },
 
     actions: {
@@ -39,6 +40,7 @@ export default {
             await axios.post(`${url}/api/vk-auth/add-user`, newUser).then((res) => {
                 ctx.commit("updateRegProgress", false);
                 if (res.data.name === "Success") {
+                    ctx.commit("removeTokenVk");
                     ctx.commit("authSuccess", res.data.token);
                 }
             });
@@ -60,8 +62,13 @@ export default {
         },
 
         async checkUserVk(ctx) {
-            await axios.get(`${url}/api/vk-auth/user`).then((res) => {
-                ctx.commit("updateUserVkData", res.data);
+            let token = {value: ctx.state.tokenVk};
+            await axios.post(`${url}/api/vk-auth/decode-token-vk`, token).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("updateUserVkData", res.data.user);
+                } else {
+                    ctx.commit("removeTokenVk");
+                }
             })
         },
 
@@ -71,6 +78,7 @@ export default {
                 if (res.data.name === "Success") {
                     if (res.data.match) {
                         ctx.commit("authSuccess", res.data.token);
+                        ctx.commit("removeTokenVk");
                     }
                 }
             })
@@ -97,6 +105,10 @@ export default {
 
         updateStatusAfterReg(state, value) {
             state.status = value;
+        },
+
+        removeTokenVk() {
+            localStorage.removeItem("vk-token");
         },
 
         updateUserVkData(state, user) {

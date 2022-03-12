@@ -171,7 +171,7 @@ export default {
         menu: false,
         dateFormatted: "",
         showPass: false,
-        showPassRepeat: false
+        showPassRepeat: false,
     }),
 
     computed: {

@@ -36,7 +36,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin']),
+        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin', 'checkTokenVk']),
 
         logout() {
             this.unauthorized().then(() => {
@@ -46,8 +46,7 @@ export default {
     },
 
     mounted() {
-        this.checkAuth().then(() => {
-        });
+        this.checkAuth();
     }
 };
 </script>
