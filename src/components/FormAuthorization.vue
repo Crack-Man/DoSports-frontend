@@ -1,5 +1,5 @@
 <template>
-    <v-form ref="form">
+    <v-form v-if="!userIsAuthorized" ref="form">
         <v-text-field
             label="Адрес электронной почты или логин"
             v-model="user.login"
@@ -32,17 +32,20 @@
         <a href="/api/vk-auth">Войти через VK</a>
         {{ message }}
     </v-form>
+    <error-405 v-else></error-405>
 </template>
 
 <script>
 import RestorePassword from "./RestorePassword";
 import {mapGetters, mapActions} from 'vuex';
+import Error405 from "./Error405";
 
 export default {
     name: "FormAuthorization",
 
     components: {
         'restore-password': RestorePassword,
+        "error-405": Error405
     },
 
     data: () => ({
@@ -66,7 +69,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton"]),
+        ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton", 'userIsAuthorized']),
     },
 
     methods: {

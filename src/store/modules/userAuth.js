@@ -34,7 +34,7 @@ export default {
 
         async checkAuth(ctx) {
             if (ctx.state.tokenAccess) {
-                axios.post("https://www.dosports.ru/api/users/verify-token-access", {access: ctx.state.tokenAccess}).then((res) => {
+                await axios.post("https://www.dosports.ru/api/users/verify-token-access", {access: ctx.state.tokenAccess}).then((res) => {
                     if (res.data.name === "Success") {
                         ctx.commit("authSuccess", null);
                         ctx.commit("updateUserData", res.data.user);

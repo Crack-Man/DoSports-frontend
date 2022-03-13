@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <v-main>
-            <v-container>
+            <div class="progress-main" v-if="this.progress">
+            </div>
+            <v-container v-else>
                 <router-link to="/">Главная</router-link>
                 |
                 <router-link to="/about">О нас</router-link>
@@ -29,14 +31,16 @@ import {mapActions, mapGetters} from "vuex";
 export default {
     name: 'App',
 
-    data: () => ({}),
+    data: () => ({
+        progress: true
+    }),
 
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
     },
 
     methods: {
-        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin', 'checkTokenVk']),
+        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin']),
 
         logout() {
             this.unauthorized().then(() => {
@@ -46,7 +50,26 @@ export default {
     },
 
     mounted() {
-        this.checkAuth();
+        this.checkAuth().then(() => {
+            this.progress = false
+        });
     }
 };
 </script>
+
+<style lang="scss">
+.progress-main {
+    left: 0;
+    top: 0;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    background-color: #fff;
+
+    .icon {
+        position: absolute;
+        left: calc(50% - 50px / 2);
+        bottom: calc(50% - 50px / 2);
+    }
+}
+</style>

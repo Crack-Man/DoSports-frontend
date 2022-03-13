@@ -1,87 +1,102 @@
 <template>
     <div class="">
-        <div v-if="this.userVkData">
-            <h1>Введите дополнительные данные</h1>
-            <v-form ref="form" lazy-validation>
-                <v-menu
-                    ref="menu"
-                    v-model="menu"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="auto"
-                >
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                            v-model="dateFormatted"
-                            label="Дата рождения"
-                            :rules="rules.birthday"
-                            persistent-hint
-                            prepend-icon="mdi-calendar"
-                            v-bind="attrs"
-                            @blur="newUser.birthday = parseDate(dateFormatted)"
-                            return-masked-value
-                            placeholder="ДД.ММ.ГГГГ"
-                            v-mask="'##.##.####'"
-                            v-on="on"
-                        ></v-text-field>
-                    </template>
-                    <v-date-picker
-                        v-model="newUser.birthday"
-                        no-title
-                        @input="menu = false"
-                        locale="ru-ru"
-                    ></v-date-picker>
-                </v-menu>
-                <v-select
-                    v-model="newUser.id_region"
-                    :items="this.regionList"
-                    :item-text="getRegionText"
-                    :item-value="'id'"
-                    label="Регион проживания"
-                    required
-                ></v-select>
-                <v-text-field
-                    label="Почта"
-                    :rules="rules.email"
-                    v-model="newUser.email"
-                    hide-details="auto"
-                    required
-                ></v-text-field>
-                <v-text-field
-                    label="Логин"
-                    :counter="20"
-                    :rules="rules.login"
-                    v-model="newUser.login"
-                    hide-details="auto"
-                    required
-                ></v-text-field>
-                <v-checkbox
-                    label='Нажимая кнопку “Зарегистрироваться”, вы даете согласие на обработку персональных данных'
-                    :rules="rules.checkbox"
-                    required
-                ></v-checkbox>
-                <v-btn
-                    class="button"
-                    color="primary"
-                    @click="addUser"
-                    :loading="this.regProgress"
-                    required
-                >
-                    Зарегистрироваться
-                </v-btn>
-            </v-form>
+        <div class="progress-main" v-if="this.progress">
+            <v-progress-circular
+                size="50"
+                class="icon"
+                indeterminate
+                color="#004BD7"
+            ></v-progress-circular>
         </div>
-        <h1 v-else>Ошибка. Повторите попытку</h1>
+        <div v-else>
+            <div v-if="this.userVkData">
+                <h1>Введите дополнительные данные</h1>
+                <v-form ref="form" lazy-validation>
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        max-width="290px"
+                        min-width="auto"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                                v-model="dateFormatted"
+                                label="Дата рождения"
+                                :rules="rules.birthday"
+                                persistent-hint
+                                prepend-icon="mdi-calendar"
+                                v-bind="attrs"
+                                @blur="newUser.birthday = parseDate(dateFormatted)"
+                                return-masked-value
+                                placeholder="ДД.ММ.ГГГГ"
+                                v-mask="'##.##.####'"
+                                v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="newUser.birthday"
+                            no-title
+                            @input="menu = false"
+                            locale="ru-ru"
+                        ></v-date-picker>
+                    </v-menu>
+                    <v-select
+                        v-model="newUser.id_region"
+                        :items="this.regionList"
+                        :item-text="getRegionText"
+                        :item-value="'id'"
+                        label="Регион проживания"
+                        required
+                    ></v-select>
+                    <v-text-field
+                        label="Почта"
+                        :rules="rules.email"
+                        v-model="newUser.email"
+                        hide-details="auto"
+                        required
+                    ></v-text-field>
+                    <v-text-field
+                        label="Логин"
+                        :counter="20"
+                        :rules="rules.login"
+                        v-model="newUser.login"
+                        hide-details="auto"
+                        required
+                    ></v-text-field>
+                    <v-checkbox
+                        label='Нажимая кнопку “Зарегистрироваться”, вы даете согласие на обработку персональных данных'
+                        :rules="rules.checkbox"
+                        required
+                    ></v-checkbox>
+                    <v-btn
+                        class="button"
+                        color="primary"
+                        @click="addUser"
+                        :loading="this.regProgress"
+                        required
+                    >
+                        Зарегистрироваться
+                    </v-btn>
+                </v-form>
+            </div>
+            <error-405 v-else></error-405>
+        </div>
     </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import Error405 from "./Error405";
 
 export default {
     name: "FormRegistrationVk",
+
+    components: {
+        "error-405": Error405
+    },
 
     data: () => ({
         newUser: {
@@ -94,6 +109,11 @@ export default {
             login: "",
         },
 
+        progress: true,
+        actions: {
+            auth: false,
+            vkToken: false
+        },
         menu: false,
         dateFormatted: "",
 
@@ -114,7 +134,16 @@ export default {
     }),
 
     watch: {
+        "actions.auth"() {
+            this.checkActions();
+        },
+
+        "actions.vkToken"() {
+            this.checkActions();
+        },
+
         userVkData() {
+            this.actions.vkToken = true;
             if (this.userVkData) {
                 this.checkUserVkInDb(this.userVkData.id);
                 this.updateUserData();
@@ -124,12 +153,16 @@ export default {
         userIsAuthorized() {
             if (this.userIsAuthorized) {
                 this.redirect();
+            } else {
+                this.actions.auth = true;
             }
         },
 
         authStatus() {
             if (this.authStatus === "Success") {
                 this.redirect();
+            } else {
+                this.actions.auth = true;
             }
         }
     },
@@ -140,6 +173,12 @@ export default {
 
     methods: {
         ...mapActions(['showRegionList', 'showLoginList', 'showEmailList', 'checkUserVk', 'createUserVk', 'checkAuth', 'checkUserVkInDb']),
+
+        checkActions() {
+            if (Object.values(this.actions).every(Boolean)) {
+                this.progress = false;
+            }
+        },
 
         redirect() {
             this.$router.push("/").then(() => {
@@ -207,6 +246,9 @@ export default {
         this.showEmailList();
         this.checkUserVk();
         this.updateRules();
+        if (this.userIsAuthorized) {
+            this.redirect();
+        }
     }
 }
 </script>

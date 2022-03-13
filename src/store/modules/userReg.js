@@ -62,14 +62,19 @@ export default {
         },
 
         async checkUserVk(ctx) {
-            let token = {value: ctx.state.tokenVk};
-            await axios.post(`${url}/api/vk-auth/decode-token-vk`, token).then((res) => {
-                if (res.data.name === "Success") {
-                    ctx.commit("updateUserVkData", res.data.user);
-                } else {
-                    ctx.commit("removeTokenVk");
-                }
-            })
+            if (ctx.state.tokenVk) {
+                let token = {value: ctx.state.tokenVk};
+                await axios.post(`${url}/api/vk-auth/decode-token-vk`, token).then((res) => {
+                    if (res.data.name === "Success") {
+                        ctx.commit("updateUserVkData", res.data.user);
+                    } else {
+                        ctx.commit("removeTokenVk");
+                    }
+                    ctx.dispatch("changeProgressMain", false);
+                })
+            } else {
+                ctx.commit("updateUserVkData", null);
+            }
         },
 
         async checkUserVkInDb(ctx, id) {
