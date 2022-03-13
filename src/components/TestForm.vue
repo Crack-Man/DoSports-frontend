@@ -37,21 +37,21 @@
                     label="Профессионал (Вы знаете, сколько тренировок вам необходимо в неделю. Система предоставит возможность создавать любое их количество)"
                 ></v-radio>
             </v-radio-group>
-            <div v-if="weightCategory === 'нормальный вес'">
+            <div v-if="weightCategory.name === 'нормальный вес'">
                 <p>Цель программы</p>
                 <v-radio-group
                     v-model="program.aim"
                 >
                     <v-radio
-                        value=0
+                        value="0"
                         label="Поддержание веса"
                     ></v-radio>
                     <v-radio
-                        value=1
+                        value="1"
                         label="Сброс веса"
                     ></v-radio>
                     <v-radio
-                        value=2
+                        value="2"
                         label="Набор веса"
                     ></v-radio>
                 </v-radio-group>
@@ -89,6 +89,7 @@ export default {
             lifestyle: 1,
             trainPrepare: "0",
             aim: "0",
+            norm: {}
         },
         rules: {
             height: [
@@ -143,13 +144,69 @@ export default {
         },
 
         calculateProgram() {
+            this.program.norm = this.pfc();
+        },
 
+        pfc() {
+            let calories = this.calNorm();
+            calories += this.valuePfc(calories);
+            let result = {
+                "proteins": calories * 25 / 100 / 4,
+                "fats": calories * 38 / 100 / 9,
+                "carbohydrates": calories * 45 / 100 / 4,
+                "fibers": calories / 1000 * 14
+            };
+            return result
+        },
+
+        calNorm() {
+            let result = 0
+            let activity = this.lifestyleList.find(obj => this.program.lifestyle === obj.id).coef;
+            let calc = 10 * this.program.weight + 6.25 * this.program.height - 5 * this.ageUser()
+            if (this.userData.gender === "f") {
+                result = calc - 161;
+            } else if (this.userData.gender === "m") {
+                result = calc + 5;
+            }
+            result *= activity;
+            return result;
+        },
+
+        ageUser() {
+            let today = new Date();
+            let birthday = this.userData.birthday;
+            let age = today.getFullYear() - new Date(birthday).getFullYear();
+            let months = today.getMonth() - new Date(birthday).getMonth();
+            if (months < 0 || (months === 0 && today.getDate() < birthday.getDate())) {
+                age--;
+            }
+            return age;
+        },
+
+        valuePfc(calories) {
+            let category = this.weightCategory.id;
+            if (category <= 2) {
+                return 500;
+            } else if (category === 3) {
+                if (this.program.aim === "0") {
+                    return 0;
+                } else if (this.program.aim === "1") {
+                    return -calories * 0.1;
+                } else if (this.program.aim === "2") {
+                    return 500;
+                }
+            } else if (category === 4) {
+                return -calories * 0.15;
+            } else if (category >= 5) {
+                return -calories * 0.2;
+            }
         }
     },
 
     mounted() {
         this.showWeightCategoryList();
         this.showLifestyleList();
+        this.showWeightCategoryList();
     }
 }
 </script>
