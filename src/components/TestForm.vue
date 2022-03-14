@@ -2,7 +2,9 @@
     <div>
         <error-405 v-if="!userData"></error-405>
         <v-form v-else ref="form" lazy-validation>
-            <span v-if="this.bmi && isFinite(this.bmi)">Ваш ИМТ - {{ this.bmi }}. У вас {{ this.weightCategory.name }}.</span>
+            <span v-if="this.bmi && isFinite(this.bmi)">Ваш ИМТ - {{ this.bmi }}. У вас {{
+                    this.weightCategory.name
+                }}.</span>
             <v-text-field
                 label="Рост (см)"
                 v-model="program.height"
@@ -61,7 +63,7 @@
                 label="Я прочитал и согласен с условиями пользовательского соглашения"
             ></v-checkbox>
             <v-btn
-                @click="this.createProgram"
+                @click="this.calculateProgram"
                 color="primary"
             >Отправить
             </v-btn>
@@ -86,6 +88,7 @@ export default {
             bmi: 0,
             height: 0,
             weight: 0,
+            weightCategory: 0,
             lifestyle: 1,
             trainPrepare: "0",
             aim: "0",
@@ -107,7 +110,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["lifestyleList", "weightCategoryList", "userData"]),
+        ...mapGetters(["lifestyleList", "weightCategoryList", "userData", "createProgramStatus", "activeProgramStatus", "userIsAuthorized"]),
         bmi() {
             if (this.program.height && this.program.weight) return Math.round(this.program.weight / (this.program.height ** 2) * 10000 * 10) / 10
             return 0
@@ -135,26 +138,30 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showLifestyleList", "showWeightCategoryList"]),
-
-        createProgram() {
-            if (this.$refs.form.validate()) {
-                this.calculateProgram();
-            }
-        },
+        ...mapActions(["showLifestyleList", "showWeightCategoryList", "createProgram", "checkActiveProgram"]),
 
         calculateProgram() {
-            this.program.norm = this.pfc();
+            if (this.$refs.form.validate()) {
+                this.program.norm = this.pfc();
+                this.program.height = parseInt(this.program.height)
+                this.program.weight = parseInt(this.program.weight)
+                this.createProgram(this.program).then(() => {
+                    if (this.createProgramStatus === "Success") {
+                        this.$router.push("/")
+                    }
+                })
+            }
         },
 
         pfc() {
             let calories = this.calNorm();
             calories += this.valuePfc(calories);
             let result = {
-                "proteins": calories * 25 / 100 / 4,
-                "fats": calories * 38 / 100 / 9,
-                "carbohydrates": calories * 45 / 100 / 4,
-                "fibers": calories / 1000 * 14
+                proteins: Math.round(calories * 25 / 100 / 4),
+                fats: Math.round(calories * 38 / 100 / 9),
+                carbohydrates: Math.round(calories * 45 / 100 / 4),
+                fibers: Math.round(calories / 1000 * 14),
+                calories: Math.round(calories)
             };
             return result
         },
@@ -207,6 +214,14 @@ export default {
         this.showWeightCategoryList();
         this.showLifestyleList();
         this.showWeightCategoryList();
+        if (this.userIsAuthorized) {
+            this.program.idUser = this.userData.id;
+            this.checkActiveProgram(this.userData.id).then(() =>{
+                if (this.activeProgramStatus) {
+                    this.$router.push("/");
+                }
+            })
+        }
     }
 }
 </script>
