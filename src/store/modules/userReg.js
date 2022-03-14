@@ -9,7 +9,8 @@ export default {
         emails: [{email: ""}],
         status: "",
         vkUser: {},
-        tokenVk: localStorage.getItem("vk-token") || ""
+        tokenVk: localStorage.getItem("vk-token") || "",
+        match: null
     },
 
     actions: {
@@ -84,6 +85,10 @@ export default {
                     if (res.data.match) {
                         ctx.commit("authSuccess", res.data.token);
                         ctx.commit("removeTokenVk");
+                        ctx.commit("updateVkMatch", true);
+                    } else {
+                        ctx.dispatch("unauthorized");
+                        ctx.commit("updateVkMatch", false);
                     }
                 }
             })
@@ -110,6 +115,10 @@ export default {
 
         updateStatusAfterReg(state, value) {
             state.status = value;
+        },
+
+        updateVkMatch(state, value) {
+            state.match = value
         },
 
         removeTokenVk() {
@@ -140,6 +149,10 @@ export default {
 
         statusAfterReg(state) {
             return state.status
+        },
+
+        vkMatch(state) {
+            return state.match
         },
 
         userVkData(state) {

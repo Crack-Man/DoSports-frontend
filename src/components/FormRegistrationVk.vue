@@ -143,11 +143,16 @@ export default {
         },
 
         userVkData() {
-            this.actions.vkToken = true;
             if (this.userVkData) {
                 this.checkUserVkInDb(this.userVkData.id);
                 this.updateUserData();
+            } else {
+                this.actions.vkToken = true;
             }
+        },
+
+        vkMatch() {
+            this.actions.vkToken = !this.vkMatch;
         },
 
         userIsAuthorized() {
@@ -168,7 +173,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(['userIsAuthorized', 'regionList', 'loginList', 'emailList', 'userVkData', 'regProgress', 'authStatus']),
+        ...mapGetters(['userIsAuthorized', 'regionList', 'loginList', 'emailList', 'userVkData', 'regProgress', 'authStatus', 'vkMatch']),
     },
 
     methods: {
@@ -248,6 +253,8 @@ export default {
         this.updateRules();
         if (this.userIsAuthorized) {
             this.redirect();
+        } else if (this.authStatus === "Unauthorized") {
+            this.actions.auth = true;
         }
     }
 }
