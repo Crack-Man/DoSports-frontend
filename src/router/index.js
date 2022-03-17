@@ -6,6 +6,7 @@ import Registration from "../views/Registration.vue";
 import RegistrationVk from "../views/RegistrationVk.vue";
 import Authorization from "../views/Authorization.vue";
 import StartProgram from "../views/StartProgram";
+import SportProgram from "../views/SportProgram";
 
 Vue.use(VueRouter)
 
@@ -15,31 +16,42 @@ const routes = [
         name: 'Главная',
         component: Home
     },
+
     {
         path: '/about',
         name: 'О нас',
         component: About
     },
+
     {
         path: '/reg',
         name: 'Регистрация',
         component: Registration
     },
+
     {
         path: '/vk-reg',
         name: 'Введите дополнительные данные',
         component: RegistrationVk
     },
+
     {
         path: '/auth',
         name: 'Авторизация',
         component: Authorization
     },
+
     {
         path: '/start-program',
         name: 'Начало программы',
         component: StartProgram
-    }
+    },
+
+    {
+        path: '/sport-program',
+        name: 'Спортивная программа',
+        component: SportProgram
+    },
 ]
 
 const router = new VueRouter({

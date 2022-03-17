@@ -7,13 +7,13 @@
                 <router-link to="/">Главная</router-link>
                 |
                 <router-link to="/about">О нас</router-link>
-                |
-                <span v-if="this.userIsAuthorized">
-                    <router-link to="/start-program">Начать программу</router-link>
+                <span style="float: right" v-if="this.userIsAuthorized">
+                    <router-link to="/sport-program">{{ userData.login }}</router-link>
                     |
                     <a style="text-decoration: underline" @click="this.logout">Выйти</a>
                 </span>
                 <span v-else>
+                    |
                     <router-link to="/auth">Войти</router-link>
                 </span>
                 <p>{{ userIsAdmin ? "Вы админ" : "" }}</p>

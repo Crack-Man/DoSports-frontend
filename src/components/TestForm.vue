@@ -147,7 +147,7 @@ export default {
                 this.program.weight = parseInt(this.program.weight)
                 this.createProgram(this.program).then(() => {
                     if (this.createProgramStatus === "Success") {
-                        this.$router.push("/")
+                        this.$router.push("/sport-program");
                     }
                 })
             }
@@ -218,7 +218,7 @@ export default {
             this.program.idUser = this.userData.id;
             this.checkActiveProgram(this.userData.id).then(() =>{
                 if (this.activeProgramStatus) {
-                    this.$router.push("/");
+                    this.$router.push("/sport-program");
                 }
             })
         }

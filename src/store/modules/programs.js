@@ -6,7 +6,8 @@ export default {
         lifestyles: [],
         weightCategories: [],
         statusCreateProgram: "",
-        statusActiveProgram: ""
+        statusActiveProgram: "",
+        program: {}
     },
 
     actions: {
@@ -28,12 +29,24 @@ export default {
             })
         },
 
-        async checkActiveProgram(ctx,id){
+        async checkActiveProgram(ctx, id) {
             await axios.get(`${url}/api/programs/user-has-active-program/${id}`).then((res) => {
                 if (res.data.name === "Success") {
                     ctx.commit(`updateActiveProgramStatus`, res.data.text);
                 }
             })
+        },
+
+        async closeProgram(ctx, user) {
+            await axios.post(`${url}/api/programs/deactivate-program`, user);
+        },
+
+        async showProgram(ctx, user) {
+            await axios.post(`${url}/api/programs/get-program`, user).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("updateProgramData", res.data.program);
+                }
+            });
         }
     },
 
@@ -52,6 +65,10 @@ export default {
 
         updateActiveProgramStatus(state, value) {
             state.statusActiveProgram = value;
+        },
+
+        updateProgramData(state, program) {
+            state.program = program;
         }
     },
 
@@ -63,11 +80,17 @@ export default {
         weightCategoryList(state) {
             return state.weightCategories;
         },
+
         createProgramStatus(state) {
             return state.statusCreateProgram;
         },
+
         activeProgramStatus(state) {
             return state.statusActiveProgram;
+        },
+
+        programData(state) {
+            return state.program;
         }
     }
 }
