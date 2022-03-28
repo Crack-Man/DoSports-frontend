@@ -37,6 +37,7 @@
                     >
                         {{ next.text }}
                     </a>
+
                 </v-row>
             </v-col>
 
