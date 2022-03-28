@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from "vue-router"
 import Home from "../views/Home.vue"
-import About from "../views/About.vue"
 import Registration from "../views/Registration.vue";
 import RegistrationVk from "../views/RegistrationVk.vue";
 import Authorization from "../views/Authorization.vue";
@@ -15,12 +14,6 @@ const routes = [
         path: '/',
         name: 'Главная',
         component: Home
-    },
-
-    {
-        path: '/about',
-        name: 'О нас',
-        component: About
     },
 
     {
