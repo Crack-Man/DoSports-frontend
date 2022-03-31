@@ -59,16 +59,6 @@ export default {
 
     methods: {
         ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin']),
-
-        logout() {
-            this.unauthorized().then(() => {
-                this.$router.push("/");
-            });
-        }
-    },
-
-    beforeCreate() {
-        this.checkTheme();
     },
 
     mounted() {
@@ -93,11 +83,17 @@ export default {
     }
 
     .container {
-        @media (min-width: 1904px) {
-            max-width: 1110px;
+        padding: 24px;
+
+        @media (min-width: 960px) {
+            padding: 0px;
         }
 
         @media (min-width: 1264px) {
+            max-width: 1110px;
+        }
+
+        @media (min-width: 1904px) {
             max-width: 1110px;
         }
     }

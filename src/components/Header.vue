@@ -12,12 +12,17 @@
                 </router-link>
             </div>
             <ul class="menu">
-                <li>Калькуляторы</li>
-                <li>Атлас тела</li>
-                <li>Статьи</li>
+                <li v-for="(page, index) in menu_pages" :key="index">
+                    <router-link class="link" :to="page.url">{{ page.name }}</router-link>
+                </li>
             </ul>
             <div class="userLinks" v-if="userIsAuthorized">
-                <router-link class="login" to="/sport-program">{{ userData.login }}</router-link>
+                <div
+                    class="login"
+
+                >
+                    {{ userData.login }}
+                </div>
                 <v-menu
                     bottom
                     left
@@ -56,6 +61,30 @@
                     Войти
                 </router-link>
             </div>
+            <v-navigation-drawer
+                app
+                right
+                absolute
+                temporary
+                dark
+                v-model="drawer"
+            >
+                <v-list>
+                    <v-list-item-group
+                        active-class="grey--text text--accent-4"
+                    >
+                        <v-list-item
+                            v-for="(page, index) in menu_pages"
+                            :key="index"
+                        >
+                            <v-list-item-title>
+                                <router-link class="link" :to="page.url">{{ page.name }}</router-link>
+                            </v-list-item-title>
+                        </v-list-item>
+                    </v-list-item-group>
+                </v-list>
+            </v-navigation-drawer>
+            <v-app-bar-nav-icon class="menu-burger" color="white" @click="drawer = !drawer"></v-app-bar-nav-icon>
         </v-container>
     </div>
 </template>
@@ -67,6 +96,23 @@ export default {
     name: "Header",
 
     data: () => ({
+        drawer: false,
+
+        menu_pages: [
+            {
+                name: 'Калькуляторы',
+                url: '/'
+            },
+            {
+                name: 'Атлас тела',
+                url: '/'
+            },
+            {
+                name: 'Статьи',
+                url: '/'
+            },
+        ],
+
         userLinks: [
             { title: 'Выйти' },
         ]
@@ -74,6 +120,12 @@ export default {
 
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
+    },
+
+    watch: {
+        userIsAuthorized() {
+            this.checkAuthUser();
+        }
     },
 
     methods: {
@@ -84,7 +136,35 @@ export default {
             this.unauthorized().then(() => {
                 this.$router.push("/");
             });
+        },
+
+        checkAuthUser() {
+            if (this.userIsAuthorized) {
+                this.menu_pages.push({
+                    name: 'Спортивная программа',
+                    url: 'sport-program'
+                })
+            } else {
+                this.menu_pages = [
+                    {
+                        name: 'Калькуляторы',
+                        url: '/'
+                    },
+                    {
+                        name: 'Атлас тела',
+                        url: '/'
+                    },
+                    {
+                        name: 'Статьи',
+                        url: '/'
+                    },
+                ]
+            }
         }
+    },
+
+    mounted() {
+        this.checkAuthUser();
     }
 }
 </script>
@@ -94,7 +174,11 @@ export default {
 
 #app {
     .header {
-        height: 90px;
+        height: 46px;
+
+        @media(min-width: 960px) {
+            height: 90px;
+        }
     }
 
     .header-container {
@@ -106,43 +190,75 @@ export default {
         .link-main {
             display: flex;
             align-items: center;
-            margin: 0 -10px;
+            margin: 0 -7px;
+
+            @media(min-width: 960px) {
+                margin: 0 -10px;
+            }
 
             .text {
                 font-family: "Roboto-BoldItalic", serif;
-                font-size: 28px;
-                margin: 0 10px;
+                font-size: 16px;
+                margin: 0 7px;
+
+                @media(min-width: 960px) {
+                    font-size: 28px;
+                    margin: 0 10px;
+                }
             }
 
             .logo {
                 margin: 0 10px;
 
+                @media(max-width: 960px) {
+                    width: 37px;
+                    margin: 0 7px;
+                }
+
                 img {
                     display: block;
+                    max-width: 100%;
                 }
             }
         }
 
         .menu {
-            display: flex;
-            margin: 0 -25px;
-
+            display: none;
             font-family: "Inter-Regular", serif;
-            font-size: 18px;
+
+            @media(min-width: 960px) {
+                font-size: 16px;
+                display: flex;
+                margin: 0 -18px;
+            }
+
+            @media(min-width: 1264px) {
+                font-size: 18px;
+            }
 
             li {
-                margin: 0 25px;
+                margin: 0 18px;
                 list-style-type: none;
             }
         }
 
-        .auth {
-            display: flex;
-            align-items: flex-end;
-            margin: 0 -10px;
+        .menu-burger {
+            @media(min-width: 960px) {
+                display: none;
+            }
+        }
 
-            font-family: "Inter-SemiBold", serif;
-            font-size: 20px;
+        .auth {
+            display: none;
+
+            @media(min-width: 960px) {
+                display: flex;
+                align-items: flex-end;
+                margin: 0 -10px;
+
+                font-family: "Inter-SemiBold", serif;
+                font-size: 20px;
+            }
 
             a {
                 margin: 0 10px;
@@ -158,9 +274,14 @@ export default {
         }
 
         .userLinks {
-            display: flex;
-            align-items: center;
-            margin: 0 -6px;
+            display: none;
+
+
+            @media(min-width: 960px) {
+                display: flex;
+                align-items: center;
+                margin: 0 -6px;
+            }
 
             .login {
                 font-family: "Inter-Bold", serif;
