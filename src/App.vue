@@ -4,26 +4,8 @@
             <div class="progress-main" v-if="this.progress">
             </div>
             <div v-else>
-                <header-main></header-main>
-                <v-container>
-                    <!--                <router-link to="/">Главная</router-link>-->
-                    <!--                |-->
-                    <!--                <router-link to="/about">О нас</router-link>-->
-                    <!--                <span style="float: right" v-if="this.userIsAuthorized">-->
-                    <!--                    <router-link to="/sport-program">{{ userData.login }}</router-link>-->
-                    <!--                    |-->
-                    <!--                    <a style="text-decoration: underline" @click="this.logout">Выйти</a>-->
-                    <!--                </span>-->
-                    <!--                <span v-else>-->
-                    <!--                    |-->
-                    <!--                    <router-link to="/auth">Войти</router-link>-->
-                    <!--                </span>-->
-                    <!--                <p>{{ userIsAdmin ? "Вы админ" : "" }}</p>-->
-                    <!--                <p>{{ userData }}</p>-->
-                    <!--                <v-spacer></v-spacer>-->
-                    <router-view/>
-                </v-container>
-
+                <header-main/>
+                <router-view/>
             </div>
         </v-main>
     </v-app>
@@ -37,7 +19,7 @@ export default {
     name: 'App',
 
     components: {
-        "header-main": Header
+        "header-main": Header,
     },
 
     data: () => ({

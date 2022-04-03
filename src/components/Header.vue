@@ -54,7 +54,7 @@
             <div class="auth" v-else>
                 <router-link to="/auth" class="icon">
                     <img
-                        :src="require('../assets/img/png/user.png')"
+                        :src="require('@/assets/img/png/user.png')"
                     />
                 </router-link>
                 <router-link to="/auth" class="entry">
@@ -177,7 +177,7 @@ export default {
         height: 46px;
 
         @media(min-width: 960px) {
-            height: 90px;
+            height: 80px;
         }
     }
 

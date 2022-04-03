@@ -1,15 +1,22 @@
 <template>
-    <home/>
+    <div class="">
+        <welcome-slider/>
+        <v-container>
+            <advantages-slider/>
+        </v-container>
+    </div>
 </template>
 
 <script>
-import Main from '@/components/Main'
+import WelcomeSlider from '@/components/WelcomeSlider'
+import AdvantagesSlider from "@/components/AdvantagesSlider";
 
 export default {
     name: 'Home',
 
     components: {
-        "home": Main,
+        "welcome-slider": WelcomeSlider,
+        "advantages-slider": AdvantagesSlider,
     },
 }
 </script>
