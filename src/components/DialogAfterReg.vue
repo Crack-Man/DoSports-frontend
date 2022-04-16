@@ -5,25 +5,26 @@
             persistent
             max-width="500px"
         >
-            <v-card>
+            <v-card dark>
                 <v-btn
                     icon
                     dark
+                    class="close"
                     @click="closePopup"
                 >
-                    <v-icon color="black">mdi-close</v-icon>
+                    <img
+                        :src="require('../assets/img/png/close.png')"
+                    />
                 </v-btn>
 
-                <v-card-title>
-                    <span>Восстановление пароля</span>
-                    <v-spacer></v-spacer>
-                </v-card-title>
                 <v-card-text>
-                    <p>{{ this.msgAfterReg }}</p>
-                    <p>Не пришло письмо? Нажмите «Отправить повторно» через {{ this.time }} секунд</p>
+                    <h1 class="popup-title">Проверьте почту</h1>
+                    <p>Чтобы завершить регистрацию, перейдите по ссылке из письма, которое мы отправили на <span class="email">{{ this.email }}</span></p>
+                    <p v-show="this.nonActiveButton">Не пришло письмо? Нажмите «Отправить повторно» через 00:{{ this.time }}</p>
                 </v-card-text>
                 <v-card-actions>
                     <v-btn
+                        class="button"
                         color="primary"
                         @click="resendCode"
                         :disabled="this.nonActiveButton"
@@ -51,7 +52,7 @@ export default {
         resendCode() {
             this.resendActivateCode(this.email);
             this.changeButtonStatus(true);
-            this.startTimer(20);
+            this.startTimer(60);
         },
 
         closePopup() {
@@ -73,6 +74,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+@import "../assets/main.css";
+@import "../assets/forms.scss";
+@import "../assets/popups.scss";
+
+span.email {
+    color: #9196FF;
+}
+
+.v-card__actions {
+    padding: 0 !important;
+    margin-top: 20px;
+
+    .button {
+        width: 100%;
+        margin: 0 !important;
+        height: 50px !important;
+    }
+}
 
 </style>
