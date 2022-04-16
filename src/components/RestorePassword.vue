@@ -1,38 +1,41 @@
 <template>
-    <div class="">
+    <div class="restore-pass">
         <span class="restore-pass-button" @click="popupVisible = true">Забыли пароль?</span>
 
         <v-dialog
             v-model="popupVisible"
             persistent
             max-width="500px"
+            dark
         >
             <v-card>
                 <v-btn
                     icon
                     dark
+                    class="close"
                     @click="closePopup"
                 >
-                    <v-icon color="black">mdi-close</v-icon>
+                    <img
+                        :src="require('../assets/img/png/close.png')"
+                    />
                 </v-btn>
-
-                <v-card-title>
-                    <span>Восстановление пароля</span>
-                    <v-spacer></v-spacer>
-                </v-card-title>
-
                 <v-card-text v-if="this.restoreStep === 1">
-                    <v-form ref="form1">
+                    <h1 class="popup-title">Восстановление пароля</h1>
+
+                    <v-form class="form-restore" ref="form1">
                         <v-text-field
-                            label="E-mail"
+                            label="Почта"
+                            class="input"
                             v-model="user.email"
                             :rules="rules.email"
                             hide-details="auto"
+                            outlined
+                            dark
                             required
                         ></v-text-field>
                         <v-card-actions>
                             <v-btn
-                                color="primary"
+                                class="button"
                                 @click="checkEmail"
                                 :loading="this.restoreProgress"
                             >Получить код</v-btn>
@@ -41,61 +44,66 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 2">
-
-                    {{ restoreMessage }}
-
-                    <v-text-field
-                        label="Код"
-                        v-model="user.code"
-                        :rules="rules.code"
-                        type="number"
-                        v-mask="'#####'"
-                        hide-details="auto"
-                        required
-                    ></v-text-field>
-                    <v-progress-circular
-                        v-show="this.restoreProgress"
-                        indeterminate
-                        color="primary"
-                    ></v-progress-circular>
-                    <v-card-actions>
-                        <v-btn
-                            color="primary"
-                            @click="resendCode"
-                            :disabled="this.nonActiveButton"
-                        >Получить код</v-btn>
-                    </v-card-actions>
-                    <p v-show="this.nonActiveButton">Получить код повторно можно через {{ this.time }} секунд</p>
+                    <h1 class="popup-title">Восстановление пароля</h1>
+                    <v-form class="form-restore code" ref="form2">
+                        <label class="code">Введите код, который пришел вам на почту <span class="email">{{ this.user.email }}</span></label>
+                        <v-text-field
+                            class="input code"
+                            v-model="user.code"
+                            :rules="rules.code"
+                            type="number"
+                            v-mask="'#####'"
+                            hide-details="auto"
+                            outlined
+                            dark
+                            required
+                        ></v-text-field>
+                        <v-card-actions>
+                            <v-btn
+                                class="button"
+                                @click="resendCode"
+                                :disabled="this.nonActiveButton"
+                            >Получить код</v-btn>
+                        </v-card-actions>
+                        <div class="text-restore" v-show="this.nonActiveButton">Получить код повторно можно через 00:{{ this.time }}</div>
+                    </v-form>
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 3">
+                    <h1 class="popup-title">Восстановление пароля</h1>
 
-                    <v-form ref="form3">
+                    <v-form class="form-restore" ref="form3">
                         <v-text-field
                             label="Новый пароль"
+                            class="input"
                             :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPass ? 'text' : 'password'"
                             @click:append="showPass = !showPass"
                             :rules="rules.password"
                             v-model="user.password"
                             hide-details="auto"
+                            outlined
+                            dark
                             required
                         ></v-text-field>
 
                         <v-text-field
                             label="Повторите новый пароль"
+                            class="input"
                             :append-icon="showPassRepeat ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassRepeat ? 'text' : 'password'"
                             @click:append="showPassRepeat = !showPassRepeat"
                             :rules="rules.rePassword"
                             v-model="passwordRepeat"
                             hide-details="auto"
+                            outlined
+                            dark
                             required
                         ></v-text-field>
 
                         <v-card-actions>
                             <v-btn
-                                color="primary"
+                                class="button"
                                 @click="changePass"
                                 :loading="this.restoreProgress"
                             >Сохранить</v-btn>
@@ -104,7 +112,14 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 4">
-                    Ваш пароль успешно восстановлен
+                    <h1 class="popup-title">Ваш пароль успешно восстановлен</h1>
+
+                    <v-card-actions>
+                        <v-btn
+                            class="button entry"
+                            @click="closePopup"
+                        >Войти</v-btn>
+                    </v-card-actions>
                 </v-card-text>
 
             </v-card>
@@ -171,22 +186,27 @@ export default {
         },
 
         passwordRepeat() {
-            if (this.passwordRepeat !== this.user.password) {
-                this.rules.rePassword = [
-                    () => 'Пароли должны совпадать'
-                ];
-            } else {
-                this.rules.rePassword = []
-            }
-        }
+            this.checkPasswordRepeat();
+        },
     },
 
     methods: {
         ...mapActions(['sendRestoreCode', 'resendRestoreCode', 'closePopupRestore', 'changeRestoreDataName', 'compareCode', 'setRestoreProgress', 'changePassword', 'startTimer', "changeButtonStatus"]),
 
+        checkPasswordRepeat() {
+            if (this.passwordRepeat !== this.user.password) {
+                this.rules.rePassword = [
+                    () => 'Пароли должны совпадать'
+                ];
+                return false;
+            } else {
+                this.rules.rePassword = []
+                return true;
+            }
+        },
+
         checkEmail() {
             if (this.$refs.form1.validate()) {
-                this.setRestoreProgress(true);
                 this.sendRestoreCode(this.user);
             }
         },
@@ -198,12 +218,11 @@ export default {
         },
 
         checkCode() {
-            this.setRestoreProgress(true);
             this.compareCode(this.user);
         },
 
         changePass() {
-            if (this.$refs.form3.validate()) {
+            if (this.$refs.form3.validate() && this.checkPasswordRepeat()) {
                 this.setRestoreProgress(true);
                 this.changePassword(this.user);
             }
@@ -251,8 +270,88 @@ export default {
 </script>
 
 <style lang="scss">
-.restore-pass-button {
-    cursor: pointer;
-    text-decoration: underline;
+@import "../assets/main.css";
+@import "../assets/forms.scss";
+@import "../assets/popups.scss";
+
+#app {
+    .restore-pass {
+        margin-top: 13px;
+
+        .restore-pass-button {
+            cursor: pointer;
+            text-decoration: underline;
+            line-height: 180%;
+            font-family: 'Inter-Regular', sans-serif;
+            font-size: 16px;
+        }
+    }
+
+    .v-dialog {
+        width: 473px;
+    }
+
+    .v-card__text {
+        padding: 0;
+
+
+        .form-restore {
+            .input {
+                width: 100%;
+            }
+
+            label.code {
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 16px;
+                line-height: 135%;
+                display: block;
+                width: 293px;
+            }
+
+            .input.code {
+                margin-top: 23px;
+            }
+
+            .text-restore {
+                margin: 10px auto 0 auto;
+                text-align: center;
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 14px;
+                line-height: 135%;
+            }
+        }
+
+        .form-restore.code {
+            margin-top: 30px;
+        }
+
+        .v-card__actions {
+            padding: 0;
+
+            .button {
+                width: 100%;
+                height: 50px;
+                margin: 0;
+            }
+
+            .button.entry {
+                margin-top: 20px;
+            }
+        }
+    }
+}
+
+#app.dark {
+    .v-card__text {
+        .form-restore {
+            span.email {
+                color: #9196FF;
+            }
+
+            label.code {
+                color: white;
+            }
+        }
+    }
 }
 </style>

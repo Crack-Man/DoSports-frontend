@@ -58,10 +58,6 @@
                     ></v-radio>
                 </v-radio-group>
             </div>
-            <v-checkbox
-                :rules="rules.checkbox"
-                label="Я прочитал и согласен с условиями пользовательского соглашения"
-            ></v-checkbox>
             <v-btn
                 @click="this.calculateProgram"
                 color="primary"
@@ -102,9 +98,6 @@ export default {
             weight: [
                 v => v > 0 || "Некорректный вес",
                 v => v <= 600 || "Некорректный вес",
-            ],
-            checkbox: [
-                v => !!v || "Вы должны принять пользовательское соглашение"
             ]
         }
     }),

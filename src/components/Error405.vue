@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <v-container class="error-405">
         <h1>Ой! А вам сюда нельзя :(</h1>
         <h1>Ошибка 405</h1>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -12,6 +12,11 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+#app {
+    .error-405 {
+        font-family: "Oswald-Bold", sans-serif;
+        margin-top: 50px;
+    }
+}
 </style>

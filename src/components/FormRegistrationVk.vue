@@ -9,14 +9,14 @@
             ></v-progress-circular>
         </div>
         <div v-else>
-            <div v-if="this.userVkData">
-                <h1>Введите дополнительные данные</h1>
-                <v-form ref="form" lazy-validation>
+            <v-container v-if="this.userVkData">
+                <title-page name="Введите дополнительные данные"/>
+                <v-form ref="form" class="form-reg" lazy-validation>
                     <v-menu
                         ref="menu"
+                        attach=".input.date .v-input__slot"
                         v-model="menu"
                         :close-on-content-click="false"
-                        transition="scale-transition"
                         offset-y
                         max-width="290px"
                         min-width="auto"
@@ -25,15 +25,19 @@
                             <v-text-field
                                 v-model="dateFormatted"
                                 label="Дата рождения"
+                                class="input date"
                                 :rules="rules.birthday"
+                                :append-icon="'mdi-chevron-down'"
+                                @click:append="openPickerDate"
                                 persistent-hint
-                                prepend-icon="mdi-calendar"
                                 v-bind="attrs"
+                                placeholder="ДД.ММ.ГГГГ"
                                 @blur="newUser.birthday = parseDate(dateFormatted)"
                                 return-masked-value
-                                placeholder="ДД.ММ.ГГГГ"
                                 v-mask="'##.##.####'"
                                 v-on="on"
+                                dark
+                                outlined
                             ></v-text-field>
                         </template>
                         <v-date-picker
@@ -41,34 +45,57 @@
                             no-title
                             @input="menu = false"
                             locale="ru-ru"
+                            dark
                         ></v-date-picker>
                     </v-menu>
                     <v-select
                         v-model="newUser.id_region"
+                        class="input"
+                        :menu-props="{ bottom: true, offsetY: true }"
                         :items="this.regionList"
                         :item-text="getRegionText"
                         :item-value="'id'"
                         label="Регион проживания"
                         required
+                        dark
+                        outlined
                     ></v-select>
                     <v-text-field
                         label="Почта"
+                        class="input"
                         :rules="rules.email"
                         v-model="newUser.email"
                         hide-details="auto"
                         required
+                        dark
+                        outlined
                     ></v-text-field>
                     <v-text-field
                         label="Логин"
                         :counter="20"
+                        class="input"
                         :rules="rules.login"
                         v-model="newUser.login"
                         hide-details="auto"
                         required
+                        dark
+                        outlined
                     ></v-text-field>
                     <v-checkbox
-                        label='Нажимая кнопку “Зарегистрироваться”, вы даете согласие на обработку персональных данных'
+                        label='Нажимая кнопку “Зарегистрироваться”, Вы даете согласие на обработку персональных данных'
+                        class="personal"
+                        off-icon=""
+                        on-icon="mdi-check"
                         :rules="rules.checkbox"
+                        dark
+                        required
+                    ></v-checkbox>
+                    <v-checkbox
+                        :rules="rules.checkbox"
+                        label="Я прочитал и согласен с условиями пользовательского соглашения"
+                        off-icon=""
+                        on-icon="mdi-check"
+                        dark
                         required
                     ></v-checkbox>
                     <v-btn
@@ -76,12 +103,11 @@
                         color="primary"
                         @click="addUser"
                         :loading="this.regProgress"
-                        required
                     >
                         Зарегистрироваться
                     </v-btn>
                 </v-form>
-            </div>
+            </v-container>
             <error-405 v-else></error-405>
         </div>
     </div>
@@ -90,12 +116,14 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import Error405 from "./Error405";
+import Title from "@/components/Title";
 
 export default {
     name: "FormRegistrationVk",
 
     components: {
-        "error-405": Error405
+        "error-405": Error405,
+        "title-page": Title
     },
 
     data: () => ({
@@ -108,6 +136,8 @@ export default {
             email: "",
             login: "",
         },
+
+        placeholderInput: "ДД.ММ.ГГГГ",
 
         progress: true,
         actions: {
@@ -134,6 +164,10 @@ export default {
     }),
 
     watch: {
+        'newUser.birthday'() {
+            this.dateFormatted = this.formatDate(this.newUser.birthday);
+        },
+
         "actions.auth"() {
             this.checkActions();
         },
@@ -182,6 +216,14 @@ export default {
         checkActions() {
             if (Object.values(this.actions).every(Boolean)) {
                 this.progress = false;
+
+
+                setInterval(() => {
+                    let dateInput = document.querySelector(".input.date input");
+                    if (dateInput) {
+                        if (!dateInput.placeholder) dateInput.placeholder = this.placeholderInput
+                    }
+                }, 1);
             }
         },
 
@@ -189,6 +231,10 @@ export default {
             this.$router.push("/").then(() => {
                 this.checkAuth();
             });
+        },
+
+        openPickerDate() {
+            document.querySelector('.input.date input').click();
         },
 
         updateUserData() {
@@ -260,6 +306,7 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+@import "../assets/main.css";
+@import "../assets/forms.scss";
 </style>

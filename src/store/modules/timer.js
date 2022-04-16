@@ -36,7 +36,7 @@ export default {
 
     getters: {
         time(state) {
-            return state.totalTime;
+            return state.totalTime > 9 ? state.totalTime : "0" + state.totalTime;
         },
     }
 }

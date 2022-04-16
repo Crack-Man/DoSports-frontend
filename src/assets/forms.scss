@@ -1,0 +1,421 @@
+#app {
+    .form-auth {
+        .button {
+            width: 173px;
+            height: 50px;
+        }
+    }
+
+    .form-reg {
+        margin-bottom: 30px;
+
+        .button {
+            margin-top: 25px;
+            width: 258px;
+            height: 50px;
+        }
+    }
+
+    // Убрать анимацию иконки в селекте
+    .v-select.v-select--is-menu-active .v-input__icon--append .v-icon {
+        transform: none;
+    }
+
+    // Дата
+    .input.date {
+        .v-input__slot {
+            .v-menu__content {
+                top: 55px !important;
+                left: 0 !important;
+            }
+        }
+    }
+
+    .menu-date {
+        display: none;
+    }
+
+    // Радио кнопка
+    label.gender {
+        font-family: "Inter-Regular", sans-serif;
+        font-size: 13px;
+        line-height: 123%;
+        position: relative;
+        bottom: 10px;
+    }
+
+    .v-input.gender {
+        margin-top: 0px;
+    }
+
+    .v-radio {
+        margin-right: 23px;
+
+        .v-input--selection-controls__input {
+            margin-right: 3px;
+
+            i::before {
+                font-size: 15px;
+            }
+
+            .v-input--selection-controls__ripple {
+                display: none;
+            }
+        }
+
+        label {
+            color: white !important;
+        }
+    }
+
+    // Чекбокс кнопка
+    .v-input--checkbox.personal {
+        margin-top: 5px;
+    }
+
+
+    .v-input--checkbox {
+        margin-top: 15px;
+        padding-top: 0;
+
+        .v-messages {
+            display: none;
+        }
+
+        i {
+            font-size: 15px;
+            font-weight: normal !important;
+            flex: 0 0 25px;
+            height: 25px !important;
+            border-radius: 3px;
+
+            position: relative;
+            bottom: 1px;
+        }
+
+        i::after {
+            display: none;
+        }
+
+        .v-input--selection-controls__input {
+            margin-right: 15px;
+        }
+
+        .v-input--selection-controls__ripple {
+            width: 25px;
+            height: 25px;
+        }
+
+        .v-input--selection-controls__ripple {
+            display: none;
+        }
+
+        label {
+            font-size: 13px;
+            line-height: 123%;
+        }
+    }
+
+    .v-input--checkbox.personal {
+        label {
+            flex: 0 0 391px;
+        }
+    }
+
+    // Иконка глаза
+    .v-input__append-inner {
+        margin-top: 10px;
+        margin-right: 25px;
+    }
+
+    .v-text-field__slot {
+        border: none;
+    }
+
+    .input:first-child {
+        margin-top: 60px;
+    }
+
+    .input {
+        width: 50%;
+        margin-top: 30px;
+
+        .v-text-field__details {
+            display: none;
+        }
+
+        // значение селекта
+        .v-select__selections {
+            padding: 0 25px;
+            position: relative;
+            top: -7px;
+        }
+
+
+        .v-input__slot {
+            background: none;
+            padding: 0;
+            margin-bottom: 15px;
+
+            fieldset {
+                height: 53px;
+                border: 2px solid currentColor;
+
+                legend {
+                    display: none;
+                }
+            }
+
+            label {
+                top: -30px;
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 14px;
+                line-height: 123%;
+            }
+
+            label.v-label--active {
+                transform: none;
+            }
+
+            .v-text-field__slot {
+                input {
+                    position: relative;
+                    top: -7px;
+
+                    padding: 0 25px;
+                    font-family: 'Inter-Regular', sans-serif;
+                    font-size: 16px;
+                    line-height: 119%;
+
+                }
+
+                input::placeholder {
+                    font-family: "Inter-Regular", sans-serif;
+                    color: #B5B5B8 !important;
+                    opacity: 1 !important;
+                    font-size: 16px;
+                }
+            }
+        }
+
+
+        .v-text-field__details {
+            padding: 0;
+            position: relative;
+            top: -8px;
+            margin-bottom: 10px;
+
+            .v-messages.error--text {
+                font-size: 14px;
+                font-family: "Inter-Regular", sans-serif;
+
+                .v-messages__wrapper {
+                    .v-messages__message {
+                        line-height: 135%;
+                    }
+                }
+            }
+        }
+
+    }
+
+    .input.error--text {
+        .v-text-field__details {
+            display: flex;
+        }
+    }
+
+    .button {
+        margin-top: 30px;
+        font-family: "Inter-Regular", sans-serif;
+        font-size: 18px;
+        line-height: 180%;
+        text-transform: none;
+        letter-spacing: 0px;
+    }
+}
+
+#app.dark {
+    .form-auth {
+        .button {
+            background: #004BD7;
+            color: #ffff;
+        }
+    }
+
+    // Радио
+    .v-radio.v-item--active {
+        i::before {
+            color: #9196FF;
+        }
+    }
+
+    // Чекбокс
+    .v-input--checkbox {
+        i {
+            border: 1px solid #B5B5B8;
+        }
+    }
+
+
+    .v-input--checkbox.v-input--is-label-active {
+        i {
+            border: 1px solid #9196FF;
+        }
+
+        i::before {
+            color: #9196FF;
+        }
+
+        label {
+            color: white;
+        }
+    }
+
+    .v-input--checkbox.error--text {
+        i {
+            border: 1px solid #FF5B5B;
+        }
+    }
+
+    // Селектор
+    .v-menu__content {
+        border: 2px solid #9196FF;
+        border-radius: 0 0 4px 4px !important;
+
+        .v-list {
+            background: #090914 !important;
+
+            .v-list-item {
+                color: white !important;
+            }
+
+            .v-list-item--active {
+                background-color: #9196FF !important;
+            }
+        }
+    }
+
+    // Дата
+    .v-date-picker-header {
+        background-color: #090914;
+    }
+
+    .v-date-picker-table {
+        background-color: #090914;
+    }
+
+    .accent--text {
+        color: #9196FF !important;
+        caret-color: #9196FF !important;
+    }
+
+    .accent {
+        background-color: #9196FF !important;
+        border-color: #9196FF !important;
+    }
+
+    .v-date-picker-years li {
+        background: #090914 !important;
+    }
+
+    .v-date-picker-years li:hover {
+        background-color: #9196FF !important;
+    }
+
+    .v-picker--date .primary--text {
+        color: white !important;
+        caret-color: white !important;
+    }
+
+    .input.error--text {
+        .v-input__slot {
+            fieldset {
+                color: #FF5B5B;
+            }
+        }
+
+        .v-input__slot:hover {
+            fieldset {
+                color: #FF5B5B;
+            }
+        }
+    }
+
+    .input.v-input--is-focused {
+        .v-input__slot {
+            fieldset {
+                color: #9196FF;
+            }
+
+            label {
+                color: white !important;
+            }
+        }
+    }
+
+    .v-input__slot {
+        fieldset {
+            color: #B5B5B8;
+        }
+
+        label {
+            color: #B5B5B8;
+        }
+    }
+
+    .v-input__slot:hover {
+        fieldset {
+            color: #9196FF;
+        }
+
+        label {
+            color: white;
+        }
+    }
+
+    .v-text-field__details {
+        .v-messages.error--text {
+            color: #FF5B5B !important;
+            caret-color: #FF5B5B !important;
+        }
+    }
+
+    .button {
+        background-color: #004BD7 !important;
+    }
+
+    .button.v-btn--disabled {
+        background: #333341 !important;
+        color: #545467 !important;
+    }
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]:hover,
+input[type="number"]:focus {
+    -moz-appearance: number-input;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    transition-property: background-color, color !important;
+    transition-duration: 50000s !important;
+    transition-timing-function: ease-in-out, ease-in-out !important;
+}

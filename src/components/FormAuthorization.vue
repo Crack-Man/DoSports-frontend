@@ -1,47 +1,59 @@
 <template>
-  <v-form class="form-auth" v-if="!userIsAuthorized" ref="form">
-    <label for="login"> E-mail/Логин
-    </label>
-    <v-text-field
-        class="input"
-        name="login"
-        v-model="user.login"
-        :rules="rules.login"
-        hide-details="auto"
-        required
-        dark
-    ></v-text-field>
-    <label for="password"> Пароль
-    </label>
-    <v-text-field
-        class="input"
-        name="password"
-        :append-icon="showPass ? 'mdi-eye dark' : 'mdi-eye-off dark'"
-        :type="showPass ? 'text' : 'password'"
-        @click:append="showPass = !showPass"
-        v-model="user.password"
-        :rules="rules.password"
-        hide-details="auto"
-        required
-        dark
-    ></v-text-field>
-    <div class="registration-link">
-      Еще нет аккаунта?<router-link class="reg" to="/reg">Зарегистрироваться</router-link>
-    </div>
+    <v-form class="form-auth" v-if="!userIsAuthorized" ref="form">
+        <v-text-field
+            label="Почта/Логин"
+            class="input"
+            name="login"
+            v-model="user.login"
+            :rules="rules.login"
+            hide-details="auto"
+            outlined
+            required
+            dark
+        ></v-text-field>
+        <v-text-field
+            label="Пароль"
+            class="input password"
+            name="password"
+            :append-icon="showPass ? 'mdi-eye dark' : 'mdi-eye-off dark'"
+            :type="showPass ? 'text' : 'password'"
+            @click:append="showPass = !showPass"
+            v-model="user.password"
+            :rules="rules.password"
+            hide-details="auto"
+            outlined
+            required
+            dark
+        ></v-text-field>
 
-    <restore-password></restore-password>
+        <div class="error-auth">
+            {{ text }}
+        </div>
 
-    <v-btn
-        class="button"
-        :loading="this.restoreProgress"
-        @click="auth"
-    >
-      Войти
-    </v-btn>
-    <a href="/api/vk-auth">Войти через VK</a>
-    {{ message }}
-  </v-form>
-  <error-405 v-else></error-405>
+        <restore-password></restore-password>
+
+        <div class="registration-link">
+            Еще нет аккаунта?
+            <router-link class="reg" to="/reg">Зарегистрироваться</router-link>
+        </div>
+
+        <div class="button-group">
+            <v-btn
+                class="button"
+                :loading="this.restoreProgress"
+                @click="auth"
+            >
+                Войти
+            </v-btn>
+
+            <a href="/api/vk-auth" class="entry-vk">
+                <img
+                    :src="require('../assets/img/png/entry-vk.png')"
+                />
+            </a>
+        </div>
+    </v-form>
+    <error-405 v-else></error-405>
 </template>
 
 <script>
@@ -50,106 +62,131 @@ import {mapGetters, mapActions} from 'vuex';
 import Error405 from "./Error405";
 
 export default {
-  name: "FormAuthorization",
+    name: "FormAuthorization",
 
-  components: {
-    'restore-password': RestorePassword,
-    "error-405": Error405
-  },
-
-  data: () => ({
-    user: {
-      login: "",
-      password: ""
+    components: {
+        'restore-password': RestorePassword,
+        "error-405": Error405
     },
 
-    rules: {
-      login: [
-        v => !!v || "Введите логин",
-        v => /^[_.\-@\w]+$/.test(v) || 'Некорректный логин',
-      ],
+    data: () => ({
+        user: {
+            login: "",
+            password: ""
+        },
 
-      password: [
-        v => !!v || "Введите пароль"
-      ]
+        rules: {
+            login: [
+                v => !!v || "Введите логин",
+                v => /^[_.\-@\w]+$/.test(v) || 'Некорректный логин',
+            ],
+
+            password: [
+                v => !!v || "Введите пароль",
+            ]
+        },
+
+        text: "",
+
+        resetText: true,
+        showPass: false,
+    }),
+
+    computed: {
+        ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton", 'userIsAuthorized']),
     },
 
-    showPass: false,
-  }),
+    watch: {
+        'user.login' () {
+            this.text = "";
+        },
 
-  computed: {
-    ...mapGetters(['authStatus', 'message', 'restoreProgress', "time", "nonActiveButton", 'userIsAuthorized']),
-  },
+        'user.password' () {
+            if (this.resetText) this.text = "";
+            this.resetText = true;
+        }
+    },
 
-  methods: {
-    ...mapActions(['authRequest', 'checkAuth']),
-    auth() {
-      if (this.$refs.form.validate()) {
-        this.authRequest(this.user).then(() => {
-          if (this.authStatus === "Success") {
-            this.$router.push("/").then(() => {
-              this.checkAuth()
-            });
-          }
-        });
-      }
+    methods: {
+        ...mapActions(['authRequest', 'checkAuth']),
+        auth() {
+            this.text = "";
+            if (this.$refs.form.validate()) {
+                this.authRequest(this.user).then(() => {
+                    if (this.authStatus === "Success") {
+                        this.$router.push("/").then(() => {
+                            this.checkAuth()
+                        });
+                    } else {
+                        if (this.message) {
+                            this.resetText = false;
+                            this.user.password = "";
+                            this.$refs.form.resetValidation();
+                            this.text = "Проверьте правильность логина или пароля";
+                        }
+                    }
+                });
+            }
+        },
     }
-  }
 }
 </script>
 
 <style lang="scss">
 @import "../assets/main.css";
+@import "../assets/forms.scss";
 
 #app {
-  .form-auth {
-    label {
-      font-family: 'Inter-Regular', sans-serif;
-      font-size: 14px;
-      line-height: 123%;
-      color: #B5B5B8;
+    .form-auth {
+        .registration-link {
+            font-family: 'Inter-Regular', sans-serif;
+            font-size: 16px;
+            line-height: 180%;
+            margin-top: 5px;
+
+            .reg {
+                font-family: 'Inter-Regular', sans-serif !important;
+                margin: 0 0 0 20px;
+                text-decoration-line: underline !important;
+            }
+        }
+
+        .error-auth {
+            line-height: 135%;
+            font-size: 14px;
+            font-family: "Inter-Regular", sans-serif;
+            position: relative;
+            bottom: 9px;
+        }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+
+            .entry-vk {
+                margin-left: 25px;
+                width: 215px;
+                height: 50px;
+
+                img {
+                    display: block;
+                    max-width: 100%;
+                }
+            }
+
+            .button {
+                margin-top: 0;
+            }
+        }
     }
 
-    .v-text-field__slot {
-      border: none;
-    }
-
-    .input {
-      border: 2px solid #B5B5B8;
-      border-radius: 4px;
-      width: 50%;
-      height: 55px;
-    }
-
-    .button {
-      height: 50px;
-      width: 173px;
-      font-family: "Inter-Regular", sans-serif;
-      font-size: 18px;
-      line-height: 180%;
-      text-transform: none;
-      letter-spacing: 0px;
-    }
-    .registration-link{
-      font-family: 'Inter-Regular',sans-serif;
-      font-size: 16px;
-      line-height: 180%;
-    .reg{
-      font-family: 'Inter-Regular',sans-serif!important;
-      margin: 0 0 0 20px;
-      text-decoration-line: underline!important;
-    }
-    }
-  }
 }
 
 #app.dark {
-  .form-auth {
-    .button {
-      background: #004BD7;
-      color: #ffff;
+    .error-auth {
+        color: #FF5B5B;
     }
-  }
 }
 
 </style>

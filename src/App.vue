@@ -58,7 +58,7 @@ export default {
     margin: 0;
     padding: 0;
     font-size: 18px;
-    font-family: "Inter-Regular", serif;
+    font-family: "Inter-Regular", sans-serif;
 
     a, a:active, a:visited, a:hover {
         text-decoration: none !important;

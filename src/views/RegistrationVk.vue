@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <form-reg-vk></form-reg-vk>
+        <form-reg-vk/>
     </div>
 </template>
 

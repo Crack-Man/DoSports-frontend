@@ -197,7 +197,7 @@ export default {
             }
 
             .text {
-                font-family: "Roboto-BoldItalic", serif;
+                font-family: "Roboto-BoldItalic", sans-serif;
                 font-size: 16px;
                 margin: 0 7px;
 
@@ -224,7 +224,7 @@ export default {
 
         .menu {
             display: none;
-            font-family: "Inter-Regular", serif;
+            font-family: "Inter-Regular", sans-serif;
 
             @media(min-width: 960px) {
                 font-size: 16px;
@@ -256,7 +256,7 @@ export default {
                 align-items: flex-end;
                 margin: 0 -10px;
 
-                font-family: "Inter-SemiBold", serif;
+                font-family: "Inter-SemiBold", sans-serif;
                 font-size: 20px;
             }
 
@@ -284,7 +284,7 @@ export default {
             }
 
             .login {
-                font-family: "Inter-Bold", serif;
+                font-family: "Inter-Bold", sans-serif;
                 margin: 0 6px;
             }
 
@@ -302,7 +302,7 @@ export default {
 
             .action {
                 cursor: pointer;
-                font-family: "Inter-Bold", serif;
+                font-family: "Inter-Bold", sans-serif;
                 font-size: 20px;
             }
         }

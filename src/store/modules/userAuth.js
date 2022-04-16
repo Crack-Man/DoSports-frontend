@@ -90,9 +90,9 @@ export default {
                     ctx.commit("increaseRestoreStep");
                     ctx.commit("updateRestoreMessage", res.data.text);
                     ctx.dispatch("startTimer", 60);
+                } else {
+                    ctx.commit("updateRestoreData", res.data);
                 }
-                ctx.commit("updateRestoreData", res.data);
-                ctx.dispatch("setRestoreProgress", false);
             });
         },
 
@@ -114,11 +114,10 @@ export default {
                     if (res.data.match) {
                         ctx.commit("increaseRestoreStep");
                     } else {
-                        res.data.text = "Неверный код";
+                        res.data.text = "Код введен неверно";
                     }
                 }
                 ctx.commit("updateRestoreData", res.data);
-                ctx.dispatch("setRestoreProgress", false);
             });
         },
 

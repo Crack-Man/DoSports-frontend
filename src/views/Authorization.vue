@@ -1,6 +1,6 @@
 <template>
     <v-container class="">
-      <title-page name="Авторизация"></title-page>
+        <title-page name="Авторизация"></title-page>
         <form-auth></form-auth>
     </v-container>
 </template>

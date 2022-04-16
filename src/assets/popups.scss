@@ -1,0 +1,65 @@
+#app {
+    .v-overlay--active {
+        .v-overlay__scrim {
+            opacity: 1 !important;
+            background-color: rgba(0, 0, 0, 0.8) !important;
+        }
+    }
+
+    .v-dialog {
+        border-radius: 10px !important;
+
+        .v-card {
+            width: 100%;
+            height: 100%;
+            padding: 50px;
+            position: relative;
+
+            .close {
+                position: absolute;
+                top: 24px;
+                right: 24px;
+
+                width: 12px;
+                height: 12px;
+
+                span {
+                    width: 12px;
+                    height: 12px;
+
+                    img {
+                        max-width: 100%;
+                    }
+                }
+            }
+
+            .close::before {
+                display: none;
+            }
+
+            h1.popup-title {
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 32px;
+                line-height: 115%;
+            }
+        }
+
+
+    }
+}
+
+#app.dark {
+    .v-dialog {
+        .v-card {
+            background: #1A1A27 !important;
+
+            i {
+                color: white !important;
+            }
+        }
+
+        h1 {
+            color: white;
+        }
+    }
+}

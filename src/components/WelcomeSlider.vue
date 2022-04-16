@@ -154,7 +154,7 @@ export default {
             .content {
 
                 h1 {
-                    font-family: "Oswald-Bold", serif;
+                    font-family: "Oswald-Bold", sans-serif;
                     font-size: 56px;
                     line-height: 120%;
                     white-space: pre-wrap;
@@ -162,7 +162,7 @@ export default {
 
                 .description {
                     margin-top: 15px;
-                    font-family: "Inter-Regular", serif;
+                    font-family: "Inter-Regular", sans-serif;
                     font-size: 24px;
                     width: 520px;
                     line-height: 140%;
@@ -175,7 +175,7 @@ export default {
                     padding: 15px;
 
                     span {
-                        font-family: "Inter-Medium", serif;
+                        font-family: "Inter-Medium", sans-serif;
                         font-size: 18px;
                     }
                 }
