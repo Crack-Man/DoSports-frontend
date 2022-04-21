@@ -1,18 +1,20 @@
 <template>
-    <v-container class="">
-        <title-page name="Авторизация"></title-page>
-        <form-auth></form-auth>
-    </v-container>
+    <div class="">
+        <v-container>
+            <form-auth></form-auth>
+        </v-container>
+        <footer-main/>
+    </div>
 </template>
 
 <script>
 import FormAuthorization from '@/components/FormAuthorization.vue'
-import Title from "@/components/Title";
+import Footer from "@/components/Footer";
 export default {
     name: "Authorization",
     components: {
         'form-auth': FormAuthorization,
-        'title-page': Title
+        "footer-main": Footer,
     }
 }
 </script>

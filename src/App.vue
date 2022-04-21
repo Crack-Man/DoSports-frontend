@@ -1,11 +1,13 @@
 <template>
     <v-app v-bind:class="theme">
         <v-main>
-            <div class="progress-main" v-if="this.progress">
-            </div>
-            <div v-else>
-                <header-main/>
-                <router-view/>
+            <div class="content-main">
+                <div class="progress-main" v-if="this.progress">
+                </div>
+                <div v-else>
+                    <header-main/>
+                    <router-view/>
+                </div>
             </div>
         </v-main>
     </v-app>

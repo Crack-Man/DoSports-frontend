@@ -53,6 +53,7 @@ export default {
             this.resendActivateCode(this.email);
             this.changeButtonStatus(true);
             this.startTimer(60);
+            this.startTimer(60);
         },
 
         closePopup() {

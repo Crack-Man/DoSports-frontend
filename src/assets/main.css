@@ -29,6 +29,12 @@
 }
 
 @font-face {
+    font-family: "Oswald-Regular";
+    font-display: auto;
+    src: url("../../public/fonts/Oswald/Oswald-Regular.ttf");
+}
+
+@font-face {
     font-family: "Oswald-Medium";
     font-display: auto;
     src: url("../../public/fonts/Oswald/Oswald-Medium.ttf");

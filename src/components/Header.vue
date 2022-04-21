@@ -7,8 +7,10 @@
                          :src="require('../assets/img/png/logo.png')"
                     />
                 </router-link>
-                <router-link to="/">
-                    <div class="text">DO SPORTS</div>
+                <router-link to="/" class="text">
+                    <img
+                        :src="require('../assets/img/png/DO_SPORTS-small.png')"
+                    />
                 </router-link>
             </div>
             <ul class="menu">
@@ -98,21 +100,6 @@ export default {
     data: () => ({
         drawer: false,
 
-        menu_pages: [
-            {
-                name: 'Калькуляторы',
-                url: '/'
-            },
-            {
-                name: 'Атлас тела',
-                url: '/'
-            },
-            {
-                name: 'Статьи',
-                url: '/'
-            },
-        ],
-
         userLinks: [
             { title: 'Выйти' },
         ]
@@ -120,11 +107,29 @@ export default {
 
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
-    },
 
-    watch: {
-        userIsAuthorized() {
-            this.checkAuthUser();
+        menu_pages() {
+            let menu_pages = [
+                {
+                    name: 'Калькуляторы',
+                    url: '/'
+                },
+                {
+                    name: 'Атлас тела',
+                    url: '/'
+                },
+                {
+                    name: 'Статьи',
+                    url: '/'
+                },
+            ]
+            if (this.userIsAuthorized) {
+                menu_pages.unshift({
+                    name: 'Спортивная программа',
+                    url: 'sport-program'
+                })
+            }
+            return menu_pages;
         }
     },
 
@@ -137,35 +142,7 @@ export default {
                 this.$router.push("/");
             });
         },
-
-        checkAuthUser() {
-            if (this.userIsAuthorized) {
-                this.menu_pages.push({
-                    name: 'Спортивная программа',
-                    url: 'sport-program'
-                })
-            } else {
-                this.menu_pages = [
-                    {
-                        name: 'Калькуляторы',
-                        url: '/'
-                    },
-                    {
-                        name: 'Атлас тела',
-                        url: '/'
-                    },
-                    {
-                        name: 'Статьи',
-                        url: '/'
-                    },
-                ]
-            }
-        }
     },
-
-    mounted() {
-        this.checkAuthUser();
-    }
 }
 </script>
 
@@ -174,9 +151,9 @@ export default {
 
 #app {
     .header {
-        height: 46px;
+        height: 48px;
 
-        @media(min-width: 960px) {
+        @media(min-width: 961px) {
             height: 80px;
         }
     }
@@ -190,31 +167,29 @@ export default {
         .link-main {
             display: flex;
             align-items: center;
-            margin: 0 -7px;
-
-            @media(min-width: 960px) {
-                margin: 0 -10px;
-            }
 
             .text {
                 font-family: "Roboto-BoldItalic", sans-serif;
                 font-size: 16px;
-                margin: 0 7px;
+                margin-left: 20px;
 
-                @media(min-width: 960px) {
+                @media(min-width: 961px) {
                     font-size: 28px;
-                    margin: 0 10px;
                 }
             }
 
             .logo {
-                margin: 0 10px;
-
-                @media(max-width: 960px) {
+                @media(max-width: 961px) {
                     width: 37px;
-                    margin: 0 7px;
                 }
 
+                img {
+                    display: block;
+                    max-width: 100%;
+                }
+            }
+
+            .text {
                 img {
                     display: block;
                     max-width: 100%;
@@ -225,11 +200,11 @@ export default {
         .menu {
             display: none;
             font-family: "Inter-Regular", sans-serif;
+            padding-left: 0 !important;
 
-            @media(min-width: 960px) {
+            @media(min-width: 961px) {
                 font-size: 16px;
                 display: flex;
-                margin: 0 -18px;
             }
 
             @media(min-width: 1264px) {
@@ -237,13 +212,17 @@ export default {
             }
 
             li {
-                margin: 0 18px;
+                margin-left: 35px;
                 list-style-type: none;
+            }
+
+            li:first-child {
+                margin-left: 0;
             }
         }
 
         .menu-burger {
-            @media(min-width: 960px) {
+            @media(min-width: 961px) {
                 display: none;
             }
         }
@@ -251,19 +230,13 @@ export default {
         .auth {
             display: none;
 
-            @media(min-width: 960px) {
+            @media(min-width: 961px) {
                 display: flex;
                 align-items: flex-end;
-                margin: 0 -10px;
 
-                font-family: "Inter-SemiBold", sans-serif;
+                font-family: "Inter-Medium", sans-serif;
                 font-size: 20px;
             }
-
-            a {
-                margin: 0 10px;
-            }
-
             .icon {
                 img {
                     display: block;
@@ -271,13 +244,17 @@ export default {
                     bottom: 7px;
                 }
             }
+
+            .entry {
+                margin-left: 20px;
+            }
         }
 
         .userLinks {
             display: none;
 
 
-            @media(min-width: 960px) {
+            @media(min-width: 961px) {
                 display: flex;
                 align-items: center;
                 margin: 0 -6px;
@@ -312,6 +289,20 @@ export default {
 #app.dark {
     .header {
         background-color: #1A1A27;
+    }
+
+    .header-container {
+        .menu {
+            li {
+                a:hover {
+                    color: #9196FF !important;
+                }
+            }
+        }
+
+        .entry:hover {
+            color: #9196FF !important;
+        }
     }
 }
 </style>

@@ -1,12 +1,15 @@
 <template>
     <div class="">
-        <v-container v-if="!userIsAuthorized">
-            <title-page name="Регистрация"></title-page>
-            <div class="page-content">
-                <form-reg/>
-                <explanation :text="this.explanation"/>
-            </div>
-        </v-container>
+        <div v-if="!userIsAuthorized">
+            <v-container>
+                <title-page name="Регистрация"></title-page>
+                <div class="page-content">
+                    <form-reg/>
+                    <explanation :text="this.explanation"/>
+                </div>
+            </v-container>
+            <footer-main/>
+        </div>
         <v-container v-else>
             <error-405></error-405>
         </v-container>
@@ -19,6 +22,7 @@ import Title from "@/components/Title";
 import Explanation from "@/components/Explanation";
 import Error405 from "@/components/Error405";
 import {mapGetters} from "vuex";
+import Footer from "@/components/Footer";
 
 export default {
     name: "Registration",
@@ -26,7 +30,8 @@ export default {
         'form-reg': FormRegistration,
         'title-page': Title,
         'explanation': Explanation,
-        "error-405": Error405
+        "error-405": Error405,
+        "footer-main": Footer,
     },
 
     data: () => ({

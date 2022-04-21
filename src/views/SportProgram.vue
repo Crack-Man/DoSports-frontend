@@ -7,6 +7,7 @@
             <div v-else>
                 <program-base-info></program-base-info>
             </div>
+            <footer-main/>
         </div>
     </div>
 </template>
@@ -15,13 +16,15 @@
 import ProgramBaseInfo from "../components/ProgramBaseInfo";
 import Error405 from "@/components/Error405";
 import {mapActions, mapGetters} from "vuex";
+import Footer from "@/components/Footer";
 
 export default {
     name: "SportProgram",
 
     components: {
         "program-base-info": ProgramBaseInfo,
-        "error-405": Error405
+        "error-405": Error405,
+        "footer-main": Footer,
     },
 
     data: () => ({
