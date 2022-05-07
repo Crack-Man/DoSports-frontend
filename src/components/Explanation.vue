@@ -32,6 +32,10 @@ export default {
             font-size: 18px;
             line-height: 140%;
             white-space: pre-line;
+
+            @media (max-width: 700px) {
+                margin-left: 10px;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 <template>
     <div class="">
+        <header-main/>
         <div v-if="!userIsAuthorized">
             <v-container>
                 <title-page name="Регистрация"></title-page>
@@ -23,10 +24,12 @@ import Explanation from "@/components/Explanation";
 import Error405 from "@/components/Error405";
 import {mapGetters} from "vuex";
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export default {
     name: "Registration",
     components: {
+        "header-main": Header,
         'form-reg': FormRegistration,
         'title-page': Title,
         'explanation': Explanation,

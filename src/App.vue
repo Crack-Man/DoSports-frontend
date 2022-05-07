@@ -5,7 +5,6 @@
                 <div class="progress-main" v-if="this.progress">
                 </div>
                 <div v-else>
-                    <header-main/>
                     <router-view/>
                 </div>
             </div>
@@ -15,13 +14,11 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import Header from "./components/Header";
 
 export default {
     name: 'App',
 
     components: {
-        "header-main": Header,
     },
 
     data: () => ({

@@ -112,7 +112,7 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 4">
-                    <h1 class="popup-title">Ваш пароль успешно восстановлен</h1>
+                    <h1 class="popup-title end">Ваш пароль успешно восстановлен</h1>
 
                     <v-card-actions>
                         <v-btn
@@ -293,6 +293,10 @@ export default {
 
     .v-card__text {
         padding: 0;
+
+        .popup-title.end {
+            text-align: center;
+        }
 
 
         .form-restore {

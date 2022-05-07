@@ -120,7 +120,8 @@ export default {
                 this.authRequest(this.user).then(() => {
                     if (this.authStatus === "Success") {
                         this.$router.push("/").then(() => {
-                            this.checkAuth()
+                            // this.checkAuth();
+                            this.$router.go(0);
                         });
                     } else {
                         if (this.message) {
@@ -170,6 +171,7 @@ export default {
             margin-top: 30px;
 
             .entry-vk {
+                position: relative;
                 margin-left: 25px;
                 width: 215px;
                 height: 50px;
@@ -178,6 +180,25 @@ export default {
                     display: block;
                     max-width: 100%;
                 }
+            }
+
+            .entry-vk::before {
+                background-color: currentColor;
+                border-radius: inherit;
+                bottom: 0;
+                color: inherit;
+                content: "";
+                left: 0;
+                opacity: 0;
+                pointer-events: none;
+                position: absolute;
+                right: 0;
+                top: 0;
+                transition: opacity 0.2s cubic-bezier(0.4, 0, 0.6, 1);
+            }
+
+            .entry-vk:hover::before {
+                opacity: 0.08;
             }
 
             .button {

@@ -1,5 +1,6 @@
 <template>
     <div class="">
+        <header-main/>
         <welcome-slider/>
         <advantages-slider/>
         <gid-slider/>
@@ -20,12 +21,15 @@ import SliderDownloadApp from "@/components/SliderDownloadApp";
 import SliderArticles from "@/components/SliderArticles";
 
 import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export default {
     name: 'Home',
 
     components: {
+        "header-main": Header,
         "welcome-slider": SliderWelcome,
+
         "advantages-slider": SliderAdvantages,
         "gid-slider": SliderGid,
         'invite-slider': SliderInviteBanner,

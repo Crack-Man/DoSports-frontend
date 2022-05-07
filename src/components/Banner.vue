@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="container-banner">
         <div class="banner">
             <div class="title">ВСТУПАЙ В НАШ КЛУБ</div>
             <button-join/>
@@ -37,6 +37,7 @@ export default {
         width: 100%;
         height: 250px;
         padding: 65px;
+        background-size: 100% 100% !important;
 
         .title {
             font-family: 'Oswald-Bold', sans-serif !important;

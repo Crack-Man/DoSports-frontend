@@ -22,6 +22,14 @@ export default {
         font-size: 44px;
         line-height: 148%;
         margin: 50px 0 30px 0;
+
+        @media (max-width: 1263px) {
+            font-size: 38px;
+        }
+
+        @media (max-width: 945px) {
+            font-size: 34px;
+        }
     }
 }
 
