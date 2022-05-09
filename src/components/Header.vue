@@ -420,9 +420,9 @@ body.lock {
                 display: none;
                 margin-right: 25px;
 
-                @media (max-width: 960px) {
-                    display: block;
-                }
+                //@media (max-width: 960px) {
+                //    display: block;
+                //}
 
                 @media (max-width: 450px) {
                     margin-right: 15px;

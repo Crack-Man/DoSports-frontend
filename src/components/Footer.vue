@@ -283,6 +283,11 @@ export default {
                     @media (max-width: 550px) {
                         margin-top: 25px;
                     }
+
+                    @media (max-width: 350px) {
+                        margin-top: 20px;
+                        font-size: 13px;
+                    }
                 }
             }
 
@@ -335,7 +340,7 @@ export default {
                     }
 
                     @media (max-width: 350px) {
-                        width: 120px;
+                        width: 130px;
                     }
 
                     img {
@@ -353,10 +358,6 @@ export default {
 
                     @media (max-width: 550px) {
                         margin-top: 15px;
-                    }
-
-                    @media (max-width: 350px) {
-                        margin-top: 25px;
                     }
                 }
             }

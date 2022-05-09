@@ -27,7 +27,7 @@
                         <div class="title">
                             {{ item.title }}
                         </div>
-                        <explanation :text="item.description"/>
+                        <explanation :texts="item.description"/>
                     </div>
                 </div>
                 <div class="right" v-else-if="item.posImg === 'right'">
@@ -35,7 +35,7 @@
                         <div class="title">
                             {{ item.title }}
                         </div>
-                        <explanation :text="item.description"/>
+                        <explanation :texts="item.description"/>
                     </div>
                     <div :class="item.classImg">
                         <img
@@ -85,7 +85,9 @@ export default {
                 classText: 'text start-program',
                 posImg: "left",
                 title: "Начните свою программу",
-                description: "После регистрации вам будет предложено пройти небольшой тест, после которого мы сформируем минимальные требования к достижению\nоптимального веса"
+                description: [{
+                    text: "После регистрации вам будет предложено пройти небольшой тест, после которого мы сформируем минимальные требования к достижению\nоптимального веса"
+                }]
             },
             {
                 image: require('@/assets/img/png/screen-food.png'),
@@ -97,7 +99,9 @@ export default {
                 classText: 'text food',
                 posImg: "right",
                 title: "Следуйте графику\nпитания",
-                description: "В базе данных представлено множество продуктов, из которых вы сможете составить собственный рацион. Во время добавления продуктов вы сможете отслеживать соотношение КБЖУ, чтобы находиться в пределах нормы"
+                description: [{
+                    text: "В базе данных представлено множество продуктов, из которых вы сможете составить собственный рацион. Во время добавления продуктов вы сможете отслеживать соотношение КБЖУ, чтобы находиться в пределах нормы"
+                }]
             },
             {
                 image: require('@/assets/img/png/screen-food.png'),
@@ -109,7 +113,9 @@ export default {
                 classText: 'text train',
                 posImg: "left",
                 title: "Составьте план тренировок",
-                description: "На основе вашей весовой категории и образа\nжизни будут предложены индивидуальные\nрежимы тренировок, из которых вы сможете\nотобрать понравившиеся упражнения и добавить\nв собственный план"
+                description: [{
+                    text: "На основе вашей весовой категории и образа\nжизни будут предложены индивидуальные\nрежимы тренировок, из которых вы сможете\nотобрать понравившиеся упражнения и добавить\nв собственный план"
+                }]
             }
         ]
     })
@@ -381,7 +387,7 @@ export default {
                     }
                 }
 
-                .explanation {
+                .container-explanation {
                     margin-top: 30px;
                     margin-left: 0;
 

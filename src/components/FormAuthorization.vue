@@ -119,7 +119,7 @@ export default {
             if (this.$refs.form.validate()) {
                 this.authRequest(this.user).then(() => {
                     if (this.authStatus === "Success") {
-                        this.$router.push("/").then(() => {
+                        this.$router.push("/sport-program").then(() => {
                             // this.checkAuth();
                             this.$router.go(0);
                         });

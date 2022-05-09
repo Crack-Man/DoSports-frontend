@@ -324,7 +324,7 @@ class Swipe {
         }
 
         @media (max-width: 450px) {
-            margin-top: -150px;
+            margin-top: -120px;
         }
 
         .header-slider {
@@ -355,7 +355,7 @@ class Swipe {
                 display: flex;
                 align-items: center;
 
-                @media (max-width: 1263px) {
+                @media (max-width: 700px) {
                     display: none;
                 }
 

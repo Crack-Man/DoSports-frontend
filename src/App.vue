@@ -64,10 +64,14 @@ export default {
     }
 
     .container {
-        padding: 24px;
+        padding: 0 15px;
+
+        @media (min-width: 450px) {
+            padding: 0 30px;
+        }
 
         @media (min-width: 960px) {
-            padding: 0px;
+            padding: 0;
         }
 
         @media (min-width: 1264px) {

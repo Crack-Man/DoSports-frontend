@@ -6,7 +6,7 @@
                 <title-page name="Регистрация"></title-page>
                 <div class="page-content">
                     <form-reg/>
-                    <explanation :text="this.explanation"/>
+                    <explanation :texts="this.explanation"/>
                 </div>
             </v-container>
             <footer-main/>
@@ -38,11 +38,14 @@ export default {
     },
 
     data: () => ({
-        explanation: "На указанную в форме почту придёт сообщение \n" +
-            "с подтверждением регистрации.\n" +
-            "\n" +
-            "В случае если этого не произошло, \n" +
-            "попробуйте зайти в папку \"спам\"."
+        explanation: [{
+            text:
+                "На указанную в форме почту придёт сообщение \n" +
+                "с подтверждением регистрации.\n" +
+                "\n" +
+                "В случае если этого не произошло, \n" +
+                "попробуйте зайти в папку \"спам\"."
+        }]
     }),
 
     computed: {

@@ -228,8 +228,8 @@ export default {
         },
 
         redirect() {
-            this.$router.push("/").then(() => {
-                this.checkAuth();
+            this.$router.push("/sport-program").then(() => {
+                this.$router.go(0);
             });
         },
 

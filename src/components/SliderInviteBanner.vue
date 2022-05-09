@@ -26,22 +26,9 @@ export default {
     },
 
     methods: {
-        // heightBannerMobile() {
-        //     let width = window.innerWidth;
-        //     if (width <= 700) {
-        //         let proportion = width > 450 ? 700 / 1175 : 720 / 1349;
-        //         console.log(proportion)
-        //         let bannerMobile = document.querySelector('.banner-mobile');
-        //         bannerMobile.style.height = `${Math.round(width / proportion)}px`;
-        //     }
-        // }
     },
 
     mounted() {
-        // this.heightBannerMobile();
-        // window.onresize = () => {
-        //     this.heightBannerMobile();
-        // }
     }
 }
 </script>
@@ -107,13 +94,13 @@ export default {
             display: none;
 
             position: relative;
-            top: -20px;
             width: 100%;
             background: url("../assets/img/png/banner-main-tablet.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
 
             @media (max-width: 700px) {
+                top: -20px;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -122,7 +109,16 @@ export default {
                 height: calc(100vw / (720 / 1349));
             }
 
+            @media (max-width: 700px) and (max-height: 450px) {
+                background: url("../assets/img/png/banner-main-mobile-album.png");
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+
+                height: calc(100vw / (1400 / 1935));
+            }
+
             @media (max-width: 450px) {
+                top: -15px;
                 background: url("../assets/img/png/banner-main-mobile.png");
                 background-repeat: no-repeat;
                 background-size: 100% 100%;
@@ -139,6 +135,10 @@ export default {
 
                     @media (max-width: 700px) {
                         font-size: 90px;
+                    }
+
+                    @media (max-width: 700px) and (max-height: 450px) {
+                        font-size: 75px;
                     }
 
                     @media (max-width: 580px) {
@@ -167,6 +167,10 @@ export default {
                 width: 100%;
                 justify-content: center;
                 margin-top: 50px;
+
+                @media (max-width: 700px) and (max-height: 450px) {
+                    margin-top: 30px;
+                }
 
                 @media (max-width: 500px) {
                     margin-top: 40px;

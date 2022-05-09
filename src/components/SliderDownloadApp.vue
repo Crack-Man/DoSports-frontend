@@ -69,7 +69,8 @@ export default {
         }
 
         @media (max-width: 700px) {
-            padding: 15px 0;
+            margin-top: 130px;
+            padding: 35px 0;
         }
 
         @media (max-width: 650px) {
@@ -77,12 +78,13 @@ export default {
         }
 
         @media (max-width: 600px) {
-            padding: 100px 0 750px 0;
+            padding: 150px 0 800px 0;
+            margin-top: 0;
             bottom: 120px;
         }
 
         @media (max-width: 550px) {
-            padding-bottom: 700px;
+            padding-bottom: 750px;
         }
 
         @media (max-width: 500px) {
@@ -90,15 +92,15 @@ export default {
         }
 
         @media (max-width: 450px) {
-            padding-bottom: 550px;
+            padding-bottom: 600px;
         }
 
         @media (max-width: 400px) {
-            padding-bottom: 400px;
+            padding-bottom: 450px;
         }
 
         @media (max-width: 350px) {
-            padding-bottom: 350px;
+            padding-bottom: 375px;
         }
 
         .container {
@@ -154,6 +156,7 @@ export default {
             align-items: center;
 
             @media (max-width: 700px) {
+                margin-top: 25px;
                 align-items: flex-start;
                 flex-direction: column;
             }
@@ -255,7 +258,7 @@ export default {
             }
 
             @media (max-width: 700px) {
-                bottom: -15px;
+                bottom: -35px;
             }
 
             @media (max-width: 650px) {
@@ -266,13 +269,13 @@ export default {
             @media (max-width: 600px) {
                 width: 550px;
                 left: calc(50% - 550px / 2);
-                bottom: -750px;
+                bottom: -800px;
             }
 
             @media (max-width: 550px) {
                 width: 500px;
                 left: calc(50% - 500px / 2);
-                bottom: -700px;
+                bottom: -750px;
             }
 
             @media (max-width: 500px) {
@@ -284,19 +287,19 @@ export default {
             @media (max-width: 450px) {
                 width: 400px;
                 left: calc(50% - 400px / 2);
-                bottom: -550px;
+                bottom: -600px;
             }
 
             @media (max-width: 400px) {
                 width: 300px;
                 left: calc(50% - 300px / 2);
-                bottom: -400px;
+                bottom: -450px;
             }
 
             @media (max-width: 350px) {
                 width: 250px;
                 left: calc(50% - 250px / 2);
-                bottom: -350px;
+                bottom: -375px;
             }
 
             img {

@@ -47,24 +47,25 @@
     // Радио кнопка
     label.gender {
         font-family: "Inter-Regular", sans-serif;
-        font-size: 13px;
+        font-size: 14px;
         line-height: 123%;
         position: relative;
         bottom: 10px;
     }
 
     .v-input.gender {
-        margin-top: 0px;
+        margin-top: 0;
     }
 
     .v-radio {
         margin-right: 23px;
 
         .v-input--selection-controls__input {
+            margin-top: -1px;
             margin-right: 3px;
 
             i::before {
-                font-size: 15px;
+                font-size: 17px;
             }
 
             .v-input--selection-controls__ripple {
@@ -73,8 +74,14 @@
         }
 
         label {
-            color: white !important;
+            font-family: 'Inter-Regular', sans-serif;
+            font-size: 16px;
+            line-height: 145%;
         }
+    }
+
+    .v-radio:not(:last-child):not(:only-child) {
+        margin-bottom: 10px;
     }
 
     // Чекбокс кнопка
@@ -345,6 +352,12 @@
     .v-picker--date .primary--text {
         color: white !important;
         caret-color: white !important;
+    }
+
+    .v-radio {
+        label {
+            color: white !important;
+        }
     }
 
     .input.error--text {

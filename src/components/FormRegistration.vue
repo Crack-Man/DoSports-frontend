@@ -310,5 +310,13 @@ export default {
             }
         }
     }
+
+    .container-explanation {
+        .text {
+            @media (max-width: 1263px) {
+                font-size: 14px !important;
+            }
+        }
+    }
 }
 </style>
