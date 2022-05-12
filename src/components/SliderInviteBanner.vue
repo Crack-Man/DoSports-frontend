@@ -41,10 +41,12 @@ export default {
         z-index: 1;
 
         @media (max-width: 960px) {
+            padding-top: 130px;
             padding-bottom: 300px;
         }
 
         @media (max-width: 850px) {
+            padding-top: 110px;
             padding-bottom: 250px;
         }
 
@@ -58,6 +60,8 @@ export default {
         }
 
         .container-banner {
+            margin-top: 0;
+
             @media (max-width: 700px) {
                 display: none !important;
             }

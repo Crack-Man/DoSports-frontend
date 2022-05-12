@@ -97,6 +97,10 @@ export default {
             bottom: calc(50% - 50px / 2);
         }
     }
+
+    span.selected-text {
+        font-style: italic;
+    }
 }
 
 #app.dark {
@@ -109,6 +113,10 @@ export default {
 
     .progress-main {
         background-color: #090914;
+    }
+
+    span.selected-text {
+        color: #9196FF;
     }
 }
 </style>

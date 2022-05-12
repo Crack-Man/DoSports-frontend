@@ -57,31 +57,34 @@
                             dark
                         ></v-radio>
                     </v-radio-group>
-                    <div class="aim-group" v-if="weightCategory.name === 'нормальный вес'">
+                    <div v-if="weightCategory.name === 'нормальный вес'">
                         <label class="aim">Цель программы</label>
-                        <v-radio-group
-                            v-model="program.aim"
-                        >
-                            <v-radio
-                                class="support"
-                                value="0"
-                                label="Поддержание веса"
-                                dark
-                            ></v-radio>
-                            <v-radio
-                                class="down"
-                                value="1"
-                                label="Сброс веса"
-                                dark
-                            ></v-radio>
-                            <v-radio
-                                class="up"
-                                value="2"
-                                label="Набор веса"
-                                dark
-                            ></v-radio>
-                        </v-radio-group>
+                        <div class="aim-group">
+                            <v-radio-group
+                                v-model="program.aim"
+                            >
+                                <v-radio
+                                    class="support"
+                                    value="0"
+                                    label="Поддержание веса"
+                                    dark
+                                ></v-radio>
+                                <v-radio
+                                    class="down"
+                                    value="1"
+                                    label="Сброс веса"
+                                    dark
+                                ></v-radio>
+                                <v-radio
+                                    class="up"
+                                    value="2"
+                                    label="Набор веса"
+                                    dark
+                                ></v-radio>
+                            </v-radio-group>
+                        </div>
                     </div>
+
                     <v-btn
                         @click="this.calculateProgram"
                         color="primary"
@@ -114,8 +117,8 @@ export default {
         program: {
             idUser: 0,
             bmi: 0,
-            height: 0,
-            weight: 0,
+            height: "",
+            weight: "",
             weightCategory: 0,
             lifestyle: 1,
             trainPrepare: "0",
@@ -145,7 +148,10 @@ export default {
             let explanation = [];
             if (this.bmi && isFinite(this.bmi))
                 explanation.push({text: `Ваш ИМТ - ${this.bmi}. У вас ${this.weightCategory.name}.`, class: "bmi"});
-            explanation.push({text: "Прежде, чем начать будет рассчитан индекс массы тела, дневная норма потребления питательных веществ и калорий.\n\nИсходя из рекомендаций системы, вы сможете самостоятельно назначить углеводность дней, количество приемов пищи, потребляемые продукты и их количество, а также составить индивидуальный план силовых и кардиотренировок.", class: "prompt"})
+            explanation.push({
+                text: "Прежде, чем начать будет рассчитан индекс массы тела, дневная норма потребления питательных веществ и калорий.\n\nИсходя из рекомендаций системы, вы сможете самостоятельно назначить углеводность дней, количество приемов пищи, потребляемые продукты и их количество, а также составить индивидуальный план силовых и кардиотренировок.",
+                class: "prompt"
+            })
             return explanation;
         },
 
@@ -246,7 +252,6 @@ export default {
     mounted() {
         this.showWeightCategoryList();
         this.showLifestyleList();
-        this.showWeightCategoryList();
         if (this.userIsAuthorized) {
             this.program.idUser = this.userData.id;
             this.checkActiveProgram(this.userData.id).then(() => {
@@ -304,9 +309,14 @@ export default {
                 line-height: 123%;
             }
 
+            .train-prepare {
+                display: block;
+                margin-top: -2px;
+            }
+
             .train-prepare-group {
                 .v-radio:not(:last-child):not(:only-child) {
-                    margin-bottom: 5px;
+                    margin-bottom: 10px;
                 }
             }
 
@@ -330,8 +340,18 @@ export default {
                 width: 430px;
             }
 
+            .aim {
+                display: block;
+                margin-top: 5px;
+            }
+
             .aim-group {
-                margin-top: 20px;
+                margin-top: 15px;
+
+                .v-input--radio-group {
+                    padding-top: 0;
+                    margin-top: 15px;
+                }
             }
 
             .button {

@@ -20,22 +20,20 @@
                 <div class="list">
                     <div class="track">
                         <div class="item" v-for="(article, index) in articles" :key="index">
-                            <div class="image">
-                                <router-link to="/">
+                                <router-link class="image" :to="article.link">
                                     <img
                                         :src="article.image"
                                     >
                                 </router-link>
-                            </div>
                             <div class="text">
-                                <router-link to="/">
+                                <router-link :to="article.link">
                                     <div class="title">{{ article.title }}</div>
                                 </router-link>
-                                <router-link to="/">
+                                <router-link :to="article.link">
                                     <div class="description">{{ article.description }}</div>
                                 </router-link>
                             </div>
-                            <router-link to="/" class="link">+ Читать подробнее</router-link>
+                            <router-link :to="article.link" class="link">+ Читать подробнее</router-link>
                         </div>
                     </div>
                 </div>
@@ -52,35 +50,27 @@ export default {
     data: () => ({
         articles: [
             {
-                image: require('@/assets/img/png/article1.png'),
-                title: "Почему бег важен в борьбе за идеальные формы?",
-                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста"
+                image: require('@/assets/img/png/article-sweets.png'),
+                title: "Почему мне хочется сладкого?",
+                description: "Если вам постоянно хочется сладкого, стоит задуматься — причина может быть далеко не безобидная.",
+                link: "/articles/why-do-i-want-sweets"
             },
             {
                 image: require('@/assets/img/png/article2.png'),
                 title: "Почему бег важен в борьбе за идеальные формы?",
-                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста"
+                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста",
+                link: "/"
             },
             {
                 image: require('@/assets/img/png/article3.png'),
                 title: "Почему бег важен в борьбе за идеальные формы?",
-                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста"
+                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста",
+                link: "/"
             },
         ]
     }),
 
     methods: {
-        swipeStart() {
-
-        },
-
-        swipeAction() {
-
-        },
-
-        swipeEnd() {
-
-        }
     },
 
     mounted() {
@@ -315,6 +305,10 @@ class Swipe {
         overflow: hidden;
         padding-top: 155px;
 
+        @media (max-width: 960px) {
+            padding-top: 95px;
+        }
+
         @media (max-width: 700px) {
             padding-top: 70px;
         }
@@ -426,6 +420,7 @@ class Swipe {
                 }
 
                 .image {
+                    display: block;
                     width: 100%;
                     height: 197px;
 
@@ -466,6 +461,7 @@ class Swipe {
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
+                        border-radius: 4px;
 
                         // чтобы они не перетаскивались мышью
                         pointer-events: none;

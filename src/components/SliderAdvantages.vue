@@ -56,23 +56,31 @@ export default {
     }
 
     .advantages-slider {
-        margin-top: 165px;
-        margin-bottom: 0;
+        padding: 165px 0;
+
+        @media (max-width: 1185px) and (max-height: 1300px) {
+            margin-top: calc((100vh - 85px - (100vh - 85px) * 0.75) * (-1) + 165px);
+        }
+
+        @media (max-width: 1185px) and (max-height: 1200px) {
+            margin-top: calc((100vh - 85px - (100vh - 85px) * 0.65) * (-1) + 165px);
+        }
+
+        @media (max-width: 1185px) and (max-height: 720px) {
+            margin-top: 0;
+        }
 
         @media (max-width: 1035px) and (max-height: 1300px) {
-            margin-top: 75px;
+            padding: 120px 0;
+            margin-top: 0;
         }
 
         @media (max-width: 960px) {
-            margin-top: 75px;
-        }
-
-        @media (max-width: 945px) {
-            margin-top: 45px;
+            padding: 120px 0;
         }
 
         @media (max-width: 700px) {
-            margin-top: 50px;
+            padding: 50px 0;
         }
 
         h1 {
@@ -99,24 +107,19 @@ export default {
         .advantage-list {
             display: flex;
             justify-content: space-between;
-            margin: 50px 0 150px 0;
+            margin-top: 50px;
 
             @media (max-width: 960px) {
                 margin-top: 35px;
-                margin-bottom: 100px;
             }
 
             @media (max-width: 810px) {
                 margin-top: 20px;
             }
 
-            @media (max-width: 710px) {
+            @media (max-width: 750px) {
                 margin-top: 25px;
                 flex-direction: column;
-            }
-
-            @media (max-width: 700px) {
-                margin-bottom: 50px;
             }
 
             .item {
@@ -126,12 +129,13 @@ export default {
                 margin-left: 20px;
 
                 @media (max-width: 850px) {
-                    margin-left: 0;
+                    margin-left: 10px;
                 }
 
-                @media (max-width: 710px) {
+                @media (max-width: 750px) {
                     justify-content: stretch;
                     margin-top: 25px;
+                    margin-left: 0;
                 }
 
                 .image {
@@ -149,10 +153,11 @@ export default {
                     }
 
                     @media (max-width: 770px) {
+                        margin-right: 10px;
                         flex: 0 0 18px;
                     }
 
-                    @media (max-width: 710px) {
+                    @media (max-width: 750px) {
                         margin-top: 4px;
                         flex: 0 0 20px;
                     }
@@ -181,7 +186,7 @@ export default {
                             font-size: 20px !important;
                         }
 
-                        @media (max-width: 710px) {
+                        @media (max-width: 750px) {
                             font-size: 24px !important;
                         }
                     }
@@ -206,7 +211,7 @@ export default {
                             font-size: 12px;
                         }
 
-                        @media (max-width: 710px) {
+                        @media (max-width: 750px) {
                             display: none;
                             font-size: 16px;
                             margin-top: 10px;
@@ -220,7 +225,7 @@ export default {
                     .description.split {
                         display: none;
 
-                        @media (max-width: 710px) {
+                        @media (max-width: 750px) {
                             display: block;
                         }
 
@@ -234,7 +239,7 @@ export default {
             .item:first-child {
                 margin-left: 0;
 
-                @media (max-width: 710px) {
+                @media (max-width: 750px) {
                     margin-top: 0;
                 }
             }

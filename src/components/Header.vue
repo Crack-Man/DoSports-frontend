@@ -24,8 +24,17 @@
                     </router-link>
                 </div>
                 <ul class="menu">
-                    <li v-for="(page, index) in menu_pages" :key="index">
+                    <li v-for="(page, index) in menuPages" :key="index">
                         <router-link class="link" :to="page.url">{{ page.name }}</router-link>
+                        <div v-if="page.submenuPages" class="sub-menu">
+                            <router-link
+                                v-for="(subPage, subIndex) in page.submenuPages"
+                                :key="subIndex"
+                                :to="subPage.url"
+                            >
+                                {{ subPage.name }}
+                            </router-link>
+                        </div>
                     </li>
                 </ul>
                 <div class="user-links" v-if="userIsAuthorized">
@@ -35,40 +44,17 @@
                     >
                         {{ userData.login }}
                     </div>
-                    <v-menu
-                        bottom
-                        left
-                        offset-y
-                    >
-                        <template v-slot:activator="{ on, attrs }">
-                            <img
-                                :src="require('../assets/img/png/menu-button.png')"
-                                v-bind="attrs"
-                                v-on="on"
-                            />
-                            <span
-                                class="login"
-                                v-bind="attrs"
-                                v-on="on"
-                            >
-                                {{ userData.login }}
-                            </span>
-                        </template>
-                        <v-list
-                            dark
-                            class="action-list"
-                        >
-                            <v-list-item class="action" v-if="userIsAdmin">
-                                <v-list-item-title>Админ-панель</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item class="action">
-                                <v-list-item-title>Профиль</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item class="action">
-                                <v-list-item-title @click="this.logout">Выйти</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
+                    <div class="menu-button">
+                        <img
+                            @click="menuButton"
+                            :src="require('../assets/img/png/menu-button.png')"
+                        />
+                    </div>
+                    <div class="profile-menu">
+                        <router-link v-if="userIsAdmin" to="/">Админ-панель</router-link>
+                        <router-link to="/">Профиль</router-link>
+                        <span @click="this.logout">Выйти</span>
+                    </div>
                     <div class="menu-burger" @click="activeMenu()">
                         <span class="top"></span>
                         <span class="center"></span>
@@ -103,10 +89,21 @@
                 <div class="links">
                     <div
                         class="item"
-                        v-for="(page, index) in menu_pages"
+                        v-for="(page, index) in menuPages"
                         :key="index"
                     >
-                        <router-link class="link" :to="page.url">{{ page.name }}</router-link>
+                        <router-link v-if="!page.submenuPages" class="link" :to="page.url">{{ page.name }}</router-link>
+                        <a class="link" v-else @click="subMenuMobile">{{ page.name }}</a>
+                        <img class="arrow-submenu" @click="subMenuMobile" v-if="page.submenuPages" :src="require('@/assets/img/png/arrow-submenu.png')">
+                        <div v-if="page.submenuPages" class="sub-menu">
+                            <router-link
+                                v-for="(subPage, subIndex) in page.submenuPages"
+                                :key="subIndex"
+                                :to="subPage.url"
+                            >
+                                {{ subPage.name }}
+                            </router-link>
+                        </div>
                     </div>
                 </div>
                 <div class="mail">
@@ -125,9 +122,7 @@ export default {
     name: "Header",
 
     data: () => ({
-        userLinks: [
-            { title: 'Выйти' },
-        ],
+        showProfileMenu: false,
     }),
 
     props: ['screen'],
@@ -135,11 +130,21 @@ export default {
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
 
-        menu_pages() {
-            let menu_pages = [
+        menuPages() {
+            let menuPages = [
                 {
                     name: 'Калькуляторы',
-                    url: '/'
+                    url: '/',
+                    submenuPages: [
+                        {
+                            name: 'Калькулятор ИМТ',
+                            url: '/calc-bmi'
+                        },
+                        {
+                            name: 'Калькулятор БЖУ',
+                            url: '/calc-pfc'
+                        },
+                    ]
                 },
                 {
                     name: 'Атлас тела',
@@ -151,17 +156,29 @@ export default {
                 },
             ]
             if (this.userIsAuthorized) {
-                menu_pages.unshift({
+                menuPages.unshift({
                     name: 'Спортивная программа',
                     url: 'sport-program'
                 })
             }
-            return menu_pages;
+            return menuPages;
         }
     },
 
     methods: {
         ...mapActions(['unauthorized']),
+
+        menuButton() {
+            this.showProfileMenu = !this.showProfileMenu
+        },
+
+        subMenuMobile(event) {
+            if (event.target.classList.contains("link")) {
+                event.target.nextElementSibling.classList.toggle("active");
+            } else {
+                event.target.classList.toggle("active");
+            }
+        },
 
         logout() {
             this.unauthorized().then(() => {
@@ -306,12 +323,58 @@ body.lock {
             }
 
             li {
+                position: relative;
+                display: block;
                 margin-left: 35px;
                 list-style-type: none;
+
+                a {
+                    display: block;
+                    height: 100%;
+                }
             }
 
             li:first-child {
                 margin-left: 0;
+            }
+
+            .sub-menu {
+                display: none;
+                width: 200px;
+                position: absolute;
+                left: -15px;
+                padding: 40px 20px 20px 20px;
+                border-radius: 0 0 5px 5px;
+                z-index: 0;
+
+                @media (max-width: 1265px) {
+                    width: 180px;
+                }
+
+                a {
+                    display: block;
+                    clear:both;
+                    float:left;
+                    font-family: 'Inter-Regular', sans-serif;
+                    font-size: 18px;
+                    line-height: 122%;
+
+                    @media (max-width: 1265px) {
+                        font-size: 16px;
+                    }
+                }
+
+                a:not(:last-child):not(:only-child) {
+                    margin-bottom: 15px;
+                }
+            }
+
+            a:hover + .sub-menu {
+                display: block;
+            }
+
+            .sub-menu:hover {
+                display: block;
             }
         }
 
@@ -400,50 +463,87 @@ body.lock {
         }
 
         .user-links {
+            position: relative;
             display: flex;
             align-items: center;
-            margin: 0 -6px;
+            cursor: pointer;
 
             .login {
                 font-family: "Inter-Bold", sans-serif;
-                margin: 0 6px;
             }
 
 
-            div.login {
-                @media (max-width: 960px) {
-                    display: none;
-                }
-            }
-
-            span.login {
-                display: none;
-                margin-right: 25px;
-
-                //@media (max-width: 960px) {
-                //    display: block;
-                //}
-
+            .login {
                 @media (max-width: 450px) {
                     margin-right: 15px;
                     font-size: 14px;
                 }
             }
 
-            img {
-                display: block;
-                cursor: pointer;
-                margin: 0 6px;
+            .profile-menu {
+                display: none;
+                position: absolute;
+                left: -15px;
+                margin-top: 150px;
+                width: 172px;
+                padding: 40px 20px 20px 20px;
+                border-radius: 0 0 5px 5px;
 
-                @media (max-width: 960px) {
-                    display: none;
+                @media (max-width: 1265px) {
+                    width: 150px;
                 }
+
+                a {
+                    display: block;
+                    clear:both;
+                    float:left;
+
+                    font-family: 'Inter-Regular', sans-serif;
+                    font-size: 18px;
+                    line-height: 122%;
+                    margin-bottom: 15px;
+
+                    @media (max-width: 1265px) {
+                        font-size: 16px;
+                    }
+                }
+
+                span {
+                    display: block;
+                    clear:both;
+                    float:left;
+                    cursor: pointer;
+
+                    @media (max-width: 1265px) {
+                        font-size: 16px;
+                    }
+                }
+
+                span:not(:last-child):not(:only-child) {
+                    margin-bottom: 15px;
+                }
+            }
+
+            .menu-button {
+                margin-left: 15px;
+
+                img {
+                    display: block;
+                    width: 100%;
+                }
+            }
+        }
+
+        .user-links:hover {
+            .profile-menu {
+                display: block;
             }
         }
     }
 
     .v-menu__content {
         margin: 7px 0;
+
         .action-list {
 
             .action {
@@ -476,6 +576,41 @@ body.lock {
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 18px;
                 line-height: 115%;
+            }
+        }
+
+        .arrow-submenu {
+            cursor: pointer;
+            margin-left: 15px;
+            width: 11px;
+            height: auto;
+        }
+
+        .arrow-submenu.active {
+            transform: rotate(90deg);
+        }
+
+        .arrow-submenu.active + .sub-menu {
+            display: block;
+        }
+
+        .sub-menu {
+            display: none;
+            cursor: pointer;
+
+            margin-top: 15px;
+            padding-bottom: 7px;
+
+            a {
+                display: block;
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 14px;
+                line-height: 115%;
+                margin-left: 10px;
+            }
+
+            a:not(:last-child):not(:only-child) {
+                margin-bottom: 10px;
             }
         }
 
@@ -518,6 +653,10 @@ body.lock {
                     color: #9196FF !important;
                 }
             }
+
+            .sub-menu {
+                background: #1A1A27;
+            }
         }
 
         .menu-burger {
@@ -546,6 +685,14 @@ body.lock {
                     color: #9196FF !important;
                 }
             }
+        }
+    }
+
+    .profile-menu {
+        background: #1A1A27;
+
+        a:hover, span:hover {
+            color: #9196FF !important;
         }
     }
 

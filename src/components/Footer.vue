@@ -71,11 +71,11 @@ export default {
             let menu_pages = [
                 {
                     name: 'Калькулятор ИМТ',
-                    url: '/'
+                    url: '/calc-bmi'
                 },
                 {
                     name: 'Калькулятор БЖУ',
-                    url: '/'
+                    url: '/calc-pfc'
                 },
                 {
                     name: 'Атлас тела',
@@ -89,12 +89,12 @@ export default {
             if (this.userIsAuthorized) {
                 menu_pages.unshift({
                     name: 'Спортивная программа',
-                    url: 'sport-program'
+                    url: '/sport-program'
                 })
             } else {
                 menu_pages.push({
                     name: 'Личный кабинет',
-                    url: 'auth'
+                    url: '/auth'
                 })
             }
             return menu_pages;

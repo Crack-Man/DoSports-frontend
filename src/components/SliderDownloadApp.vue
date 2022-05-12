@@ -69,12 +69,8 @@ export default {
         }
 
         @media (max-width: 700px) {
-            margin-top: 130px;
+            margin-top: 0;
             padding: 35px 0;
-        }
-
-        @media (max-width: 650px) {
-            padding: 0 0;
         }
 
         @media (max-width: 600px) {
@@ -114,13 +110,8 @@ export default {
             line-height: 125%;
 
             @media (max-width: 1263px) {
-                width: 360px;
+                width: 365px;
                 font-size: 36px;
-            }
-
-            @media (max-width: 800px) {
-                width: 325px;
-                font-size: 32px;
             }
 
             @media (max-width: 800px) {
@@ -263,7 +254,7 @@ export default {
 
             @media (max-width: 650px) {
                 width: 300px;
-                bottom: 0;
+                bottom: -35px;
             }
 
             @media (max-width: 600px) {

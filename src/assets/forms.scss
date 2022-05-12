@@ -84,6 +84,12 @@
         margin-bottom: 10px;
     }
 
+    .form-reg {
+        .v-radio:not(:last-child):not(:only-child) {
+            margin-bottom: 0px;
+        }
+    }
+
     // Чекбокс кнопка
     .v-input--checkbox.personal {
         margin-top: 5px;

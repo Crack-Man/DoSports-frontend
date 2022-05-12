@@ -49,11 +49,11 @@ export default {
         pages: [
             {
                 name: 'Калькулятор\nИМТ',
-                url: '/'
+                url: '/calc-bmi'
             },
             {
                 name: 'Калькулятор\nБЖУ',
-                url: '/'
+                url: '/calc-pfc'
             },
             {
                 name: 'Атлас\nтела',
@@ -92,9 +92,15 @@ export default {
         height: calc(100vh - 80px);
         position: relative;
 
+        @media (max-width: 1035px) and (max-height: 1300px) {
+            height: 690px;
+        }
+
+
         .header {
             display: none;
             background-color: rgba(0, 0, 0, 0);
+
 
             @media (max-width: 700px) {
                 display: block;
