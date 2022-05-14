@@ -25,7 +25,8 @@
                 </div>
                 <ul class="menu">
                     <li v-for="(page, index) in menuPages" :key="index">
-                        <router-link class="link" :to="page.url">{{ page.name }}</router-link>
+                        <router-link class="link" v-if="!page.submenuPages" :to="page.url">{{ page.name }}</router-link>
+                        <a class="link unhovered" v-else>{{ page.name }}</a>
                         <div v-if="page.submenuPages" class="sub-menu">
                             <router-link
                                 v-for="(subPage, subIndex) in page.submenuPages"
@@ -134,7 +135,6 @@ export default {
             let menuPages = [
                 {
                     name: 'Калькуляторы',
-                    url: '/',
                     submenuPages: [
                         {
                             name: 'Калькулятор ИМТ',
@@ -152,7 +152,7 @@ export default {
                 },
                 {
                     name: 'Статьи',
-                    url: '/'
+                    url: '/articles'
                 },
             ]
             if (this.userIsAuthorized) {
@@ -203,7 +203,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../assets/main.css";
+@import "../assets/scss/fonts.css";
 
 body.lock {
     position: fixed;
@@ -651,6 +651,10 @@ body.lock {
             li {
                 a:hover {
                     color: #9196FF !important;
+                }
+
+                a.unhovered:hover {
+                    color: white !important;
                 }
             }
 

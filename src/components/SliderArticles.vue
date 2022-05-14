@@ -3,7 +3,7 @@
         <v-container>
             <div class="header-slider">
                 <h1 class="title">ПОЛЕЗНЫЕ СТАТЬИ</h1>
-                <router-link to="/" class="link">
+                <router-link to="/articles" class="link">
                     <span>Смотреть все</span>
                     <div class="image">
                         <img
@@ -56,10 +56,10 @@ export default {
                 link: "/articles/why-do-i-want-sweets"
             },
             {
-                image: require('@/assets/img/png/article2.png'),
-                title: "Почему бег важен в борьбе за идеальные формы?",
-                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста",
-                link: "/"
+                image: require('@/assets/img/png/article-smoke.png'),
+                title: "Ухудшает ли курение память?",
+                description: "Курение буквально \"разлагает\" мозг, нарушая способность к обучению и рассуждению, а также ухудшая память.",
+                link: "/articles/does-smoking-impair-memory"
             },
             {
                 image: require('@/assets/img/png/article3.png'),

@@ -1,53 +1,53 @@
 @font-face {
     font-family: "Roboto-BoldItalic";
     font-display: auto;
-    src: url("../../public/fonts/Roboto/Roboto-BoldItalic.ttf");
+    src: url("../../../public/fonts/Roboto/Roboto-BoldItalic.ttf");
 }
 
 @font-face {
     font-family: "Inter-Regular";
     font-display: auto;
-    src: url("../../public/fonts/Inter/Inter-Regular.otf");
+    src: url("../../../public/fonts/Inter/Inter-Regular.otf");
 }
 
 @font-face {
     font-family: "Inter-Medium";
     font-display: auto;
-    src: url("../../public/fonts/Inter/Inter-Medium.otf");
+    src: url("../../../public/fonts/Inter/Inter-Medium.otf");
 }
 
 @font-face {
     font-family: "Inter-SemiBold";
     font-display: auto;
-    src: url("../../public/fonts/Inter/Inter-SemiBold.otf");
+    src: url("../../../public/fonts/Inter/Inter-SemiBold.otf");
 }
 
 @font-face {
     font-family: "Inter-Bold";
     font-display: auto;
-    src: url("../../public/fonts/Inter/Inter-Bold.otf");
+    src: url("../../../public/fonts/Inter/Inter-Bold.otf");
 }
 
 @font-face {
     font-family: "Oswald-Regular";
     font-display: auto;
-    src: url("../../public/fonts/Oswald/Oswald-Regular.ttf");
+    src: url("../../../public/fonts/Oswald/Oswald-Regular.ttf");
 }
 
 @font-face {
     font-family: "Oswald-Medium";
     font-display: auto;
-    src: url("../../public/fonts/Oswald/Oswald-Medium.ttf");
+    src: url("../../../public/fonts/Oswald/Oswald-Medium.ttf");
 }
 
 @font-face {
     font-family: "Oswald-SemiBold";
     font-display: auto;
-    src: url("../../public/fonts/Oswald/Oswald-SemiBold.ttf");
+    src: url("../../../public/fonts/Oswald/Oswald-SemiBold.ttf");
 }
 
 @font-face {
     font-family: "Oswald-Bold";
     font-display: auto;
-    src: url("../../public/fonts/Oswald/Oswald-Bold.ttf");
+    src: url("../../../public/fonts/Oswald/Oswald-Bold.ttf");
 }

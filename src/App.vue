@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./assets/main.css";
+@import "assets/scss/fonts.css";
 
 #app {
     margin: 0;

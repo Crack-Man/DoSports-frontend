@@ -89,7 +89,7 @@
 
                         <v-text-field
                             label="Повторите новый пароль"
-                            class="input"
+                            class="input restore"
                             :append-icon="showPassRepeat ? 'mdi-eye' : 'mdi-eye-off'"
                             :type="showPassRepeat ? 'text' : 'password'"
                             @click:append="showPassRepeat = !showPassRepeat"
@@ -270,9 +270,9 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../assets/main.css";
-@import "../assets/forms.scss";
-@import "../assets/popups.scss";
+@import "../assets/scss/fonts.css";
+@import "../assets/scss/forms";
+@import "../assets/scss/popups";
 
 #app {
     .restore-pass {
@@ -316,6 +316,10 @@ export default {
                 margin-top: 23px;
             }
 
+            .input.restore {
+                margin-top: 20px;
+            }
+
             .text-restore {
                 margin: 10px auto 0 auto;
                 text-align: center;
@@ -330,6 +334,7 @@ export default {
         }
 
         .v-card__actions {
+            margin-top: -2px;
             padding: 0;
 
             .button {
@@ -339,7 +344,7 @@ export default {
             }
 
             .button.entry {
-                margin-top: 20px;
+                margin-top: 20px !important;
             }
         }
     }

@@ -9,6 +9,8 @@ import StartProgram from "@/views/StartProgram";
 import SportProgram from "@/views/SportProgram";
 import CalculatorBMI from "@/views/CalculatorBMI";
 import ArticleSweets from "@/views/ArticleSweets";
+import Articles from "@/views/Articles";
+import ArticleSmoke from "@/views/ArticleSmoke";
 
 Vue.use(VueRouter)
 
@@ -45,7 +47,7 @@ const routes = [
 
     {
         path: '/auth',
-        name: 'Авторизация',
+        name: 'Вход',
         component: Authorization
     },
 
@@ -62,9 +64,21 @@ const routes = [
     },
 
     {
+        path: '/articles',
+        name: 'Статьи',
+        component: Articles
+    },
+
+    {
         path: '/articles/why-do-i-want-sweets',
         name: 'Почему мне хочется сладкого?',
         component: ArticleSweets
+    },
+
+    {
+        path: '/articles/does-smoking-impair-memory',
+        name: 'Ухудшает ли курение память?',
+        component: ArticleSmoke
     },
 ]
 

@@ -307,6 +307,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../assets/main.css";
-@import "../assets/forms.scss";
+@import "../assets/scss/fonts.css";
+@import "../assets/scss/forms";
 </style>

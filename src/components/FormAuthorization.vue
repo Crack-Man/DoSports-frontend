@@ -1,6 +1,6 @@
 <template>
     <div  v-if="!userIsAuthorized">
-        <title-page name="Авторизация"></title-page>
+        <title-page name="Вход"></title-page>
         <v-form class="form-auth" ref="form">
             <v-text-field
                 label="Почта/Логин"
@@ -139,8 +139,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "../assets/main.css";
-@import "../assets/forms.scss";
+@import "../assets/scss/fonts.css";
+@import "../assets/scss/forms";
 
 #app {
     .form-auth {

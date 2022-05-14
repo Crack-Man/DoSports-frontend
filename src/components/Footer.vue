@@ -83,7 +83,7 @@ export default {
                 },
                 {
                     name: 'Статьи',
-                    url: '/'
+                    url: '/articles'
                 },
             ]
             if (this.userIsAuthorized) {
@@ -118,12 +118,15 @@ export default {
         },
     },
 
+    watch: {
+    },
+
     mounted() {
-        this.positionFooter();
+        setTimeout(() => {this.positionFooter();}, 500);
+
         window.onresize = () => {
             this.positionFooter();
         }
-
     }
 }
 </script>
