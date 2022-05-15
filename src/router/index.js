@@ -11,6 +11,7 @@ import CalculatorBMI from "@/views/CalculatorBMI";
 import ArticleSweets from "@/views/ArticleSweets";
 import Articles from "@/views/Articles";
 import ArticleSmoke from "@/views/ArticleSmoke";
+import ArticleBeer from "@/views/ArticleBeer";
 
 Vue.use(VueRouter)
 
@@ -79,6 +80,12 @@ const routes = [
         path: '/articles/does-smoking-impair-memory',
         name: 'Ухудшает ли курение память?',
         component: ArticleSmoke
+    },
+
+    {
+        path: '/articles/does-beer-break-down-muscles',
+        name: 'Разрушает ли пиво мышцы?',
+        component: ArticleBeer
     },
 ]
 

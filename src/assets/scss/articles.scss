@@ -48,6 +48,19 @@
                     line-height: 145%;
                     margin-bottom: 0;
                 }
+                ul {
+                    margin-top: 20px;
+
+                    li {
+                        font-family: 'Inter-Regular', sans-serif;
+                        font-size: 18px;
+                        line-height: 145%;
+                    }
+
+                    li:not(:first-child):not(:only-child) {
+                        margin-top: 10px;
+                    }
+                }
 
                 h1 {
                     margin-top: 45px;

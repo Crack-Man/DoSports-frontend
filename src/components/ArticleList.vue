@@ -43,9 +43,9 @@ export default {
                 link: "/articles/does-smoking-impair-memory"
             },
             {
-                image: require('@/assets/img/png/article-empty.png'),
-                title: "Ухудшает ли курение память?",
-                link: "/"
+                image: require('@/assets/img/png/article-beer.png'),
+                title: "Разрушает ли пиво мышцы?",
+                link: "/articles/does-beer-break-down-muscles"
             },
             {
                 image: require('@/assets/img/png/article-empty.png'),

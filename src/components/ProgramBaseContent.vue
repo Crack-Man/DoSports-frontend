@@ -175,18 +175,18 @@ export default {
             }
 
             .right {
-                margin-right: 130px;
+                margin-right: 180px;
                 font-family: 'Inter-Medium', sans-serif;
-                font-size: 24px;
+                font-size: 20px;
                 line-height: 135%;
             }
         }
 
         .title-table {
-            margin-top: 30px;
+            margin-top: 40px;
 
             font-family: 'Inter-Medium', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             line-height: 180%;
         }
 

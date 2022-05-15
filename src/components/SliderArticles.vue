@@ -62,10 +62,10 @@ export default {
                 link: "/articles/does-smoking-impair-memory"
             },
             {
-                image: require('@/assets/img/png/article3.png'),
-                title: "Почему бег важен в борьбе за идеальные формы?",
-                description: "Рассчитайте ваш индивидуальный индекс массы тела,  позволяющий оценить степень соответствия массы и роста",
-                link: "/"
+                image: require('@/assets/img/png/article-beer.png'),
+                title: "Разрушает ли пиво мышцы?",
+                description: "Умеренное употребление алкоголя — не более 30–40 г этанола в день — не вредит вашей физической форме.",
+                link: "/articles/does-beer-break-down-muscles"
             },
         ]
     }),
