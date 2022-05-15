@@ -81,6 +81,32 @@
                         dark
                         outlined
                     ></v-text-field>
+                    <v-text-field
+                        label="Пароль (необязательно)"
+                        class="input"
+                        :append-icon="showPass ? 'mdi-eye dark' : 'mdi-eye-off dark'"
+                        :type="showPass ? 'text' : 'password'"
+                        @click:append="showPass = !showPass"
+                        :rules="passwordRule"
+                        v-model="newUser.password"
+                        hide-details="auto"
+                        dark
+                        outlined
+                        required
+                    ></v-text-field>
+                    <v-text-field
+                        label="Повторите пароль"
+                        class="input"
+                        :append-icon="showPassRepeat ? 'mdi-eye dark' : 'mdi-eye-off dark'"
+                        :type="showPassRepeat ? 'text' : 'password'"
+                        @click:append="showPassRepeat = !showPassRepeat"
+                        :rules="rules.rePassword"
+                        v-model="passwordRepeat"
+                        hide-details="auto"
+                        dark
+                        outlined
+                        required
+                    ></v-text-field>
                     <v-checkbox
                         label='Нажимая кнопку “Зарегистрироваться”, Вы даете согласие на обработку персональных данных'
                         class="personal"
@@ -135,6 +161,7 @@ export default {
             id_vk: 0,
             email: "",
             login: "",
+            password: ""
         },
 
         placeholderInput: "ДД.ММ.ГГГГ",
@@ -147,6 +174,10 @@ export default {
         menu: false,
         dateFormatted: "",
 
+        showPass: false,
+        showPassRepeat: false,
+        passwordRepeat: "",
+
         rules: {
             birthday:
                 [
@@ -157,9 +188,11 @@ export default {
 
             login: [],
 
+            rePassword: [],
+
             checkbox: [
                 v => !!v
-            ]
+            ],
         }
     }),
 
@@ -208,6 +241,15 @@ export default {
 
     computed: {
         ...mapGetters(['userIsAuthorized', 'regionList', 'loginList', 'emailList', 'userVkData', 'regProgress', 'authStatus', 'vkMatch']),
+
+        passwordRule() {
+            if (this.newUser.password.length > 0 && this.newUser.password.length < 7)
+                return [() => 'Пароль должен состоять как минимум из 7 символов']
+            if (this.newUser.password.length > 0) {
+                return [(v) => /^[^'"`]+$/.test(v) || 'Некорректный пароль']
+            }
+            return []
+        }
     },
 
     methods: {
@@ -263,6 +305,9 @@ export default {
                 v => /^[_.\w]+$/.test(v) || 'Некорректный логин',
                 v => v.length <= 20 || 'Логин должен состоять не более чем из 20 символов',
                 v => !this.loginList.find(obj => obj.login === v) || 'Данный логин уже существует'
+            ];
+            this.rules.rePassword = [
+                v => this.newUser.password === v || 'Пароли должны совпадать'
             ];
         },
 
