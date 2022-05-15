@@ -97,19 +97,47 @@ import {mapActions, mapGetters} from "vuex";
 export default {
     name: "ProgramBaseContent",
 
+    props: ['aim'],
+
     data: () => ({
-        table: [
-            { name: "Калории", aim: 1545, eaten: 6565, amendment: 5656 },
-            { name: "Белки", aim: 45, eaten: 5656, amendment: 36505 },
-            { name: "Жиры", aim: 56, eaten: 566, amendment: 5656 },
-            { name: "Углеводы", aim: 56, eaten: 6565, amendment: 5656 },
-            { name: "Клетчатка", aim: 5665, eaten: 6565, amendment: 5656 },
-        ],
         popupVisible: false
     }),
 
     computed: {
         ...mapGetters(["userData", "programData"]),
+
+        table() {
+            if (this.aim) {
+                let aim = {
+                    calories: this.aim.calories,
+                    proteins: this.aim.proteins,
+                    fats: this.aim.fats,
+                    carbohydrates: this.aim.carbohydrates,
+                    fibers: this.aim.fibers
+                }
+                let eaten = {
+                    calories: 0,
+                    proteins: 0,
+                    fats: 0,
+                    carbohydrates: 0,
+                    fibers: 0
+                }
+                return [
+                    { name: "Калории", aim: aim.calories, eaten: eaten.calories, amendment: aim.calories -  eaten.calories},
+                    { name: "Белки", aim: aim.proteins, eaten: eaten.proteins, amendment: aim.proteins -  eaten.proteins},
+                    { name: "Жиры", aim: aim.fats, eaten: eaten.fats, amendment: aim.fats -  eaten.fats},
+                    { name: "Углеводы", aim: aim.carbohydrates, eaten: eaten.carbohydrates, amendment: aim.carbohydrates -  eaten.carbohydrates},
+                    { name: "Клетчатка", aim: aim.fibers, eaten: eaten.fibers, amendment: aim.fibers - eaten.fibers },
+                ]
+            }
+            return [
+                { name: "Калории", aim: 0, eaten: 0, amendment: 0 },
+                { name: "Белки", aim: 0, eaten: 0, amendment: 0 },
+                { name: "Жиры", aim: 0, eaten: 0, amendment: 0 },
+                { name: "Углеводы", aim: 0, eaten: 0, amendment: 0 },
+                { name: "Клетчатка", aim: 0, eaten: 0, amendment: 0 },
+            ]
+        }
     },
 
     methods: {

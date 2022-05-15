@@ -1,24 +1,33 @@
 <template>
-    <div class="days">
-        <div class="item">День 1</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 2</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 3</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 4</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 5</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 6</div>
-        <div class="spacer-days"></div>
-        <div class="item">День 7</div>
+    <div class="days" v-if="this.schedule['1']">
+        <div
+            class="item"
+            v-for="item in schedule['1']['days']"
+            :key="item.id"
+        >
+            <span :class="currentDate.day === item.id ? 'active' : ''" @click="setDay(item.id)">День {{ item.id }}</span>
+            <div v-if="item.id < 7" class="spacer-days"></div>
+        </div>
     </div>
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
-    name: "ProgramDays"
+    name: "ProgramDays",
+
+    computed: {
+        ...mapGetters(["schedule", "currentDate"]),
+    },
+
+    methods: {
+        ...mapActions(["setCurrentDay"]),
+
+        setDay(day) {
+            this.setCurrentDay(day);
+        }
+    },
 }
 </script>
 
@@ -41,18 +50,18 @@ export default {
         }
 
         .item {
-            cursor: pointer;
-            font-family: 'Inter-Medium', sans-serif;
-            font-size: 16px;
-            line-height: 180%;
-        }
+            display: flex;
+            justify-content: space-between;
+            flex: 1 0 auto;
+            align-items: center;
+            margin-left: 53px;
 
-        .item:first-child {
-            margin-left: 52px;
-        }
-
-        .item:last-child {
-            margin-right: 52px;
+            span {
+                cursor: pointer;
+                font-family: 'Inter-Medium', sans-serif;
+                font-size: 16px;
+                line-height: 180%;
+            }
         }
     }
 }
@@ -66,11 +75,15 @@ export default {
         }
 
         .item {
-            color: #B5B5B8;
+            span {
+                color: #B5B5B8;
+            }
         }
 
-        .item:hover {
-            color: #9196FF;
+        .item {
+            span.active {
+                color: #9196FF;
+            }
         }
     }
 }

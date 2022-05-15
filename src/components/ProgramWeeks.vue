@@ -1,16 +1,36 @@
 <template>
     <div class="weeks">
-        <div class="item">Неделя 1</div>
-        <div class="spacer-week"></div>
-        <div class="item">Неделя 2</div>
-        <div class="spacer-week"></div>
-        <div class="item">Неделя 3</div>
+        <div
+            class="item"
+            v-for="item in schedule"
+            :key="item.id"
+        >
+            <span :class="currentDate.week === item.id ? 'active' : ''" @click="setWeek(item.id)">Неделя {{ item.id }}</span>
+            <div v-if="item.id < 3" class="spacer-week"></div>
+        </div>
     </div>
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
-    name: "ProgramWeeks"
+    name: "ProgramWeeks",
+
+    data: () => ({
+    }),
+
+    computed: {
+        ...mapGetters(["schedule", "currentDate"]),
+    },
+
+    methods: {
+        ...mapActions(["initSchedule", "setCurrentWeek"]),
+
+        setWeek(week) {
+            this.setCurrentWeek(week);
+        }
+    }
 }
 </script>
 
@@ -33,18 +53,18 @@ export default {
         }
 
         .item {
-            cursor: pointer;
-            font-family: 'Inter-Medium', sans-serif;
-            font-size: 24px;
-            line-height: 180%;
-        }
-
-        .item:first-child {
+            display: flex;
+            justify-content: space-between;
+            flex: 1 0 auto;
+            align-items: center;
             margin-left: 131px;
-        }
 
-        .item:last-child {
-            margin-right: 131px;
+            span {
+                cursor: pointer;
+                font-family: 'Inter-Medium', sans-serif;
+                font-size: 24px;
+                line-height: 180%;
+            }
         }
     }
 }
@@ -61,8 +81,10 @@ export default {
             color: #B5B5B8;
         }
 
-        .item:hover {
-            color: #9196FF;
+        .item {
+            span.active {
+                color: #9196FF;
+            }
         }
     }
 }

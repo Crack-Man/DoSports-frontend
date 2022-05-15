@@ -5,12 +5,14 @@
             v-for="(page, index) in menu"
             :key="index"
         >
-            <router-link :to="page.url">{{ page.name }}</router-link>
+            <a @click="changePage(index)" :class="index === programPage ? 'active' : ''">{{ page.name }}</a>
         </div>
     </div>
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
     name: "ProgramSidebar",
 
@@ -25,6 +27,18 @@ export default {
             {name: "Свои продукты", url: "/"},
         ]
     }),
+
+    computed: {
+        ...mapGetters(["programPage"]),
+    },
+
+    methods: {
+        ...mapActions(["setPage"]),
+
+        changePage(id) {
+            this.setPage(id);
+        }
+    }
 }
 </script>
 
@@ -58,7 +72,7 @@ export default {
                 color: #B5B5B8 !important;
             }
 
-            a:hover {
+            a.active {
                 color: #9196FF !important;
             }
         }

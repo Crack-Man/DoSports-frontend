@@ -62,7 +62,9 @@ import {mapGetters} from "vuex";
 export default {
     name: "Footer",
 
-    data: () => ({}),
+    data: () => ({
+        size: document.querySelector('.content-main').scrollHeight
+    }),
 
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
@@ -119,10 +121,16 @@ export default {
     },
 
     watch: {
+        size() {
+            this.positionFooter();
+        }
     },
 
     mounted() {
         setTimeout(() => {this.positionFooter();}, 500);
+        setInterval(() => {
+            this.size = document.querySelector('.content-main').scrollHeight;
+        }, 100)
 
         window.onresize = () => {
             this.positionFooter();

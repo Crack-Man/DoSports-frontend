@@ -5,7 +5,7 @@
             <days/>
             <div class="program-base-container">
                 <sidebar/>
-                <program-base-content/>
+                <program-base-content v-if="programPage === 0" :aim="aim"/>
             </div>
 <!--            <p>{{ this.programData }}</p>-->
 <!--            <v-btn color="primary" @click="deleteProgram">Удалить программу</v-btn>-->
@@ -30,12 +30,26 @@ export default {
         "program-base-content": ProgramBaseContent
     },
 
+    data: () => ({
+    }),
+
     computed: {
-        ...mapGetters(["userData", "programData"]),
+        ...mapGetters(["userData", "programData", "programPage"]),
+
+        aim() {
+            if (!this.programData) return {};
+            return {
+                calories: this.programData.calories,
+                proteins: this.programData.proteins,
+                fats: this.programData.fats,
+                carbohydrates: this.programData.carbohydrates,
+                fibers: this.programData.fibers
+            }
+        }
     },
 
     methods: {
-        ...mapActions(["closeProgram", "showProgram"]),
+        ...mapActions(["initSchedule", "closeProgram", "showProgram"]),
 
         deleteProgram() {
             this.closeProgram(this.userData).then(() => {
