@@ -37,9 +37,9 @@
                 display: none;
             }
 
-            h1.popup-title {
-                font-family: 'Inter-Regular', sans-serif;
-                font-size: 32px;
+            .popup-title {
+                font-family: 'Inter-SemiBold', sans-serif;
+                font-size: 28px;
                 line-height: 115%;
             }
 
@@ -51,7 +51,7 @@
             }
 
             p:first-of-type {
-                margin-top: 30px;
+                margin-top: 26px;
             }
         }
 
@@ -73,7 +73,7 @@
             }
         }
 
-        h1 {
+        .popup-title {
             color: white;
         }
     }

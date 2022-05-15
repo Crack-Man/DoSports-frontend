@@ -1,15 +1,34 @@
 <template>
     <div>
-        <p>{{ this.programData }}</p>
-        <v-btn color="primary" @click="deleteProgram">Удалить программу</v-btn>
+        <v-container>
+            <weeks/>
+            <days/>
+            <div class="program-base-container">
+                <sidebar/>
+                <program-base-content/>
+            </div>
+<!--            <p>{{ this.programData }}</p>-->
+<!--            <v-btn color="primary" @click="deleteProgram">Удалить программу</v-btn>-->
+        </v-container>
     </div>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import ProgramWeeks from "@/components/ProgramWeeks";
+import ProgramDays from "@/components/ProgramDays";
+import ProgramSidebar from "@/components/ProgramSidebar";
+import ProgramBaseContent from "@/components/ProgramBaseContent";
 
 export default {
     name: "ProgramBaseInfo",
+
+    components: {
+        "weeks": ProgramWeeks,
+        "days": ProgramDays,
+        "sidebar": ProgramSidebar,
+        "program-base-content": ProgramBaseContent
+    },
 
     computed: {
         ...mapGetters(["userData", "programData"]),
@@ -31,6 +50,12 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+#app {
+    .program-base-container {
+        margin-top: 40px;
+        display: flex;
+        align-items: flex-start;
+    }
+}
 </style>

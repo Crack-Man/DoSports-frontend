@@ -20,7 +20,7 @@
                     />
                 </v-btn>
                 <v-card-text v-if="this.restoreStep === 1">
-                    <h1 class="popup-title">Восстановление пароля</h1>
+                    <div class="popup-title">Восстановление пароля</div>
 
                     <v-form class="form-restore" ref="form1">
                         <v-text-field
@@ -44,7 +44,7 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 2">
-                    <h1 class="popup-title">Восстановление пароля</h1>
+                    <div class="popup-title">Восстановление пароля</div>
                     <v-form class="form-restore code" ref="form2">
                         <label class="code">Введите код, который пришел вам на почту <span class="email">{{ this.user.email }}</span></label>
                         <v-text-field
@@ -70,7 +70,7 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 3">
-                    <h1 class="popup-title">Восстановление пароля</h1>
+                    <div class="popup-title">Восстановление пароля</div>
 
                     <v-form class="form-restore" ref="form3">
                         <v-text-field
@@ -112,7 +112,7 @@
                 </v-card-text>
 
                 <v-card-text v-if="this.restoreStep === 4">
-                    <h1 class="popup-title end">Ваш пароль успешно восстановлен</h1>
+                    <div class="popup-title end">Ваш пароль успешно восстановлен</div>
 
                     <v-card-actions>
                         <v-btn
@@ -312,6 +312,10 @@ export default {
                 width: 293px;
             }
 
+            .input:first-child {
+                margin-top: 50px;
+            }
+
             .input.code {
                 margin-top: 23px;
             }
@@ -330,7 +334,7 @@ export default {
         }
 
         .form-restore.code {
-            margin-top: 30px;
+            margin-top: 25px;
         }
 
         .v-card__actions {

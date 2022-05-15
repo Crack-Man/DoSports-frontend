@@ -146,7 +146,7 @@ export default {
 
         explanation() {
             let explanation = [];
-            if (this.bmi && isFinite(this.bmi))
+            if (this.bmi && isFinite(this.bmi) && this.weightCategory)
                 explanation.push({text: `Ваш ИМТ - ${this.bmi}. У вас ${this.weightCategory.name}.`, class: "bmi"});
             explanation.push({
                 text: "Прежде, чем начать будет рассчитан индекс массы тела, дневная норма потребления питательных веществ и калорий.\n\nИсходя из рекомендаций системы, вы сможете самостоятельно назначить углеводность дней, количество приемов пищи, потребляемые продукты и их количество, а также составить индивидуальный план силовых и кардиотренировок.",
@@ -156,7 +156,24 @@ export default {
         },
 
         weightCategory() {
-            return this.weightCategoryList.find(obj => this.bmi >= obj.min_bmi && this.bmi <= obj.max_bmi);
+            if (this.weightCategoryList.length) {
+                return this.weightCategoryList.find(obj => this.bmi >= obj.min_bmi && this.bmi <= obj.max_bmi);
+            }
+            return {name: ""};
+        },
+
+        ageUser() {
+            if (this.userIsAuthorized) {
+                let today = new Date();
+                let birthday = new Date(this.userData.birthday);
+                let age = today.getFullYear() - birthday.getFullYear();
+                let months = today.getMonth() - birthday.getMonth();
+                if (months < 0 || (months === 0 && today.getDate() < birthday.getDate())) {
+                    age--;
+                }
+                return age;
+            }
+            return 18;
         }
     },
 
@@ -208,7 +225,7 @@ export default {
         calNorm() {
             let result = 0
             let activity = this.lifestyleList.find(obj => this.program.lifestyle === obj.id).coef;
-            let calc = 10 * this.program.weight + 6.25 * this.program.height - 5 * this.ageUser()
+            let calc = 10 * this.program.weight + 6.25 * this.program.height - 5 * this.ageUser
             if (this.userData.gender === "f") {
                 result = calc - 161;
             } else if (this.userData.gender === "m") {
@@ -216,17 +233,6 @@ export default {
             }
             result *= activity;
             return result;
-        },
-
-        ageUser() {
-            let today = new Date();
-            let birthday = this.userData.birthday;
-            let age = today.getFullYear() - new Date(birthday).getFullYear();
-            let months = today.getMonth() - new Date(birthday).getMonth();
-            if (months < 0 || (months === 0 && today.getDate() < birthday.getDate())) {
-                age--;
-            }
-            return age;
         },
 
         valuePfc(calories) {

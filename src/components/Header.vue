@@ -158,7 +158,7 @@ export default {
             if (this.userIsAuthorized) {
                 menuPages.unshift({
                     name: 'Спортивная программа',
-                    url: 'sport-program'
+                    url: '/sport-program'
                 })
             }
             return menuPages;
@@ -214,7 +214,7 @@ body.lock {
 #app {
     .header {
         height: 80px;
-        width: 100vw;
+        width: 100%;
         position: relative;
         z-index: 2;
 
