@@ -312,14 +312,10 @@ body.lock {
             display: flex;
             font-family: "Inter-Regular", sans-serif;
             padding-left: 0 !important;
-            font-size: 18px;
+            font-size: 16px;
 
             @media(max-width: 960px) {
                 display: none;
-            }
-
-            @media(max-width: 1265px) {
-                font-size: 16px;
             }
 
             li {
@@ -340,7 +336,7 @@ body.lock {
 
             .sub-menu {
                 display: none;
-                width: 200px;
+                width: 179px;
                 position: absolute;
                 left: -15px;
                 padding: 40px 20px 20px 20px;
@@ -356,12 +352,8 @@ body.lock {
                     clear:both;
                     float:left;
                     font-family: 'Inter-Regular', sans-serif;
-                    font-size: 18px;
+                    font-size: 16px;
                     line-height: 122%;
-
-                    @media (max-width: 1265px) {
-                        font-size: 16px;
-                    }
                 }
 
                 a:not(:last-child):not(:only-child) {
@@ -483,15 +475,13 @@ body.lock {
             .profile-menu {
                 display: none;
                 position: absolute;
-                left: -15px;
-                margin-top: 150px;
-                width: 172px;
+                cursor: auto;
+                left: -20px;
+                margin-top: 142px;
+                min-width: 135px;
+                width: calc(100% + 20px);
                 padding: 40px 20px 20px 20px;
                 border-radius: 0 0 5px 5px;
-
-                @media (max-width: 1265px) {
-                    width: 150px;
-                }
 
                 a {
                     display: block;
@@ -499,13 +489,9 @@ body.lock {
                     float:left;
 
                     font-family: 'Inter-Regular', sans-serif;
-                    font-size: 18px;
+                    font-size: 16px;
                     line-height: 122%;
                     margin-bottom: 15px;
-
-                    @media (max-width: 1265px) {
-                        font-size: 16px;
-                    }
                 }
 
                 span {
@@ -513,10 +499,7 @@ body.lock {
                     clear:both;
                     float:left;
                     cursor: pointer;
-
-                    @media (max-width: 1265px) {
-                        font-size: 16px;
-                    }
+                    font-size: 16px;
                 }
 
                 span:not(:last-child):not(:only-child) {
@@ -660,6 +643,7 @@ body.lock {
 
             .sub-menu {
                 background: #1A1A27;
+                filter: drop-shadow(0 50px 20px rgba(0, 0, 0, 0.35));
             }
         }
 
@@ -694,6 +678,7 @@ body.lock {
 
     .profile-menu {
         background: #1A1A27;
+        filter: drop-shadow(0 50px 20px rgba(0, 0, 0, 0.35));
 
         a:hover, span:hover {
             color: #9196FF !important;
