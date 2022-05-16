@@ -24,10 +24,29 @@ export default {
     methods: {
         ...mapActions(["setCurrentDay"]),
 
+        nowDay() {
+            if (Object.keys(this.schedule).length) {
+                let startDate = this.schedule['1'].days['1'].date.getDate();
+                let nowDate = new Date().getDate();
+                let difference = (nowDate - startDate) % 7;
+                this.setCurrentDay(difference + 1);
+            }
+        },
+
         setDay(day) {
             this.setCurrentDay(day);
         }
     },
+
+    watch: {
+        schedule() {
+            this.nowDay();
+        }
+    },
+
+    mounted() {
+        this.nowDay();
+    }
 }
 </script>
 

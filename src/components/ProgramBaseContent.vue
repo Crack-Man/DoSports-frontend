@@ -4,8 +4,8 @@
             <div class="left">
                 <div class="border"></div>
                 <div class="name">
-                    <div class="week-day">Четверг</div>
-                    <div class="date">03.02.2022</div>
+                    <div class="week-day">{{ weekDay }}</div>
+                    <div class="date">{{ date }}</div>
                 </div>
             </div>
             <div class="center">
@@ -104,7 +104,26 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "programData"]),
+        ...mapGetters(["userData", "programData", "currentDate", "schedule"]),
+
+        date() {
+            return this.formatDate(this.getScheduleDay());
+        },
+
+        weekDay() {
+            let weekDay = {
+                1: "Понедельник",
+                2: "Вторник",
+                3: "Среда",
+                4: "Четверг",
+                5: "Пятница",
+                6: "Суббота",
+                0: "Воскресенье",
+            }
+            let scheduleDay = this.getScheduleDay();
+            if (scheduleDay) return weekDay[scheduleDay.getDay()];
+            return "";
+        },
 
         table() {
             if (this.aim) {
@@ -143,6 +162,25 @@ export default {
     methods: {
         ...mapActions(["closeProgram", "showProgram"]),
 
+        getScheduleDay() {
+            let week = this.currentDate.week;
+            let day = this.currentDate.day;
+            if (this.schedule[week]) {
+                return this.schedule[week].days[day].date;
+            }
+            return "";
+        },
+
+        formatDate(date) {
+            if (date) {
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                return `${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year}`;
+            }
+            return "";
+        },
+
         openPopup() {
             this.popupVisible = true;
         },
@@ -169,10 +207,8 @@ export default {
         margin-left: 30px;
 
         .info-day {
-            width: 100%;
             display: flex;
             align-items: center;
-            justify-content: space-between;
 
             .left {
                 display: flex;
@@ -199,11 +235,11 @@ export default {
 
             .center {
                 flex: 0 0 209px;
+                margin: 0 35px;
                 border-radius: 4px;
             }
 
             .right {
-                margin-right: 180px;
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 20px;
                 line-height: 135%;

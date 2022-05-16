@@ -10,7 +10,8 @@ export default {
         program: {},
         scheduleProgram: {},
         currentDateProgram: {week: 1, day: 1},
-        page: 0
+        page: 0,
+        programFoods: [],
     },
 
     actions: {
@@ -18,9 +19,14 @@ export default {
             let weeks = {}
             for (let i = 0; i < 3; i++) {
                 let days = {};
+                ctx.state.week = i;
                 for (let j = 0; j < 7; j++) {
+                    let date = new Date(ctx.state.program.date_start);
+                    date.setDate(date.getDate() + i * 7 + j);
                     days[`${j + 1}`] = {
                         id: j + 1,
+                        date: date,
+                        weekDay: date.getDay(),
                         eaten: {
                             calories: 0,
                             proteins: 0,
@@ -88,6 +94,12 @@ export default {
 
         setPage(ctx, id) {
             ctx.commit("updatePage", id);
+        },
+
+        async showFoods(ctx) {
+            await axios.get(`${url}/api/programs/get-foods`).then((res) => {
+                ctx.commit(`updateFoods`, res.data);
+            });
         }
     },
 
@@ -126,6 +138,10 @@ export default {
 
         updatePage(state, id) {
             state.page = id;
+        },
+
+        updateFoods(state, foods) {
+            state.programFoods = foods;
         }
     },
 
@@ -160,6 +176,10 @@ export default {
 
         programPage(state) {
             return state.page;
+        },
+
+        foods(state) {
+            return state.programFoods;
         }
     }
 }

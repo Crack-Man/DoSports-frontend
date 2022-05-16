@@ -25,11 +25,35 @@ export default {
     },
 
     methods: {
-        ...mapActions(["initSchedule", "setCurrentWeek"]),
+        ...mapActions(["setCurrentWeek"]),
+
+        nowWeek() {
+            if (Object.keys(this.schedule).length) {
+                let startDate = this.schedule['1'].days['1'].date.getDate();
+                let nowDate = new Date().getDate();
+                if (nowDate - startDate < 7) {
+                    this.setCurrentWeek(1);
+                } else if (nowDate - startDate < 14) {
+                    this.setCurrentWeek(2);
+                } else if (nowDate - startDate < 21) {
+                    this.setCurrentWeek(3);
+                }
+            }
+        },
 
         setWeek(week) {
             this.setCurrentWeek(week);
         }
+    },
+
+    watch: {
+        schedule() {
+            this.nowWeek();
+        }
+    },
+
+    mounted() {
+        this.nowWeek();
     }
 }
 </script>

@@ -6,6 +6,7 @@
             <div class="program-base-container">
                 <sidebar/>
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
+                <program-meal v-if="programPage === 1"/>
             </div>
 <!--            <p>{{ this.programData }}</p>-->
 <!--            <v-btn color="primary" @click="deleteProgram">Удалить программу</v-btn>-->
@@ -19,6 +20,7 @@ import ProgramWeeks from "@/components/ProgramWeeks";
 import ProgramDays from "@/components/ProgramDays";
 import ProgramSidebar from "@/components/ProgramSidebar";
 import ProgramBaseContent from "@/components/ProgramBaseContent";
+import ProgramMeal from "./ProgramMeal";
 
 export default {
     name: "ProgramBaseInfo",
@@ -27,7 +29,8 @@ export default {
         "weeks": ProgramWeeks,
         "days": ProgramDays,
         "sidebar": ProgramSidebar,
-        "program-base-content": ProgramBaseContent
+        "program-base-content": ProgramBaseContent,
+        "program-meal": ProgramMeal,
     },
 
     data: () => ({

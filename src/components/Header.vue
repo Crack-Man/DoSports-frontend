@@ -478,8 +478,6 @@ body.lock {
                 cursor: auto;
                 left: -20px;
                 margin-top: 142px;
-                min-width: 135px;
-                width: calc(100% + 20px);
                 padding: 40px 20px 20px 20px;
                 border-radius: 0 0 5px 5px;
 
