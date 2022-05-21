@@ -1,0 +1,43 @@
+#app {
+    .profile-banner {
+        margin-top: 50px;
+    }
+
+    .profile-container {
+        margin-top: 50px;
+        display: flex;
+        align-items: flex-start;
+
+        .profile-sidebar {
+            flex: 0 0 255px;
+            background: #1A1A27;
+            border-radius: 4px;
+            padding: 25px;
+
+            a {
+                display: block;
+                font-family: 'Inter-Medium', sans-serif;
+                font-size: 18px;
+                line-height: 180%;
+            }
+
+            a:not(:first-child):not(:only-child) {
+                margin-top: 5px;
+            }
+        }
+    }
+}
+
+#app.dark {
+    .profile-container {
+        .profile-sidebar {
+            a {
+                color: #B5B5B8 !important;
+            }
+
+            a.active {
+                color: #9196FF !important;
+            }
+        }
+    }
+}

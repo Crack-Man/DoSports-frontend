@@ -279,6 +279,7 @@ export default {
             }
         }
     },
+
     mounted() {
         let dateInput = document.querySelector(".input.date input");
         setInterval(() => {

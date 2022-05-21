@@ -38,6 +38,10 @@ export default {
         changePage(id) {
             this.setPage(id);
         }
+    },
+
+    mounted() {
+        this.changePage(0);
     }
 }
 </script>

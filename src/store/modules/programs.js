@@ -12,6 +12,7 @@ export default {
         currentDateProgram: {week: 1, day: 1},
         page: 0,
         programFoods: [],
+        diet: [],
     },
 
     actions: {
@@ -100,6 +101,12 @@ export default {
             await axios.get(`${url}/api/programs/get-foods`).then((res) => {
                 ctx.commit(`updateFoods`, res.data);
             });
+        },
+
+        async showProgramDiet(ctx, input) {
+            await axios.post(`${url}/api/programs/get-program-diet`, input).then((res) => {
+                ctx.commit(`updateProgramDiet`, res.data);
+            });
         }
     },
 
@@ -142,7 +149,11 @@ export default {
 
         updateFoods(state, foods) {
             state.programFoods = foods;
-        }
+        },
+
+        updateProgramDiet(state, diet) {
+            state.diet = diet;
+        },
     },
 
     getters: {
@@ -180,6 +191,10 @@ export default {
 
         foods(state) {
             return state.programFoods;
+        },
+
+        programDiet(state) {
+            return state.diet;
         }
     }
 }

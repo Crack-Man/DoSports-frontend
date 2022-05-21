@@ -12,6 +12,8 @@ import ArticleSweets from "@/views/ArticleSweets";
 import Articles from "@/views/Articles";
 import ArticleSmoke from "@/views/ArticleSmoke";
 import ArticleBeer from "@/views/ArticleBeer";
+import ProfileBase from "@/views/ProfileBase";
+import ProfileSettings from "@/views/ProfileSettings";
 
 Vue.use(VueRouter)
 
@@ -86,6 +88,18 @@ const routes = [
         path: '/articles/does-beer-break-down-muscles',
         name: 'Разрушает ли пиво мышцы?',
         component: ArticleBeer
+    },
+
+    {
+        path: '/profile/base',
+        name: 'Основная информация',
+        component: ProfileBase
+    },
+
+    {
+        path: '/profile/settings',
+        name: 'Настройки',
+        component: ProfileSettings
     },
 ]
 

@@ -190,6 +190,13 @@ export default {
 
         weightCategory() {
             this.program.weightCategory = this.weightCategory.id;
+            if (this.weightCategory.id < 3) {
+                this.program.aim = "2";
+            } else if (this.weightCategory.id === 3) {
+                this.program.aim = "0";
+            } else {
+                this.program.aim = "3";
+            }
         }
     },
 

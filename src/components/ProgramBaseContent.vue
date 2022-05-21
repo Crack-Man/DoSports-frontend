@@ -264,7 +264,7 @@ export default {
                 padding: 0 0 5px 0 !important;
                 font-family: 'Inter-Regular', sans-serif;
                 font-weight: normal;
-                font-size: 16px;
+                font-size: 14px;
                 line-height: 200%;
             }
 
@@ -283,7 +283,7 @@ export default {
 
                     font-family: 'Inter-Regular', sans-serif;
                     font-weight: normal;
-                    font-size: 18px;
+                    font-size: 16px;
                     line-height: 200%;
                 }
 

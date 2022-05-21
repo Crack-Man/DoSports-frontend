@@ -1,7 +1,5 @@
 <template>
-    <div>
-        <div class="title-page">{{ name }}</div>
-    </div>
+    <div class="title-page">{{ name }}</div>
 </template>
 
 <script>

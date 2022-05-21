@@ -1,11 +1,12 @@
 <template>
-    <router-link :to="this.userIsAuthorized ? '/sport-program' : '/auth'" class="button link">
+    <router-link :to="link" :class="type !== 'premium' ? 'button link' : 'button link premium'">
         <div class="image">
             <img
                 :src="require('@/assets/img/png/plus.png')"
             >
         </div>
-        <span>Присоединиться</span>
+        <span v-if="type !== 'premium'">Присоединиться</span>
+        <span v-else>Оформить подписку</span>
     </router-link>
 </template>
 
@@ -15,8 +16,17 @@ import {mapGetters} from "vuex";
 export default {
     name: "ButtonJoin",
 
+    props: ['type'],
+
     computed: {
         ...mapGetters(['userIsAuthorized']),
+
+        link() {
+            if (this.type === "premium") {
+                return "/";
+            }
+            return this.userIsAuthorized ? '/sport-program' : '/auth';
+        }
     },
 }
 </script>
@@ -46,6 +56,10 @@ export default {
             font-family: "Inter-Medium", sans-serif;
             font-size: 18px;
         }
+    }
+
+    .button.link.premium {
+        width: 252px;
     }
 
 

@@ -41,7 +41,6 @@
                 <div class="user-links" v-if="userIsAuthorized">
                     <div
                         class="login"
-
                     >
                         {{ userData.login }}
                     </div>
@@ -53,7 +52,7 @@
                     </div>
                     <div class="profile-menu">
                         <router-link v-if="userIsAdmin" to="/">Админ-панель</router-link>
-                        <router-link to="/">Профиль</router-link>
+                        <router-link to="/profile/base">Профиль</router-link>
                         <span @click="this.logout">Выйти</span>
                     </div>
                     <div class="menu-burger" @click="activeMenu()">
@@ -462,11 +461,12 @@ body.lock {
 
             .login {
                 font-family: "Inter-Bold", sans-serif;
-            }
 
+                @media (max-width: 960px) {
+                    display: none;
+                }
 
-            .login {
-                @media (max-width: 450px) {
+                @media (max-width: 450px) { // ВРЕМЕННО
                     margin-right: 15px;
                     font-size: 14px;
                 }
@@ -508,6 +508,10 @@ body.lock {
             .menu-button {
                 margin-left: 15px;
 
+                @media (max-width: 960px) {
+                    display: none;
+                }
+
                 img {
                     display: block;
                     width: 100%;
@@ -518,6 +522,10 @@ body.lock {
         .user-links:hover {
             .profile-menu {
                 display: block;
+
+                @media (max-width: 960px) {
+                    display: none;
+                }
             }
         }
     }

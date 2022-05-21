@@ -1,8 +1,9 @@
 <template>
     <v-container class="container-banner">
-        <div class="banner">
-            <div class="title">ВСТУПАЙ В НАШ КЛУБ</div>
-            <button-join/>
+        <div :class="type !== 'premium' ? 'banner' : 'banner premium'">
+            <div v-if="type !== 'premium'" class="title">ВСТУПАЙ В НАШ КЛУБ</div>
+            <div v-else class="title premium">ПОЧУВСТВУЙ ВСЕ ПЛЮСЫ <span>PREMIUM</span> ПОДПИСКИ</div>
+            <button-join :type="this.type === 'premium' ? 'premium' : ''"/>
         </div>
     </v-container>
 </template>
@@ -12,7 +13,7 @@ import ButtonJoin from "@/components/ButtonJoin";
 
 export default {
     name: "Banner",
-    props: ['image'],
+    props: ['type', 'image'],
 
     components: {
         'button-join': ButtonJoin
@@ -46,8 +47,27 @@ export default {
             letter-spacing: 0.02em !important;
         }
 
+        .title.premium {
+            width: 531px;
+        }
+
         .button.link {
             margin-top: 25px !important;
+        }
+    }
+
+    .banner.premium {
+        padding-top: 36px;
+        padding-bottom: 36px;
+    }
+}
+
+#app.dark {
+    .banner {
+        .title.premium {
+            span {
+                color: #9196FF;
+            }
         }
     }
 }
