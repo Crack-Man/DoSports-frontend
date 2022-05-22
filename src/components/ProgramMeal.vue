@@ -55,13 +55,13 @@
 
                         <div class="counter">
                             <div class="decrease" @click="decreaseMeal">
-                                <img :src="require('@/assets/img/png/counter-decrease.png')">
+                                <img :src="require('@/assets/img/png/arrow-left.png')">
                             </div>
                             <div class="count">
                                 <span>{{ mealCount }}</span>
                             </div>
                             <div class="increase" @click="increaseMeal">
-                                <img :src="require('@/assets/img/png/counter-increase.png')">
+                                <img :src="require('@/assets/img/png/arrow-right.png')">
                             </div>
                         </div>
                         <v-btn
@@ -74,106 +74,6 @@
                     </v-card-text>
                 </v-card>
             </v-dialog>
-            <div class="counter">
-                <!--            <div class="">Установка приемов пищи на день</div>-->
-                <!--            <div class="meal-counter">-->
-                <!--                <div class="image" @click="decreaseMeal">-</div>-->
-                <!--                <div class="count">{{ mealCount }}</div>-->
-                <!--                <div class="image" @click="increaseMeal">+</div>-->
-                <!--            </div>-->
-                <!--            <div class="add-meals" @click="calcMealSchedule">Готово</div>-->
-                <!--            <div class="meals" v-for="(item, index) in mealSchedule" :key="index">-->
-                <!--                <div class="time">-->
-                <!--                    {{ item.time }}-->
-                <!--                </div>-->
-                <!--            </div>-->
-                <!--            <div class="food-button" @click="popupVisibleFood = true">Список продуктов</div>-->
-                <!--            <v-dialog-->
-                <!--                v-model="popupVisibleFood"-->
-                <!--                persistent-->
-                <!--                width="1110px"-->
-                <!--                dark-->
-                <!--            >-->
-                <!--                <v-card>-->
-                <!--                    <v-btn-->
-                <!--                        icon-->
-                <!--                        dark-->
-                <!--                        class="close"-->
-                <!--                        @click="popupVisibleFood = false"-->
-                <!--                    >-->
-                <!--                        <img-->
-                <!--                            :src="require('../assets/img/png/close.png')"-->
-                <!--                        />-->
-                <!--                    </v-btn>-->
-                <!--                    <v-card-text class="popup-reset">-->
-                <!--                        <v-simple-table-->
-                <!--                            dark-->
-                <!--                        >-->
-                <!--                            <template v-slot:default>-->
-                <!--                                <thead>-->
-                <!--                                <tr>-->
-                <!--                                    <th>-->
-                <!--                                        Название продукта-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        Б-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        Ж-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        У-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        Ккал-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        Клетчатка-->
-                <!--                                    </th>-->
-                <!--                                    <th>-->
-                <!--                                        ГИ-->
-                <!--                                    </th>-->
-                <!--                                </tr>-->
-                <!--                                </thead>-->
-                <!--                                <tbody>-->
-                <!--                                <template-->
-                <!--                                    v-for="(food, index) in foods"-->
-                <!--                                >-->
-                <!--                                    <tr :key="index" @click="showedFood = index">-->
-                <!--                                        <td>{{ food['name'] }}</td>-->
-                <!--                                        <td>{{ food['proteins'] }}</td>-->
-                <!--                                        <td>{{ food['fats'] }}</td>-->
-                <!--                                        <td>{{ food['carbohydrates'] }}</td>-->
-                <!--                                        <td>{{ food['calories'] }}</td>-->
-                <!--                                        <td>{{ food['fibers'] }}</td>-->
-                <!--                                        <td>{{ food['glycemic_index'] }}</td>-->
-                <!--                                    </tr>-->
-                <!--                                    <tr :key="'calc' + index" v-if="showedFood === index">-->
-                <!--                                        <td><v-text-field-->
-                <!--                                            label="Граммы"-->
-                <!--                                            class="input"-->
-                <!--                                            v-model="grams"-->
-                <!--                                            type="number"-->
-                <!--                                            hide-details="auto"-->
-                <!--                                            dark-->
-                <!--                                            outlined-->
-                <!--                                        >-->
-                <!--                                        </v-text-field></td>-->
-                <!--                                        <td>{{ proteins }}</td>-->
-                <!--                                        <td>{{ fats }}</td>-->
-                <!--                                        <td>{{ carbohydrates }}</td>-->
-                <!--                                        <td>{{ calories }}</td>-->
-                <!--                                        <td>{{ fibers }}</td>-->
-                <!--                                        <td>{{ food['glycemic_index'] }}</td>-->
-                <!--                                    </tr>-->
-                <!--                                </template>-->
-                <!--                                </tbody>-->
-                <!--                            </template>-->
-                <!--                        </v-simple-table>-->
-                <!--                    </v-card-text>-->
-                <!--                </v-card>-->
-                <!--            </v-dialog>-->
-            </div>
         </div>
         <div v-else>
             <div
@@ -185,13 +85,14 @@
                 <div class="foods">
                     <div class="list">
                         <div v-if="true" class="empty">
-                            Продукты еще не назначены
+                            Продукты еще не добавлены
                         </div>
                         <div v-else class="item">
                             Каша овсяная с клубничным джемом
                         </div>
                     </div>
-                    <div class="edit">Редактировать</div>
+                    <div v-if="true" class="add" @click="popupVisibleFood = true">Добавить</div>
+                    <div v-else class="edit">Редактировать</div>
                 </div>
                 <div class="proteins">
                     <div class="name">Б</div>
@@ -199,11 +100,11 @@
                 </div>
                 <div class="fats">
                     <div class="name">Ж</div>
-                    <div class="value">50</div>
+                    <div class="value">0</div>
                 </div>
                 <div class="carbohydrates">
                     <div class="name">У</div>
-                    <div class="value">1250</div>
+                    <div class="value">0</div>
                 </div>
                 <div class="calories">
                     <div class="name">Ккал</div>
@@ -218,10 +119,46 @@
                     <div class="value">0</div>
                 </div>
             </div>
-            <div class="reset-meals" @click="resetMeals">
+            <div class="reset-meals" @click="popupVisibleReset = true">
                 <img :src="require('@/assets/img/png/text-reset-meals--white.png')">
                 <img class="active" :src="require('@/assets/img/png/text-reset-meals--violet.png')">
             </div>
+            <v-dialog
+                v-model="popupVisibleReset"
+                persistent
+                max-width="473px"
+                dark
+            >
+                <v-card>
+                    <v-btn
+                        icon
+                        dark
+                        class="close"
+                        @click="popupVisibleReset = false"
+                    >
+                        <img
+                            :src="require('../assets/img/png/close.png')"
+                        />
+                    </v-btn>
+
+                    <v-card-text class="popup-reset">
+                        <div class="popup-title">Вы точно хотите</div>
+                        <div class="popup-title">сбросить приемы пищи?</div>
+                        <v-card-actions>
+                            <v-btn
+                                class="button cancel"
+                                @click="popupVisibleReset = false"
+                            >Отменить</v-btn>
+                            <v-btn
+                                class="button reset"
+                                :loading="progressResetMeals"
+                                @click="resetMeals"
+                            >Сбросить</v-btn>
+                        </v-card-actions>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+            <popup-foods :visible="popupVisibleFood" @updateVisible="onUpdateVisibleFood"/>
         </div>
     </div>
 </template>
@@ -231,67 +168,29 @@ import {mapActions, mapGetters} from "vuex";
 import Title from "@/components/Title";
 import axios from "axios";
 import url from "@/services/url";
+import PopupFoods from "@/components/PopupFoods";
 
 export default {
     name: "ProgramMeal",
 
     components: {
         "title-page": Title,
+        "popup-foods": PopupFoods,
     },
 
     data: () => ({
         mealCount: 3,
         mealSchedule: [],
         popupVisibleFood: false,
+        popupVisibleReset: false,
         popupVisibleCounter: false,
-        showedFood: -1,
-        grams: 100,
         progressSetMeals: false,
+        progressResetMeals: false,
         program: {}
     }),
 
     computed: {
         ...mapGetters(["foods", "currentDate", "programData", "schedule", "programDiet"]),
-
-        proteins() {
-            if (this.showedFood !== -1) {
-                let value = this.foods[this.showedFood]["proteins"] * this.grams / 100
-                return (+value.toFixed(1));
-            }
-            return "";
-        },
-
-        fats() {
-            if (this.showedFood !== -1) {
-                let value = this.foods[this.showedFood]["fats"] * this.grams / 100
-                return (+value.toFixed(1));
-            }
-            return "";
-        },
-
-        carbohydrates() {
-            if (this.showedFood !== -1) {
-                let value = this.foods[this.showedFood]["carbohydrates"] * this.grams / 100
-                return (+value.toFixed(1));
-            }
-            return "";
-        },
-
-        calories() {
-            if (this.showedFood !== -1) {
-                let value = this.foods[this.showedFood]["calories"] * this.grams / 100
-                return (+value.toFixed(1));
-            }
-            return "";
-        },
-
-        fibers() {
-            if (this.showedFood !== -1) {
-                let value = this.foods[this.showedFood]["fibers"] * this.grams / 100
-                return (+value.toFixed(1));
-            }
-            return "";
-        },
 
         date() {
             return this.formatDate(this.getScheduleDay());
@@ -299,10 +198,6 @@ export default {
     },
 
     watch: {
-        showedFood() {
-            this.grams = 100;
-        },
-
         programDiet() {
             this.progressSetMeals = false;
             this.popupVisibleCounter = false;
@@ -319,6 +214,10 @@ export default {
 
     methods: {
         ...mapActions(["showFoods", "showProgramDiet"]),
+
+        onUpdateVisibleFood(data) {
+            this.popupVisibleFood = data;
+        },
 
         getScheduleDay() {
             let week = this.currentDate.week;
@@ -447,6 +346,7 @@ export default {
         },
 
         async resetMeals() {
+            this.progressResetMeals = true;
             if (this.programDiet.length) {
                 let input = {
                     id: this.programDiet[0].id_program_diet,
@@ -454,14 +354,15 @@ export default {
                 await axios.post(`${url}/api/programs/delete-program-diet`, input).then((res) => {
                     if (res.data.name === "Success") {
                         this.getProgramDiet();
+                        this.popupVisibleReset = false;
                     }
+                    this.progressResetMeals = false;
                 });
             }
         }
     },
 
     mounted() {
-        this.showFoods();
         this.getProgramDiet();
     }
 }
@@ -545,7 +446,7 @@ export default {
                     line-height: 16px;
                 }
 
-                .edit {
+                .edit, .add {
                     font-family: 'Inter-Regular', sans-serif;
                     font-size: 13px;
                     line-height: 16px;
@@ -652,10 +553,10 @@ export default {
             position: relative;
 
             .decrease, .increase {
-                width: 9px;
+                width: 14px;
                 cursor: pointer;
                 position: absolute;
-                bottom: calc(50% - 16.5px / 2);
+                bottom: calc(50% - 14px / 2);
 
                 img {
                     display: block;

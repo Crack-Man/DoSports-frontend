@@ -300,8 +300,6 @@ export default {
                 }
 
 
-
-
                 tr {
                     td {
                         padding-top: 5px !important;
