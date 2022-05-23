@@ -12,6 +12,7 @@ export default {
         currentDateProgram: {week: 1, day: 1},
         page: 0,
         programFoods: [],
+        programFoodCats: [],
         diet: [],
     },
 
@@ -52,6 +53,12 @@ export default {
 
         async setCurrentDay(ctx, day) {
             ctx.commit("updateCurrentDay", day);
+        },
+
+        async showFoodCategories(ctx) {
+            await axios.get(`${url}/api/programs/get-food-categories`).then((res) => {
+                ctx.commit(`updateFoodCategories`, res.data);
+            });
         },
 
         async showLifestyleList(ctx) {
@@ -104,8 +111,16 @@ export default {
         },
 
         async showProgramDiet(ctx, input) {
-            await axios.post(`${url}/api/programs/get-program-diet`, input).then((res) => {
-                ctx.commit(`updateProgramDiet`, res.data);
+            // получить все приемы пищи
+            await axios.post(`${url}/api/programs/get-program-diet`, input).then(async (res) => {
+                let diet = Array.from(res.data);
+                // на каждый прием пищи получить продукты
+                for (let i = 0; i < diet.length; i++) {
+                    await axios.get(`${url}/api/programs/get-meal-foods/${diet[i].id}`).then((res) => {
+                        diet[i].foods = res.data;
+                    });
+                }
+                ctx.commit(`updateProgramDiet`, diet);
             });
         }
     },
@@ -121,6 +136,10 @@ export default {
 
         updateCurrentDay(state, day) {
             state.currentDateProgram.day = day;
+        },
+
+        updateFoodCategories(state, programFoodCats) {
+            state.programFoodCats = programFoodCats;
         },
 
         updateLifestyleList(state, lifestyles) {
@@ -163,6 +182,10 @@ export default {
 
         currentDate(state) {
             return state.currentDateProgram;
+        },
+
+        foodCategories(state) {
+            return state.programFoodCats;
         },
 
         lifestyleList(state) {

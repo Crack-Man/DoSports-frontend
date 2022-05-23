@@ -310,13 +310,37 @@
         }
     }
 
+    .input i {
+        color: #B5B5B8 !important;
+    }
+
+    .date .v-icon {
+        color: #B5B5B8 !important;
+    }
+
+    .date:hover .v-icon {
+        color: white !important;
+    }
+
+    .v-input--is-focused i {
+        color: white !important;
+    }
+
+    .v-input--is-label-active {
+        color: white !important;
+    }
+
+    .input:hover i {
+        color: white !important;
+    }
+
     // Селектор
     .v-menu__content {
         border: 2px solid #9196FF;
-        border-radius: 0 0 4px 4px !important;
+        border-radius: 4px !important;
 
         .v-list {
-            background: #090914 !important;
+            background: #1A1A27;
 
             .v-list-item {
                 color: white !important;
@@ -326,6 +350,21 @@
                 background-color: #9196FF !important;
             }
         }
+    }
+
+    .v-menu__content::-webkit-scrollbar {
+        display: none;
+    }
+
+    .v-menu__content::-webkit-scrollbar-track {
+        background: #262635;
+        border-radius: 4px;
+    }
+
+    .v-menu__content::-webkit-scrollbar-thumb {
+        background-color: #9196FF;
+        border-radius: 4px;
+        border: 3px solid #9196FF;
     }
 
     // Дата

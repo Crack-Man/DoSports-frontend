@@ -65,12 +65,16 @@
             background: #1A1A27 !important;
 
             i {
-                color: #B5B5B8 !important;
+                color: #B5B5B8;
             }
 
             p {
-                color: white !important;
+                color: white;
             }
+        }
+
+        .input:hover i {
+            color: white !important;
         }
 
         .popup-title {

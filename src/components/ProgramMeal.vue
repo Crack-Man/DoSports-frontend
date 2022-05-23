@@ -1,165 +1,180 @@
 <template>
     <div class="program-meal">
-        <title-page class="meals" :name="'Приемы пищи' + (programDiet.length ? ` (${programDiet.length})` : '')"/>
-        <div v-if="!programDiet.length">
-            <div class="text">Здесь будет отображаться информация о приемах пищи за день. Необходимо установить их
-                количество на один день.
-            </div>
-            <v-btn
-                @click="popupVisibleCounter = true"
-                color="primary"
-                class="button set-meals"
-            >Установить
-            </v-btn>
-            <v-dialog
-                v-model="popupVisibleCounter"
-                persistent
-                width="473px"
-                dark
-            >
-                <v-card class="dialog-set-meals">
-                    <v-btn
-                        icon
-                        dark
-                        class="close"
-                        @click="popupVisibleCounter = false"
-                    >
-                        <img
-                            :src="require('../assets/img/png/close.png')"
-                        />
-                    </v-btn>
-                    <v-card-text>
-                        <div class="popup-title">Установка приемов пищи на день</div>
-                        <div class="info-day">
-                            <div class="left">
-                                Неделя {{ currentDate["week"] }}
-                            </div>
-                            <div class="center">
-                            </div>
-                            <div class="right">
-                                День {{ currentDate["day"] }}
-                            </div>
-                        </div>
-                        <div class="description">
-                            <div>
-                                Укажите, сколько приемов пищи планируете в этот день. Допустимые значения - от 3 до 5
-                                приемов.
-                            </div>
-                            <div>
-                                Изменить количество приемов можно будет только сбросив и заново установив их на текущий день.
-                            </div>
-                            <div>
-                                Для каждого приема автоматически установится время. Его вы сможете изменить, когда захотите.
-                            </div>
-                        </div>
-
-                        <div class="counter">
-                            <div class="decrease" @click="decreaseMeal">
-                                <img :src="require('@/assets/img/png/arrow-left.png')">
-                            </div>
-                            <div class="count">
-                                <span>{{ mealCount }}</span>
-                            </div>
-                            <div class="increase" @click="increaseMeal">
-                                <img :src="require('@/assets/img/png/arrow-right.png')">
-                            </div>
-                        </div>
+        <div class="progress-diet" v-if="progressDiet">
+            <v-progress-circular
+                size="50"
+                class="icon"
+                indeterminate
+                color="#004BD7"
+            ></v-progress-circular>
+        </div>
+        <template v-else>
+            <title-page class="meals" :name="'Приемы пищи' + (programDiet.length ? ` (${programDiet.length})` : '')"/>
+            <div v-if="!programDiet.length">
+                <div class="text">Здесь будет отображаться информация о приемах пищи за день. Необходимо установить их
+                    количество на один день.
+                </div>
+                <v-btn
+                    @click="popupVisibleCounter = true"
+                    color="primary"
+                    class="button set-meals"
+                >Установить
+                </v-btn>
+                <v-dialog
+                    v-model="popupVisibleCounter"
+                    persistent
+                    width="473px"
+                    dark
+                >
+                    <v-card class="dialog-set-meals">
                         <v-btn
-                            @click="createProgramDiet"
-                            color="primary"
-                            :loading="this.progressSetMeals"
-                            class="button add-meals"
-                        >Готово
+                            icon
+                            dark
+                            class="close"
+                            @click="popupVisibleCounter = false"
+                        >
+                            <img
+                                :src="require('../assets/img/png/close.png')"
+                            />
                         </v-btn>
-                    </v-card-text>
-                </v-card>
-            </v-dialog>
-        </div>
-        <div v-else>
-            <div
-                class="meal-card"
-                v-for="meal in programDiet"
-                :key="meal.id"
-            >
-                <div class="time">{{ meal.time }}</div>
-                <div class="foods">
-                    <div class="list">
-                        <div v-if="true" class="empty">
-                            Продукты еще не добавлены
-                        </div>
-                        <div v-else class="item">
-                            Каша овсяная с клубничным джемом
-                        </div>
-                    </div>
-                    <div v-if="true" class="add" @click="popupVisibleFood = true">Добавить</div>
-                    <div v-else class="edit">Редактировать</div>
-                </div>
-                <div class="proteins">
-                    <div class="name">Б</div>
-                    <div class="value">0</div>
-                </div>
-                <div class="fats">
-                    <div class="name">Ж</div>
-                    <div class="value">0</div>
-                </div>
-                <div class="carbohydrates">
-                    <div class="name">У</div>
-                    <div class="value">0</div>
-                </div>
-                <div class="calories">
-                    <div class="name">Ккал</div>
-                    <div class="value">0</div>
-                </div>
-                <div class="fibers">
-                    <div class="name">Клетчатка</div>
-                    <div class="value">0</div>
-                </div>
-                <div class="glycemic-index">
-                    <div class="name">ГИ</div>
-                    <div class="value">0</div>
-                </div>
-            </div>
-            <div class="reset-meals" @click="popupVisibleReset = true">
-                <img :src="require('@/assets/img/png/text-reset-meals--white.png')">
-                <img class="active" :src="require('@/assets/img/png/text-reset-meals--violet.png')">
-            </div>
-            <v-dialog
-                v-model="popupVisibleReset"
-                persistent
-                max-width="473px"
-                dark
-            >
-                <v-card>
-                    <v-btn
-                        icon
-                        dark
-                        class="close"
-                        @click="popupVisibleReset = false"
-                    >
-                        <img
-                            :src="require('../assets/img/png/close.png')"
-                        />
-                    </v-btn>
+                        <v-card-text>
+                            <div class="popup-title">Установка приемов пищи на день</div>
+                            <div class="info-day">
+                                <div class="left">
+                                    Неделя {{ currentDate["week"] }}
+                                </div>
+                                <div class="center">
+                                </div>
+                                <div class="right">
+                                    День {{ currentDate["day"] }}
+                                </div>
+                            </div>
+                            <div class="description">
+                                <div>
+                                    Укажите, сколько приемов пищи планируете в этот день. Допустимые значения - от 3 до 5
+                                    приемов.
+                                </div>
+                                <div>
+                                    Изменить количество приемов можно будет только сбросив и заново установив их на текущий день.
+                                </div>
+                                <div>
+                                    Для каждого приема автоматически установится время. Его вы сможете изменить, когда захотите.
+                                </div>
+                            </div>
 
-                    <v-card-text class="popup-reset">
-                        <div class="popup-title">Вы точно хотите</div>
-                        <div class="popup-title">сбросить приемы пищи?</div>
-                        <v-card-actions>
+                            <div class="counter">
+                                <div class="decrease" @click="decreaseMeal">
+                                    <img :src="require('@/assets/img/png/arrow-left.png')">
+                                </div>
+                                <div class="count">
+                                    <span>{{ mealCount }}</span>
+                                </div>
+                                <div class="increase" @click="increaseMeal">
+                                    <img :src="require('@/assets/img/png/arrow-right.png')">
+                                </div>
+                            </div>
                             <v-btn
-                                class="button cancel"
-                                @click="popupVisibleReset = false"
-                            >Отменить</v-btn>
-                            <v-btn
-                                class="button reset"
-                                :loading="progressResetMeals"
-                                @click="resetMeals"
-                            >Сбросить</v-btn>
-                        </v-card-actions>
-                    </v-card-text>
-                </v-card>
-            </v-dialog>
-            <popup-foods :visible="popupVisibleFood" @updateVisible="onUpdateVisibleFood"/>
-        </div>
+                                @click="createProgramDiet"
+                                color="primary"
+                                :loading="this.progressSetMeals"
+                                class="button add-meals"
+                            >Готово
+                            </v-btn>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+            </div>
+            <div v-else>
+                <div
+                    class="meal-card"
+                    v-for="meal in programDiet"
+                    :key="meal.id"
+                >
+                    <div class="time">{{ meal.time }}</div>
+                    <div class="foods">
+                        <div class="list">
+                            <div v-if="!meal.foods.length" class="empty">
+                                Продукты еще не добавлены
+                            </div>
+                            <div v-else>
+                                <template v-for="(food, index) in meal.foods">
+                                    <div v-if="index < 2" :key="food.id" class="item">
+                                        {{ food.name }}
+                                    </div>
+                                    <div class="item ellipsis" :key="food.id" v-else-if="index === 2">...</div>
+                                </template>
+                            </div>
+                        </div>
+                        <div v-if="!meal.foods.length" class="add" @click="openPopupFoods(meal.id)">Добавить</div>
+                        <div v-else class="edit">Редактировать</div>
+                    </div>
+                    <div class="proteins">
+                        <div class="name">Б</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="fats">
+                        <div class="name">Ж</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="carbohydrates">
+                        <div class="name">У</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="calories">
+                        <div class="name">Ккал</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="fibers">
+                        <div class="name">Клетчатка</div>
+                        <div class="value">0</div>
+                    </div>
+                    <div class="glycemic-index">
+                        <div class="name">ГИ</div>
+                        <div class="value">0</div>
+                    </div>
+                </div>
+                <div class="reset-meals" @click="popupVisibleReset = true">
+                    <img :src="require('@/assets/img/png/text-reset-meals--white.png')">
+                    <img class="active" :src="require('@/assets/img/png/text-reset-meals--violet.png')">
+                </div>
+                <v-dialog
+                    v-model="popupVisibleReset"
+                    persistent
+                    max-width="473px"
+                    dark
+                >
+                    <v-card>
+                        <v-btn
+                            icon
+                            dark
+                            class="close"
+                            @click="popupVisibleReset = false"
+                        >
+                            <img
+                                :src="require('../assets/img/png/close.png')"
+                            />
+                        </v-btn>
+
+                        <v-card-text class="popup-reset">
+                            <div class="popup-title">Вы точно хотите</div>
+                            <div class="popup-title">сбросить приемы пищи?</div>
+                            <v-card-actions>
+                                <v-btn
+                                    class="button cancel"
+                                    @click="popupVisibleReset = false"
+                                >Отменить</v-btn>
+                                <v-btn
+                                    class="button reset"
+                                    :loading="progressResetMeals"
+                                    @click="resetMeals"
+                                >Сбросить</v-btn>
+                            </v-card-actions>
+                        </v-card-text>
+                    </v-card>
+                </v-dialog>
+                <popup-foods :visible="popupVisibleFood" :idMeal="idMeal" @updateVisible="onUpdateVisibleFood" @updateDiet="getProgramDiet"/>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -182,6 +197,8 @@ export default {
         mealCount: 3,
         mealSchedule: [],
         popupVisibleFood: false,
+        idMeal: 0,
+        progressDiet: true,
         popupVisibleReset: false,
         popupVisibleCounter: false,
         progressSetMeals: false,
@@ -204,10 +221,12 @@ export default {
         },
 
         'currentDate.week'() {
+            this.progressDiet = true;
             this.getProgramDiet();
         },
 
         'currentDate.day'() {
+            this.progressDiet = true;
             this.getProgramDiet();
         },
     },
@@ -272,7 +291,9 @@ export default {
                 idProgram: this.programData.id,
                 date: this.date,
             };
-            this.showProgramDiet(input);
+            this.showProgramDiet(input).then(() => {
+                this.progressDiet = false;
+            });
         },
 
         calcMealSchedule() {
@@ -345,6 +366,11 @@ export default {
             }
         },
 
+        openPopupFoods(id) {
+            this.popupVisibleFood = true;
+            this.idMeal = id;
+        },
+
         async resetMeals() {
             this.progressResetMeals = true;
             if (this.programDiet.length) {
@@ -373,6 +399,18 @@ export default {
     .program-meal {
         flex: 1 0 auto;
         margin-left: 30px;
+
+        .progress-diet {
+            position: relative;
+            width: 100%;
+            height: 310px;
+
+            .icon {
+                position: absolute;
+                left: calc(50% - 50px / 2);
+                bottom: calc(50% - 50px / 2);
+            }
+        }
 
         .title-page.meals {
             margin: 0;
@@ -427,6 +465,9 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 flex-direction: column;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
 
                 width: 210px;
                 margin-left: 45px;
@@ -444,6 +485,14 @@ export default {
                     font-family: 'Inter-Regular', sans-serif;
                     font-size: 13px;
                     line-height: 16px;
+                }
+
+                .item:not(:first-child):not(:only-child) {
+                    margin-top: 5px;
+                }
+
+                .item.ellipsis {
+                    margin-top: 0 !important;
                 }
 
                 .edit, .add {
