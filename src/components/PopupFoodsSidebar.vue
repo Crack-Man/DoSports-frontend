@@ -17,7 +17,7 @@ export default {
     data: () => ({
         links: [
             {id: 0, name: "+ Добавить блюдо", class: "link-dish unactive", speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”."},
-            {id: 1, name: "+ Добавить свой продукт", class: "link-self-food unactive"},
+            {id: 1, name: "+ Добавить свой продукт", class: "link-self-food unactive", speech: "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”."},
             {id: 2, name: "+ Добавить рацион", class: "link-ration unactive", speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи."},
         ]
     }),
@@ -67,7 +67,7 @@ export default {
             content: '';
             position: absolute;
             transform: rotate(-135deg);
-            bottom: -10px;
+            bottom: -9px;
             left: calc(50% - 9px);
         }
 
@@ -78,7 +78,21 @@ export default {
         .link-dish {
             .speech {
                 width: 238px;
-                right: -65px;
+                right: -51px;
+            }
+        }
+
+        .link-self-food {
+            .speech {
+                width: 238px;
+                top: -87px;
+                right: -75px;
+            }
+
+            .speech:before {
+                transform: rotate(90deg);
+                bottom: -13px;
+                left: calc(50% + 20px);
             }
         }
 
@@ -86,7 +100,7 @@ export default {
             .speech {
                 width: 238px;
                 top: -87px;
-                right: -72px;
+                right: -58px;
             }
         }
     }

@@ -1,10 +1,10 @@
 <template>
     <div>
         <v-container>
-            <weeks/>
-            <days/>
+            <weeks v-show="barsVisible"/>
+            <days v-show="barsVisible"/>
             <div class="program-base-container">
-                <sidebar/>
+                <sidebar v-show="barsVisible"/>
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
                 <program-meal v-if="programPage === 1"/>
             </div>
@@ -37,7 +37,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "programData", "programPage"]),
+        ...mapGetters(["userData", "programData", "programPage", "barsVisible"]),
 
         aim() {
             if (!this.programData) return {};
@@ -52,7 +52,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["initSchedule", "closeProgram", "showProgram"]),
+        ...mapActions(["initSchedule", "closeProgram", "showProgram", "changeBarsVisible"]),
 
         deleteProgram() {
             this.closeProgram(this.userData).then(() => {
@@ -62,6 +62,7 @@ export default {
     },
 
     mounted() {
+        this.changeBarsVisible(true);
         this.showProgram(this.userData);
     }
 }

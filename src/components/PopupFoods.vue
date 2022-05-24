@@ -350,7 +350,7 @@ export default {
                 }
 
                 .header-table {
-                    margin-top: 22px;
+                    margin-top: 5px;
                     display: flex;
 
                     div {

@@ -139,6 +139,7 @@ export default {
         }
 
         .results {
+            margin-top: 15px;
             margin-left: 30px;
 
             @media (max-width: 1263px) {

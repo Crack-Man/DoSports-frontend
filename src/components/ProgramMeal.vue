@@ -8,7 +8,7 @@
                 color="#004BD7"
             ></v-progress-circular>
         </div>
-        <template v-else>
+        <template v-else-if="page === 1">
             <title-page class="meals" :name="'Приемы пищи' + (programDiet.length ? ` (${programDiet.length})` : '')"/>
             <div v-if="!programDiet.length">
                 <div class="text">Здесь будет отображаться информация о приемах пищи за день. Необходимо установить их
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                         <div v-if="!meal.foods.length" class="add" @click="openPopupFoods(meal.id)">Добавить</div>
-                        <div v-else class="edit">Редактировать</div>
+                        <div v-else class="edit" @click="openEditFrame(meal.id, meal.time)">Редактировать</div>
                     </div>
                     <div class="proteins">
                         <div class="name">Б</div>
@@ -175,6 +175,7 @@
                 <popup-foods :visible="popupVisibleFood" :idMeal="idMeal" @updateVisible="onUpdateVisibleFood" @updateDiet="getProgramDiet"/>
             </div>
         </template>
+        <program-meal-edit v-else :idMeal="idMeal" :time="timeMeal" @back="page = 1"/>
     </div>
 </template>
 
@@ -184,6 +185,7 @@ import Title from "@/components/Title";
 import axios from "axios";
 import url from "@/services/url";
 import PopupFoods from "@/components/PopupFoods";
+import ProgramMealEdit from "@/components/ProgramMealEdit";
 
 export default {
     name: "ProgramMeal",
@@ -191,6 +193,7 @@ export default {
     components: {
         "title-page": Title,
         "popup-foods": PopupFoods,
+        "program-meal-edit": ProgramMealEdit,
     },
 
     data: () => ({
@@ -198,6 +201,8 @@ export default {
         mealSchedule: [],
         popupVisibleFood: false,
         idMeal: 0,
+        timeMeal: "",
+        page: 1,
         progressDiet: true,
         popupVisibleReset: false,
         popupVisibleCounter: false,
@@ -232,7 +237,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showFoods", "showProgramDiet"]),
+        ...mapActions(["showFoods", "showProgramDiet", "changeBarsVisible"]),
 
         onUpdateVisibleFood(data) {
             this.popupVisibleFood = data;
@@ -369,6 +374,13 @@ export default {
         openPopupFoods(id) {
             this.popupVisibleFood = true;
             this.idMeal = id;
+        },
+
+        openEditFrame(id, time) {
+            this.page = 2;
+            this.idMeal = id;
+            this.timeMeal = time;
+            this.changeBarsVisible(false);
         },
 
         async resetMeals() {
@@ -678,6 +690,10 @@ export default {
         .foods {
             .empty {
                 color: #B5B5B8;
+            }
+
+            .edit:hover, .add:hover {
+                color: #9196FF;
             }
         }
 

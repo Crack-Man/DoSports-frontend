@@ -14,6 +14,7 @@ export default {
         programFoods: [],
         programFoodCats: [],
         diet: [],
+        visibleBars: true,
     },
 
     actions: {
@@ -122,6 +123,10 @@ export default {
                 }
                 ctx.commit(`updateProgramDiet`, diet);
             });
+        },
+
+        changeBarsVisible(ctx, value) {
+            ctx.commit("updateBarsVisible", value);
         }
     },
 
@@ -173,6 +178,10 @@ export default {
         updateProgramDiet(state, diet) {
             state.diet = diet;
         },
+
+        updateBarsVisible(state, value) {
+            state.visibleBars = value;
+        }
     },
 
     getters: {
@@ -218,6 +227,10 @@ export default {
 
         programDiet(state) {
             return state.diet;
+        },
+
+        barsVisible(state) {
+            return state.visibleBars;
         }
     }
 }
