@@ -105,28 +105,28 @@
                                 </template>
                             </div>
                         </div>
-                        <div v-if="!meal.foods.length" class="add" @click="openPopupFoods(meal.id)">Добавить</div>
+                        <div v-if="!meal.foods.length" class="add" @click="openPopupFoods(meal.id, meal.time)">Добавить</div>
                         <div v-else class="edit" @click="openEditFrame(meal.id, meal.time)">Редактировать</div>
                     </div>
                     <div class="proteins">
                         <div class="name">Б</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.proteins }}</div>
                     </div>
                     <div class="fats">
                         <div class="name">Ж</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.fats }}</div>
                     </div>
                     <div class="carbohydrates">
                         <div class="name">У</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.carbohydrates }}</div>
                     </div>
                     <div class="calories">
                         <div class="name">Ккал</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.calories }}</div>
                     </div>
                     <div class="fibers">
                         <div class="name">Клетчатка</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.fibers }}</div>
                     </div>
                     <div class="glycemic-index">
                         <div class="name">ГИ</div>
@@ -172,10 +172,10 @@
                         </v-card-text>
                     </v-card>
                 </v-dialog>
-                <popup-foods :visible="popupVisibleFood" :idMeal="idMeal" @updateVisible="onUpdateVisibleFood" @updateDiet="getProgramDiet"/>
+                <popup-foods :visible="popupVisibleFood" :idMeal="idMeal" @updateVisible="onUpdateVisibleFood" @updateDiet="openEditFrameAfterPopup(idMeal, timeMeal)"/>
             </div>
         </template>
-        <program-meal-edit v-else :idMeal="idMeal" :time="timeMeal" @back="page = 1"/>
+        <program-meal-edit v-else :idMeal="idMeal" :time="timeMeal" @back="returnToProgramMeal" @updateProgramDiet="getProgramDiet"/>
     </div>
 </template>
 
@@ -371,8 +371,9 @@ export default {
             }
         },
 
-        openPopupFoods(id) {
+        openPopupFoods(id, time) {
             this.popupVisibleFood = true;
+            this.timeMeal = time;
             this.idMeal = id;
         },
 
@@ -381,6 +382,17 @@ export default {
             this.idMeal = id;
             this.timeMeal = time;
             this.changeBarsVisible(false);
+        },
+
+        openEditFrameAfterPopup(id, time) {
+            this.getProgramDiet();
+            this.openEditFrame(id, time);
+        },
+
+        returnToProgramMeal() {
+            this.page = 1;
+            this.progressDiet = true;
+            this.getProgramDiet();
         },
 
         async resetMeals() {
@@ -481,7 +493,7 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
 
-                width: 210px;
+                width: 165px;
                 margin-left: 45px;
 
                 .empty {
@@ -530,7 +542,7 @@ export default {
             }
 
             .proteins, .fats, .carbohydrates {
-                flex: 0 0 20px;
+                flex: 0 0 35px;
             }
 
             .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {

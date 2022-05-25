@@ -12,6 +12,7 @@ export default {
         currentDateProgram: {week: 1, day: 1},
         page: 0,
         programFoods: [],
+        programFoodById: [],
         programFoodCats: [],
         diet: [],
         visibleBars: true,
@@ -111,15 +112,76 @@ export default {
             });
         },
 
+        async showFoodById(ctx, id) {
+            await axios.get(`${url}/api/programs/get-food-by-id/${id}`).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit(`updateFoodById`, res.data.food);
+                }
+            });
+        },
+
         async showProgramDiet(ctx, input) {
+            let calcParams = (ratio, grams) => {
+                let value = ratio * grams / 100;
+                return (+value.toFixed(1));
+            }
+
+            let round = (value) => {
+                return (+value.toFixed(1));
+            }
             // получить все приемы пищи
             await axios.post(`${url}/api/programs/get-program-diet`, input).then(async (res) => {
                 let diet = Array.from(res.data);
-                // на каждый прием пищи получить продукты
+
+                // свойства на весь день
+                diet.proteins = 0;
+                diet.fats = 0;
+                diet.carbohydrates = 0;
+                diet.calories = 0;
+                diet.fibers = 0;
                 for (let i = 0; i < diet.length; i++) {
+                    // на каждый прием пищи получить продукты
                     await axios.get(`${url}/api/programs/get-meal-foods/${diet[i].id}`).then((res) => {
                         diet[i].foods = res.data;
+                        // свойства на прием пищи
+                        diet[i].proteins = 0;
+                        diet[i].fats = 0;
+                        diet[i].carbohydrates = 0;
+                        diet[i].calories = 0;
+                        diet[i].fibers = 0;
+
+                        for (let j = 0; j < diet[i].foods.length; j++) {
+                            // относительные свойства, зависящие от граммовки
+                            diet[i].foods[j].proteinsCalc = calcParams(diet[i].foods[j].proteins, diet[i].foods[j].amount);
+                            diet[i].foods[j].fatsCalc = calcParams(diet[i].foods[j].fats, diet[i].foods[j].amount);
+                            diet[i].foods[j].carbohydratesCalc = calcParams(diet[i].foods[j].carbohydrates, diet[i].foods[j].amount);
+                            diet[i].foods[j].caloriesCalc = calcParams(diet[i].foods[j].calories, diet[i].foods[j].amount);
+                            diet[i].foods[j].fibersCalc = calcParams(diet[i].foods[j].fibers, diet[i].foods[j].amount);
+
+                            diet[i].proteins += diet[i].foods[j].proteinsCalc;
+                            diet[i].fats += diet[i].foods[j].fatsCalc;
+                            diet[i].carbohydrates += diet[i].foods[j].carbohydratesCalc;
+                            diet[i].calories += diet[i].foods[j].caloriesCalc;
+                            diet[i].fibers += diet[i].foods[j].fibersCalc;
+                        }
+
+                        diet[i].proteins = round(diet[i].proteins);
+                        diet[i].fats = round(diet[i].fats);
+                        diet[i].carbohydrates = round(diet[i].carbohydrates);
+                        diet[i].calories = round(diet[i].calories);
+                        diet[i].fibers = round(diet[i].fibers);
+
+                        diet.proteins += diet[i].proteins;
+                        diet.fats += diet[i].fats;
+                        diet.carbohydrates += diet[i].carbohydrates;
+                        diet.calories += diet[i].calories;
+                        diet.fibers += diet[i].fibers;
                     });
+                    diet.proteins = round(diet.proteins);
+                    diet.fats = round(diet.fats);
+                    diet.carbohydrates = round(diet.carbohydrates);
+                    diet.calories = round(diet.calories);
+                    diet.fibers = round(diet.fibers);
                 }
                 ctx.commit(`updateProgramDiet`, diet);
             });
@@ -175,6 +237,10 @@ export default {
             state.programFoods = foods;
         },
 
+        updateFoodById(state, food) {
+            state.programFoodById = food;
+        },
+
         updateProgramDiet(state, diet) {
             state.diet = diet;
         },
@@ -223,6 +289,10 @@ export default {
 
         foods(state) {
             return state.programFoods;
+        },
+
+        foodById(state) {
+            return state.programFoodById;
         },
 
         programDiet(state) {

@@ -37,7 +37,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "programData", "programPage", "barsVisible"]),
+        ...mapGetters(["userData", "currentDate", "schedule", "programData", "programDiet", "programPage", "barsVisible"]),
 
         aim() {
             if (!this.programData) return {};
@@ -48,17 +48,20 @@ export default {
                 carbohydrates: this.programData.carbohydrates,
                 fibers: this.programData.fibers
             }
-        }
+        },
+    },
+
+    watch: {
     },
 
     methods: {
-        ...mapActions(["initSchedule", "closeProgram", "showProgram", "changeBarsVisible"]),
+        ...mapActions(["initSchedule", "closeProgram", "showProgram", "showProgramDiet", "changeBarsVisible"]),
 
         deleteProgram() {
             this.closeProgram(this.userData).then(() => {
                 this.$router.push("/start-program");
             })
-        }
+        },
     },
 
     mounted() {

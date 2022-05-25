@@ -3,6 +3,13 @@
         <v-main>
             <div class="content-main">
                 <div class="progress-main" v-if="this.progress">
+                    <v-progress-circular
+                        v-if="timerCount === 0"
+                        size="50"
+                        class="icon"
+                        indeterminate
+                        color="#004BD7"
+                    ></v-progress-circular>
                 </div>
                 <div v-else>
                     <router-view/>
@@ -23,6 +30,7 @@ export default {
 
     data: () => ({
         progress: true,
+        timerCount: 3,
     }),
 
     computed: {
@@ -43,6 +51,9 @@ export default {
     },
 
     mounted() {
+        setInterval(() => {
+            if (this.timerCount > 0) this.timerCount--;
+        }, 1000);
         this.checkAuth().then(() => {
             this.progress = false
         });

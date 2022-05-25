@@ -2,8 +2,8 @@
     <v-dialog
         v-model="popupVisibleFood"
         persistent
-        content-class="popup-food--content"
-        width="1110px"
+        content-class="popup-food-edit--content"
+        width="781px"
         dark
     >
         <v-card>
@@ -17,34 +17,10 @@
                     :src="require('../assets/img/png/close.png')"
                 />
             </v-btn>
-            <v-card-text class="popup-foods">
-                <div class="popup-title">Добавление продуктов</div>
+            <v-card-text class="popup-foods-edit">
+                <div class="popup-title">Редактирование</div>
                 <div class="popup-container">
                     <div class="popup-content">
-                        <div class="header-popup">
-                            <v-text-field
-                                class="input food-name"
-                                v-model="foodName"
-                                :append-icon="'mdi-magnify'"
-                                placeholder="Название продукта..."
-                                hide-details="auto"
-                                dark
-                                outlined
-                                required
-                            ></v-text-field>
-                            <v-select
-                                v-model="idCategory"
-                                class="input category"
-                                :menu-props="{ bottom: true, offsetY: true }"
-                                :append-icon="'mdi-chevron-down'"
-                                :items="this.foodCats"
-                                :item-text="'name'"
-                                :item-value="'id'"
-                                dark
-                                outlined
-                                required
-                            ></v-select>
-                        </div>
                         <div class="header-table">
                             <div class="name">Название продукта</div>
                             <div class="proteins">Б</div>
@@ -68,63 +44,62 @@
                                 <div class="speech">Гликемический индекс</div>
                             </div>
                         </div>
-                        <div class="scroller">
-                            <div :key="index" class="item" v-for="(food, index) in foodsFiltered">
-                                <div class="food" :id="`food${food.id}`">
-                                    <div class="name"><span>{{ food['name'] }}</span></div>
-                                    <div class="name-speech" :id="`name-speech${food.id}`"><div>{{ food['name'] }}</div></div>
-                                    <div class="proteins"><span>{{ food['proteins'] }}</span></div>
-                                    <div class="fats"><span>{{ food['fats'] }}</span></div>
-                                    <div class="carbohydrates"><span>{{ food['carbohydrates'] }}</span></div>
-                                    <div class="calories"><span>{{ food['calories'] }}</span></div>
-                                    <div class="fibers"><span>{{ food['fibers'] }}</span></div>
-                                    <div class="glycemic-index"><span>{{ food['glycemic_index'] }}</span></div>
-                                    <div class="arrow">
-                                        <img @click="openParams(food.id)" :class="'arrow' + food.id"
-                                             :src="require('@/assets/img/png/arrow-right.png')">
+                        <div class="item">
+                            <div class="food">
+                                <div class="name"><span>{{ food.name }}</span></div>
+                                <div class="name-speech" :id="`name-speech${food.id}`">
+                                    <div>{{ food.name }}</div>
+                                </div>
+                                <div class="proteins"><span>{{ food.proteins }}</span></div>
+                                <div class="fats"><span>{{ food.fats }}</span></div>
+                                <div class="carbohydrates"><span>{{ food.carbohydrates }}</span></div>
+                                <div class="calories"><span>{{ food.calories }}</span></div>
+                                <div class="fibers"><span>{{ food.fibers }}</span></div>
+                                <div class="glycemic-index"><span>{{ food.glycemic_index }}</span></div>
+                                <div class="arrow">
+                                    <img :class="'arrow' + food.id + ' active'"
+                                         :src="require('@/assets/img/png/arrow-right.png')">
+                                </div>
+                            </div>
+                            <span class="gram">Укажите граммовку</span>
+                            <div class="params">
+                                <div class="slider">
+                                    <div class="slider-container">
+                                        <v-slider
+                                            class="slider"
+                                            dark
+                                            v-model="grams"
+                                            thumb-label="always"
+                                            hide-details
+                                            min="0"
+                                            max="1000"
+                                            step="5"
+                                        >
+                                            <template v-slot:thumb-label="{ value }">
+                                                {{ value }} гр
+                                            </template>
+                                        </v-slider>
                                     </div>
                                 </div>
-                                <span class="gram" v-if="showedFood === food.id">Укажите граммовку</span>
-                                <div class="params" v-if="showedFood === food.id">
-                                    <div class="slider">
-                                        <div class="slider-container">
-                                            <v-slider
-                                                class="slider"
-                                                dark
-                                                v-model="grams"
-                                                thumb-label="always"
-                                                hide-details
-                                                min="0"
-                                                max="1000"
-                                                step="5"
-                                            >
-                                                <template v-slot:thumb-label="{ value }">
-                                                    {{ value }} гр
-                                                </template>
-                                            </v-slider>
-                                        </div>
-                                    </div>
-                                    <div class="proteins">{{ proteins }}</div>
-                                    <div class="fats">{{ fats }}</div>
-                                    <div class="carbohydrates">{{ carbohydrates }}</div>
-                                    <div class="calories">{{ calories }}</div>
-                                    <div class="fibers">{{ fibers }}</div>
-                                    <div class="glycemic-index">{{ food['glycemic_index'] }}</div>
-                                    <div class="button-add-meal-food">
-                                        <v-btn
-                                            class="button add-meal-food"
-                                            color="primary"
-                                            :loading="progress"
-                                            @click="addFoods(food.id)"
-                                        >
-                                            Добавить
-                                        </v-btn>
-                                    </div>
+                                <div class="proteins">{{ proteins }}</div>
+                                <div class="fats">{{ fats }}</div>
+                                <div class="carbohydrates">{{ carbohydrates }}</div>
+                                <div class="calories">{{ calories }}</div>
+                                <div class="fibers">{{ fibers }}</div>
+                                <div class="glycemic-index">{{ food['glycemic_index'] }}</div>
+                                <div class="button-save-meal-food">
+                                    <v-btn
+                                        class="button save-meal-food"
+                                        color="primary"
+                                        :loading="progress"
+                                        @click="changeFood"
+                                    >
+                                        Сохранить
+                                    </v-btn>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <popup-foods-sidebar/>
                 </div>
             </v-card-text>
         </v-card>
@@ -133,47 +108,32 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import PopupFoodsSidebar from "@/components/PopupFoodsSidebar";
 import axios from "axios";
 import url from "../services/url";
 
 export default {
-    name: "PopupFoods",
+    name: "PopupFoodsEdit",
 
     props: ['visible', 'idMeal', 'selectedFood'],
 
-    components: {
-        PopupFoodsSidebar
-    },
+    components: {},
 
     data: () => ({
         popupVisibleFood: false,
-        showedFood: -1,
         progress: false,
-        idCategory: 0,
         grams: 100,
-        foodName: "",
     }),
 
     watch: {
         visible() {
             this.popupVisibleFood = this.visible;
+            if (this.visible) {
+                this.showFoodById(this.selectedFood.idFood);
+            }
         },
 
         popupVisibleFood() {
             this.$emit('updateVisible', this.popupVisibleFood)
-        },
-
-        showedFood() {
-            this.grams = 100;
-        },
-
-        'selectedFood.id'() {
-            this.showedFood = this.selectedFood.id;
-        },
-
-        'selectedFood.name'() {
-            this.foodName = this.selectedFood.name;
         },
 
         'selectedFood.amount'() {
@@ -182,68 +142,61 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["foods", "foodCategories"]),
+        ...mapGetters(["foodById"]),
 
-        foodCats() {
-            if (this.foodCategories) {
-                let cats = Array.from(this.foodCategories);
-                cats.splice(0, 0, {id: 0, name: "Все категории"});
-                return cats;
+        food() {
+            if (this.foodById.length) {
+                return this.foodById[0];
             }
-            return [];
-        },
-
-        foodsFiltered() {
-            if (!this.foods) {
-                return [];
-            }
-            let foods = Array.from(this.foods);
-            if (this.idCategory && this.foodName) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory && obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
-            }
-            else if (this.idCategory) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory);
-            } else if (this.foodName) {
-                foods = this.foods.filter(obj => obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
-            }
-            return foods;
+            return {
+                id: 0,
+                name: "",
+                id_food_category: 0,
+                proteins: 0,
+                fats: 0,
+                carbohydrates: 0,
+                calories: 0,
+                fibers: 0,
+                glycemic_index: 0,
+                author: 0
+            };
         },
 
         proteins() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["proteins"] * this.grams / 100
+            if (this.food.id !== 0) {
+                let value = this.food["proteins"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         fats() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["fats"] * this.grams / 100
+            if (this.food.id !== 0) {
+                let value = this.food["fats"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         carbohydrates() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["carbohydrates"] * this.grams / 100
+            if (this.food.id !== 0) {
+                let value = this.food["carbohydrates"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         calories() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["calories"] * this.grams / 100
+            if (this.food.id !== 0) {
+                let value = this.food["calories"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         fibers() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["fibers"] * this.grams / 100
+            if (this.food.id !== 0) {
+                let value = this.food["fibers"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
@@ -251,43 +204,21 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showFoods", "showFoodCategories"]),
-
-        toggleClassArrow() {
-            if (this.showedFood !== -1) {
-                let arrow = document.querySelector(`.popup-foods .arrow${this.showedFood}`);
-                arrow.classList.toggle('active');
-            }
-        },
-
-        openParams(index) {
-            if (this.showedFood !== index) {
-                this.toggleClassArrow();
-                this.showedFood = index;
-                this.toggleClassArrow();
-            } else {
-                this.toggleClassArrow();
-                this.showedFood = -1;
-            }
-        },
+        ...mapActions(["showFoodById"]),
 
         closePopup() {
-            this.toggleClassArrow();
+            this.grams = this.selectedFood.amount;
             this.popupVisibleFood = false;
             this.$emit('updateVisible', this.popupVisibleFood)
-            this.showedFood = -1;
-            this.idCategory = 0;
-            this.foodName = "";
         },
 
-        async addFoods(id) {
+        async changeFood() {
             this.progress = true;
             let food = {
-                idFood: id,
+                id: this.selectedFood.idMealFood,
                 amount: this.grams,
-                idMeal: this.idMeal
             };
-            await axios.post(`${url}/api/programs/add-meal-food`, food).then((res) => {
+            await axios.post(`${url}/api/programs/update-amount-food`, food).then((res) => {
                 if (res.data.name === "Success") {
                     this.$emit("updateDiet");
                     this.closePopup();
@@ -298,8 +229,6 @@ export default {
     },
 
     mounted() {
-        this.showFoods();
-        this.showFoodCategories();
     }
 }
 </script>
@@ -307,11 +236,15 @@ export default {
 <style lang="scss">
 
 #app {
-    .popup-food--content {
+    .popup-food-edit--content {
         overflow: hidden;
+
+        .v-card {
+            padding-bottom: 25px;
+        }
     }
 
-    .popup-foods {
+    .popup-foods-edit {
 
         .popup-title {
             font-family: 'Inter-SemiBold', sans-serif;
@@ -344,22 +277,6 @@ export default {
                         margin-left: 20px;
                         margin-right: 18px;
                     }
-                }
-
-                .scroller {
-                    padding-right: 15px;
-                    height: 380px;
-                    margin-top: 10px;
-                    overflow-y: scroll;
-
-                    @-moz-document url-prefix() {
-                        //padding-right: 10px;
-                        padding-right: 18px;
-                    }
-                }
-
-                .scroller::-webkit-scrollbar {
-                    width: 3px;
                 }
 
                 .header-table {
@@ -522,7 +439,6 @@ export default {
 
                             img {
                                 float: right;
-                                cursor: pointer;
                                 display: block;
                                 width: 14px;
                                 transition: all 0.3s ease 0s;
@@ -564,11 +480,13 @@ export default {
                             flex: 0 0 51px;
                         }
 
-                        .button-add-meal-food {
+                        .button-save-meal-food {
                             flex: 1 0 auto;
 
-                            .button.add-meal-food {
+                            .button.save-meal-food {
+                                float: right;
                                 margin-top: 0;
+                                margin-right: 15px;
                                 width: 90px;
                                 height: 30px;
                                 border-radius: 2px;
@@ -626,26 +544,9 @@ export default {
 }
 
 #app.dark {
-    .popup-foods {
-        .scroller {
-            scrollbar-color: #9196FF #262635;
-            //scrollbar-width: thin;
-            scrollbar-width: none;
-        }
-
+    .popup-foods-edit {
         .v-menu__content {
             background: #1A1A27;
-        }
-
-        .scroller::-webkit-scrollbar-track {
-            background: #262635;
-            border-radius: 4px;
-        }
-
-        .scroller::-webkit-scrollbar-thumb {
-            background-color: #9196FF;
-            border-radius: 4px;
-            border: 3px solid #9196FF;
         }
 
         .header-table {

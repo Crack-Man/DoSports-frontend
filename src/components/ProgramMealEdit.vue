@@ -1,6 +1,6 @@
 <template>
     <div class="program-meal-edit">
-        <div class="progress-diet" v-if="progressDiet">
+        <div class="progress-diet" v-if="progressDiet || progressDietMeal">
             <v-progress-circular
                 size="50"
                 class="icon"
@@ -18,50 +18,65 @@
                                 {{ food.name }} ({{ food.amount }}г)
                             </div>
                             <div class="settings">
-                                <div class="edit">Редактировать</div>
-                                <div class="delete">Удалить</div>
+                                <div class="edit" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
+                                    Редактировать
+                                </div>
+                                <div class="delete" @click="deleteMealFood(food.id)">Удалить</div>
                             </div>
                         </div>
                         <div class="proteins">
                             <div class="name">Б</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.proteinsCalc }}</div>
                         </div>
                         <div class="fats">
                             <div class="name">Ж</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.fatsCalc }}</div>
                         </div>
                         <div class="carbohydrates">
                             <div class="name">У</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.carbohydratesCalc }}</div>
                         </div>
                         <div class="calories">
                             <div class="name">Ккал</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.caloriesCalc }}</div>
                         </div>
                         <div class="fibers">
                             <div class="name">Клетчатка</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.fibersCalc }}</div>
                         </div>
                         <div class="glycemic-index">
                             <div class="name">ГИ</div>
-                            <div class="value">0</div>
+                            <div class="value">{{ food.glycemic_index }}</div>
                         </div>
                     </div>
                     <div class="options">
-                        <div class="button link">
+                        <div class="button link" @click="openPopupFood">
                             <div class="image">
                                 <img
                                     :src="require('@/assets/img/png/plus.png')"
                                 >
                             </div>
                             <span>Добавить</span>
+                            <!--      Поп-ап для добавления    -->
+                            <popup-foods :visible="popupVisibleFood" :id-meal="idMeal"
+                                         @updateVisible="onUpdateVisibleFood"
+                                         @updateDiet="updateFoods"
+                            />
                         </div>
                         <div class="add-ration">
                             Создать рацион
                         </div>
+                        <!--      Поп-ап для редактирования    -->
+                        <popup-foods-edit :visible="popupVisibleFoodEdit" :selected-food="selectedFood" :id-meal="idMeal"
+                                          @updateVisible="onUpdateVisibleFoodEdit"
+                                          @updateDiet="updateFoods"
+                        />
                     </div>
                     <div class="back" @click="back">
-                        <img :src="require('@/assets/img/png/arrow-back.png')">
+                        <div class="image">
+                            <img :src="require('@/assets/img/png/arrow-back--grey.png')">
+                            <img class="active" :src="require('@/assets/img/png/arrow-back--white.png')">
+                        </div>
                         <span>Назад к приемам пищи</span>
                     </div>
                 </div>
@@ -77,11 +92,11 @@
                             <div class="name-row">ГИ</div>
                         </div>
                         <div class="value-col">
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
+                            <div class="value-row">{{ (+proteinsPerMeal.toFixed(1)) }}</div>
+                            <div class="value-row">{{ (+fatsPerMeal.toFixed(1)) }}</div>
+                            <div class="value-row">{{ (+carbohydratesPerMeal.toFixed(1)) }}</div>
+                            <div class="value-row">{{ (+caloriesPerMeal.toFixed(1)) }}</div>
+                            <div class="value-row">{{ (+fibersPerMeal.toFixed(1)) }}</div>
                             <div class="value-row">0</div>
                         </div>
                     </div>
@@ -96,11 +111,11 @@
                             <div class="name-row">ГИ</div>
                         </div>
                         <div class="value-col">
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
-                            <div class="value-row">0</div>
+                            <div class="value-row">{{ programDiet.proteins }}</div>
+                            <div class="value-row">{{ programDiet.fats }}</div>
+                            <div class="value-row">{{ programDiet.carbohydrates }}</div>
+                            <div class="value-row">{{ programDiet.calories }}</div>
+                            <div class="value-row">{{ programDiet.fibers }}</div>
                             <div class="value-row">0</div>
                         </div>
                     </div>
@@ -114,7 +129,9 @@
 import axios from "axios";
 import url from "@/services/url";
 import Title from "@/components/Title";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import PopupFoods from "@/components/PopupFoods";
+import PopupFoodsEdit from "@/components/PopupFoodsEdit";
 
 export default {
     name: "ProgramMealEdit",
@@ -123,28 +140,115 @@ export default {
 
     components: {
         "title-page": Title,
+        "popup-foods": PopupFoods,
+        "popup-foods-edit": PopupFoodsEdit,
     },
 
     data: () => ({
         progressDiet: true,
-        foods: []
+        progressDietMeal: true,
+        selectedFood: {
+            idFood: -1,
+            idMealFood: -1,
+            amount: 100,
+        },
+        proteinsPerMeal: 0,
+        fatsPerMeal: 0,
+        carbohydratesPerMeal: 0,
+        caloriesPerMeal: 0,
+        fibersPerMeal: 0,
+        popupVisibleFood: false,
+        popupVisibleFoodEdit: false,
+        foods: [],
     }),
 
-    computed: {},
+    computed: {
+        ...mapGetters(["programDiet"]),
+    },
+
+    watch: {
+        programDiet() {
+            this.progressDiet = false;
+        }
+    },
 
     methods: {
         ...mapActions(["changeBarsVisible"]),
 
         async getMealFoods() {
+            this.$emit("updateProgramDiet")
+            this.proteinsPerMeal = 0;
+            this.fatsPerMeal = 0;
+            this.carbohydratesPerMeal = 0;
+            this.caloriesPerMeal = 0;
+            this.fibersPerMeal = 0;
             await axios.get(`${url}/api/programs/get-meal-foods/${this.idMeal}`).then((res) => {
                 this.foods = res.data;
-                this.progressDiet = false;
+                for (let i = 0; i < this.foods.length; i++) {
+                    this.foods[i].proteinsCalc = this.calcParams(this.foods[i].proteins, this.foods[i].amount);
+                    this.foods[i].fatsCalc = this.calcParams(this.foods[i].fats, this.foods[i].amount);
+                    this.foods[i].carbohydratesCalc = this.calcParams(this.foods[i].carbohydrates, this.foods[i].amount);
+                    this.foods[i].caloriesCalc = this.calcParams(this.foods[i].calories, this.foods[i].amount);
+                    this.foods[i].fibersCalc = this.calcParams(this.foods[i].fibers, this.foods[i].amount);
+
+                    this.proteinsPerMeal += this.foods[i].proteinsCalc;
+                    this.fatsPerMeal += this.foods[i].fatsCalc;
+                    this.carbohydratesPerMeal += this.foods[i].carbohydratesCalc;
+                    this.caloriesPerMeal += this.foods[i].caloriesCalc;
+                    this.fibersPerMeal += this.foods[i].fibersCalc;
+                }
+                this.progressDietMeal = false;
             });
+        },
+
+        calcParams(ratio, grams) {
+            let value = ratio * grams / 100
+            return (+value.toFixed(1));
         },
 
         back() {
             this.changeBarsVisible(true);
             this.$emit("back");
+        },
+
+        openPopupFood() {
+            this.popupVisibleFood = true;
+        },
+
+        openPopupFoodEdit(idFood, idMealFood, amount) {
+            this.popupVisibleFoodEdit = true;
+            this.selectedFood = {
+                idFood: idFood,
+                idMealFood: idMealFood,
+                amount: amount
+            }
+        },
+
+        onUpdateVisibleFood(data) {
+            this.popupVisibleFood = data;
+        },
+
+        onUpdateVisibleFoodEdit(data) {
+            this.popupVisibleFoodEdit = data;
+        },
+
+        updateFoods() {
+            this.progressDiet = true;
+            this.progressDietMeal = true;
+            this.getMealFoods();
+        },
+
+        async deleteMealFood(id) {
+            let food = {
+                id: id
+            }
+            this.progressDiet = true;
+            this.progressDietMeal = true;
+            await axios.post(`${url}/api/programs/delete-meal-food`, food).then((res) => {
+                if (res.data.name === "Success") {
+                    this.getMealFoods();
+                }
+            });
         }
     },
 
@@ -196,7 +300,7 @@ export default {
 
 
                     .food {
-                        flex: 0 0 335px;
+                        flex: 0 0 268px;
 
                         .name {
                             font-family: 'Inter-Medium', sans-serif;
@@ -206,11 +310,15 @@ export default {
                     }
 
                     .proteins, .fats, .carbohydrates {
-                        flex: 0 0 20px;
+                        flex: 0 0 35px;
                     }
 
                     .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
                         margin-left: 45px;
+                    }
+
+                    .calories {
+                        flex: 0 0 50px;
                     }
 
                     .settings {
@@ -264,12 +372,20 @@ export default {
                 .back {
                     margin-top: 20px;
                     cursor: pointer;
-                    display: flex;
+                    display: inline-flex;
                     align-items: center;
 
-                    img {
-                        display: block;
+                    .image {
                         width: 30px;
+
+                        img {
+                            display: block;
+                            width: 100%;
+                        }
+
+                        img.active {
+                            display: none;
+                        }
                     }
 
                     span {
@@ -306,6 +422,10 @@ export default {
                         font-family: 'Inter-Regular', sans-serif;
                         font-size: 16px;
                         line-height: 119%;
+                    }
+
+                    .value-row {
+                        text-align: right;
                     }
 
                     .name-row:not(:first-child):not(:only-child), .value-row:not(:first-child):not(:only-child) {
@@ -354,6 +474,21 @@ export default {
                 span {
                     color: #B5B5B8;
                     opacity: 0.6;
+                }
+            }
+
+            .back:hover {
+                span {
+                    color: white;
+                    opacity: 1;
+                }
+
+                img {
+                    display: none;
+                }
+
+                img.active {
+                    display: block;
                 }
             }
 

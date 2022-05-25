@@ -1,93 +1,103 @@
 <template>
     <div class="program-base-content">
-        <div class="info-day">
-            <div class="left">
-                <div class="border"></div>
-                <div class="name">
-                    <div class="week-day">{{ weekDay }}</div>
-                    <div class="date">{{ date }}</div>
+        <div class="progress-base-content" v-if="progressDiet">
+            <v-progress-circular
+                size="50"
+                class="icon"
+                indeterminate
+                color="#004BD7"
+            ></v-progress-circular>
+        </div>
+        <template v-else>
+            <div class="info-day">
+                <div class="left">
+                    <div class="border"></div>
+                    <div class="name">
+                        <div class="week-day">{{ weekDay }}</div>
+                        <div class="date">{{ date }}</div>
+                    </div>
+                </div>
+                <div class="center">
+                </div>
+                <div class="right">
+                    Среднеуглеводный день
                 </div>
             </div>
-            <div class="center">
+            <div class="title-table">
+                Расчет БЖУ и калорий на день
             </div>
-            <div class="right">
-                Среднеуглеводный день
+            <v-simple-table
+                dark
+                class="table"
+            >
+                <template v-slot:default>
+                    <thead>
+                    <tr>
+                        <th>
+                        </th>
+                        <th>
+                            Цель
+                        </th>
+                        <th>
+                            Употреблено
+                        </th>
+                        <th>
+                            Поправка
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr
+                        v-for="item in table"
+                        :key="item.name"
+                    >
+                        <td class="name">{{ item.name }}</td>
+                        <td class="aim">{{ item.aim }}</td>
+                        <td class="eaten">{{ item.eaten }}</td>
+                        <td class="amendment">{{ item.amendment }}</td>
+                    </tr>
+                    </tbody>
+                </template>
+            </v-simple-table>
+            <div class="reset-program" @click="openPopup">
+                <img :src="require('@/assets/img/png/text-reset-program--white.png')">
+                <img class="active" :src="require('@/assets/img/png/text-reset-program--violet.png')">
             </div>
-        </div>
-        <div class="title-table">
-            Расчет БЖУ и калорий на день
-        </div>
-        <v-simple-table
-            dark
-            class="table"
-        >
-            <template v-slot:default>
-                <thead>
-                <tr>
-                    <th>
-                    </th>
-                    <th>
-                        Цель
-                    </th>
-                    <th>
-                        Употреблено
-                    </th>
-                    <th>
-                        Поправка
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
-                    v-for="item in table"
-                    :key="item.name"
-                >
-                    <td class="name">{{ item.name }}</td>
-                    <td class="aim">{{ item.aim }}</td>
-                    <td class="eaten">{{ item.eaten }}</td>
-                    <td class="amendment">{{ item.amendment }}</td>
-                </tr>
-                </tbody>
-            </template>
-        </v-simple-table>
-        <div class="reset-program" @click="openPopup">
-            <img :src="require('@/assets/img/png/text-reset-program--white.png')">
-            <img class="active" :src="require('@/assets/img/png/text-reset-program--violet.png')">
-        </div>
-        <v-dialog
-            v-model="popupVisible"
-            persistent
-            max-width="473px"
-            dark
-        >
-            <v-card>
-                <v-btn
-                    icon
-                    dark
-                    class="close"
-                    @click="closePopup"
-                >
-                    <img
-                        :src="require('../assets/img/png/close.png')"
-                    />
-                </v-btn>
+            <v-dialog
+                v-model="popupVisible"
+                persistent
+                max-width="473px"
+                dark
+            >
+                <v-card>
+                    <v-btn
+                        icon
+                        dark
+                        class="close"
+                        @click="closePopup"
+                    >
+                        <img
+                            :src="require('../assets/img/png/close.png')"
+                        />
+                    </v-btn>
 
-                <v-card-text class="popup-reset">
-                    <div class="popup-title">Вы точно хотите</div>
-                    <div class="popup-title">сбросить программу?</div>
-                    <v-card-actions>
-                        <v-btn
-                            class="button cancel"
-                            @click="closePopup"
-                        >Отменить</v-btn>
-                        <v-btn
-                            class="button reset"
-                            @click="deleteProgram"
-                        >Сбросить</v-btn>
-                    </v-card-actions>
-                </v-card-text>
-            </v-card>
-        </v-dialog>
+                    <v-card-text class="popup-reset">
+                        <div class="popup-title">Вы точно хотите</div>
+                        <div class="popup-title">сбросить программу?</div>
+                        <v-card-actions>
+                            <v-btn
+                                class="button cancel"
+                                @click="closePopup"
+                            >Отменить</v-btn>
+                            <v-btn
+                                class="button reset"
+                                @click="deleteProgram"
+                            >Сбросить</v-btn>
+                        </v-card-actions>
+                    </v-card-text>
+                </v-card>
+            </v-dialog>
+        </template>
     </div>
 </template>
 
@@ -100,11 +110,29 @@ export default {
     props: ['aim'],
 
     data: () => ({
-        popupVisible: false
+        popupVisible: false,
+        progressDiet: true,
     }),
 
+    watch: {
+        'currentDate.week'() {
+            this.progressDiet = true;
+            this.getProgramDiet();
+        },
+
+        'currentDate.day'() {
+            this.progressDiet = true;
+            this.getProgramDiet();
+        },
+
+        programPage() {
+            this.progressDiet = true;
+            this.getProgramDiet();
+        }
+    },
+
     computed: {
-        ...mapGetters(["userData", "programData", "currentDate", "schedule"]),
+        ...mapGetters(["userData", "programData", "currentDate", "schedule", "programPage", "programDiet"]),
 
         date() {
             return this.formatDate(this.getScheduleDay());
@@ -135,32 +163,36 @@ export default {
                     fibers: this.aim.fibers
                 }
                 let eaten = {
-                    calories: 0,
-                    proteins: 0,
-                    fats: 0,
-                    carbohydrates: 0,
-                    fibers: 0
+                    calories: this.programDiet.calories,
+                    proteins: this.programDiet.proteins,
+                    fats: this.programDiet.fats,
+                    carbohydrates: this.programDiet.carbohydrates,
+                    fibers: this.programDiet.fibers
+                }
+                let round = (value) => {
+                    return (+value.toFixed(1));
                 }
                 return [
-                    { name: "Калории", aim: aim.calories, eaten: eaten.calories, amendment: aim.calories -  eaten.calories},
-                    { name: "Белки", aim: aim.proteins, eaten: eaten.proteins, amendment: aim.proteins -  eaten.proteins},
-                    { name: "Жиры", aim: aim.fats, eaten: eaten.fats, amendment: aim.fats -  eaten.fats},
-                    { name: "Углеводы", aim: aim.carbohydrates, eaten: eaten.carbohydrates, amendment: aim.carbohydrates -  eaten.carbohydrates},
-                    { name: "Клетчатка", aim: aim.fibers, eaten: eaten.fibers, amendment: aim.fibers - eaten.fibers },
+
+                    { name: "Белки", aim: aim.proteins, eaten: eaten.proteins, amendment: round(aim.proteins -  eaten.proteins)},
+                    { name: "Жиры", aim: aim.fats, eaten: eaten.fats, amendment: round(aim.fats -  eaten.fats)},
+                    { name: "Углеводы", aim: aim.carbohydrates, eaten: eaten.carbohydrates, amendment: round(aim.carbohydrates -  eaten.carbohydrates)},
+                    { name: "Калории", aim: aim.calories, eaten: eaten.calories, amendment: round(aim.calories -  eaten.calories)},
+                    { name: "Клетчатка", aim: aim.fibers, eaten: eaten.fibers, amendment: round(aim.fibers - eaten.fibers) },
                 ]
             }
             return [
-                { name: "Калории", aim: 0, eaten: 0, amendment: 0 },
                 { name: "Белки", aim: 0, eaten: 0, amendment: 0 },
                 { name: "Жиры", aim: 0, eaten: 0, amendment: 0 },
                 { name: "Углеводы", aim: 0, eaten: 0, amendment: 0 },
+                { name: "Калории", aim: 0, eaten: 0, amendment: 0 },
                 { name: "Клетчатка", aim: 0, eaten: 0, amendment: 0 },
             ]
         }
     },
 
     methods: {
-        ...mapActions(["closeProgram", "showProgram"]),
+        ...mapActions(["closeProgram", "showProgram", "showProgramDiet"]),
 
         getScheduleDay() {
             let week = this.currentDate.week;
@@ -181,6 +213,16 @@ export default {
             return "";
         },
 
+        getProgramDiet() {
+            let input = {
+                idProgram: this.programData.id,
+                date: this.date,
+            };
+            this.showProgramDiet(input).then(() => {
+                this.progressDiet = false;
+            });
+        },
+
         openPopup() {
             this.popupVisible = true;
         },
@@ -195,6 +237,10 @@ export default {
             })
         }
     },
+
+    mounted() {
+        this.getProgramDiet();
+    }
 }
 </script>
 
@@ -203,6 +249,18 @@ export default {
 
 #app {
     .program-base-content {
+        .progress-base-content {
+            position: relative;
+            width: 100%;
+            height: 310px;
+
+            .icon {
+                position: absolute;
+                left: calc(50% - 50px / 2);
+                bottom: calc(50% - 50px / 2);
+            }
+        }
+
         flex: 1 0 auto;
         margin-left: 30px;
 
