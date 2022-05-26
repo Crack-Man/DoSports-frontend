@@ -12,6 +12,7 @@ export default {
         currentDateProgram: {week: 1, day: 1},
         page: 0,
         programFoods: [],
+        programPersonalFoods: [],
         programFoodById: [],
         programFoodCats: [],
         diet: [],
@@ -109,6 +110,12 @@ export default {
         async showFoods(ctx) {
             await axios.get(`${url}/api/programs/get-foods`).then((res) => {
                 ctx.commit(`updateFoods`, res.data);
+            });
+        },
+
+        async showPersonalFoods(ctx, idAuthor) {
+            await axios.get(`${url}/api/programs/get-personal-foods/${idAuthor}`).then((res) => {
+                ctx.commit(`updatePersonalFoods`, res.data);
             });
         },
 
@@ -237,6 +244,10 @@ export default {
             state.programFoods = foods;
         },
 
+        updatePersonalFoods(state, foods) {
+            state.programPersonalFoods = foods;
+        },
+
         updateFoodById(state, food) {
             state.programFoodById = food;
         },
@@ -289,6 +300,10 @@ export default {
 
         foods(state) {
             return state.programFoods;
+        },
+
+        personalFoods(state) {
+            return state.programPersonalFoods;
         },
 
         foodById(state) {

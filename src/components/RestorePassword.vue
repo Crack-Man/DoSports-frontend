@@ -321,7 +321,7 @@ export default {
             }
 
             .input.restore {
-                margin-top: 20px;
+                margin-top: 25px;
             }
 
             .text-restore {

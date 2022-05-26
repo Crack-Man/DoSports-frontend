@@ -493,7 +493,8 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
 
-                width: 165px;
+                width: 203px;
+                flex: 0 0 203px;
                 margin-left: 45px;
 
                 .empty {
@@ -541,12 +542,24 @@ export default {
                 margin-top: 15px;
             }
 
-            .proteins, .fats, .carbohydrates {
-                flex: 0 0 35px;
+            .proteins {
+                margin-left: 47px;
             }
 
-            .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
-                margin-left: 45px;
+            .proteins, .fats, .carbohydrates {
+                flex: 0 0 62px;
+            }
+
+            .calories {
+                flex: 0 0 77px;
+            }
+
+            .fibers {
+                flex: 0 0 112px;
+            }
+
+            .glycemic-index {
+                flex: 1 0 auto;
             }
         }
 

@@ -288,19 +288,20 @@ export default {
                     .name {
                         font-family: "Inter-Regular", sans-serif;
                         font-size: 13px;
-                        line-height: 16px;
+                        line-height: 123%;
                     }
 
                     .value {
                         font-family: "Inter-Regular", sans-serif;
                         font-size: 13px;
-                        line-height: 16px;
+                        line-height: 123%;
                         margin-top: 15px;
                     }
 
 
                     .food {
-                        flex: 0 0 268px;
+                        flex: 0 0 384px;
+                        padding-right: 25px;
 
                         .name {
                             font-family: 'Inter-Medium', sans-serif;
@@ -310,15 +311,23 @@ export default {
                     }
 
                     .proteins, .fats, .carbohydrates {
-                        flex: 0 0 35px;
+                        flex: 0 0 62px;
                     }
 
                     .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
-                        margin-left: 45px;
+                        //margin-left: 45px;
                     }
 
                     .calories {
-                        flex: 0 0 50px;
+                        flex: 0 0 77px;
+                    }
+
+                    .fibers {
+                        flex: 0 0 112px;
+                    }
+
+                    .glycemic-index {
+                        flex: 1 0 auto;
                     }
 
                     .settings {

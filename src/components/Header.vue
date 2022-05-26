@@ -550,7 +550,7 @@ body.lock {
         overflow: hidden;
         width: 100%;
         height: 100vh;
-        padding-top: 67px;
+        padding-top: 87px;
         transition: all 0.3s ease 0s;
         z-index: 1;
 
@@ -563,7 +563,7 @@ body.lock {
 
             a {
                 font-family: 'Inter-Medium', sans-serif;
-                font-size: 18px;
+                font-size: 20px;
                 line-height: 115%;
             }
         }
@@ -593,7 +593,7 @@ body.lock {
             a {
                 display: block;
                 font-family: 'Inter-Regular', sans-serif;
-                font-size: 14px;
+                font-size: 16px;
                 line-height: 115%;
                 margin-left: 10px;
             }

@@ -175,7 +175,7 @@ export default {
             this.rules.email = [
                 v => !!v || 'Введите email',
                 v => /.+@.+/.test(v) || 'Некорректный email',
-                v => !this.emailList.find(obj => obj.email === v) || 'Данный email уже существует'
+                v => !this.emailList.find(obj => obj.email === v) || v === this.userData.email || 'Данный email уже существует'
             ];
         },
 

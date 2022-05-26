@@ -54,8 +54,10 @@
                 margin-top: 26px;
             }
         }
+    }
 
-
+    .v-dialog::-webkit-scrollbar {
+        width: 3px;
     }
 }
 
@@ -80,5 +82,21 @@
         .popup-title {
             color: white;
         }
+    }
+
+    .v-dialog {
+        scrollbar-color: #9196FF #262635;
+        scrollbar-width: thin;
+    }
+
+    .v-dialog::-webkit-scrollbar-track {
+        background: #262635;
+        border-radius: 4px;
+    }
+
+    .v-dialog::-webkit-scrollbar-thumb {
+        background-color: #9196FF;
+        border-radius: 4px;
+        border: 3px solid #9196FF;
     }
 }

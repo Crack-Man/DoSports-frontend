@@ -244,7 +244,7 @@ export default {
             }
 
             @media (max-width: 850px) {
-                width: 350px;
+                width: 310px;
                 bottom: -35px;
             }
 

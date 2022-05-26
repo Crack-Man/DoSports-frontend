@@ -1,26 +1,77 @@
 <template>
     <div class="foods-sidebar">
-        <div :class="link.class" v-for="link in links" :key="link.id">
-            {{ link.name }}
-            <template v-if="link.speech">
-                <img :src="require('@/assets/img/svg/ask--grey.svg')"/>
-                <div class="speech">{{ link.speech }}</div>
+        <template v-for="link in links">
+            <template v-if="link.id !== page">
+                <div v-if="link.active" :class="link.class" @click="setPage(link.id)" :key="link.id">
+                    {{ link.name }}
+                </div>
+                <div v-else :class="link.classUnactive" :key="link.id">
+                    {{ link.name }}
+                    <div class="speech-area" v-if="link.speech">
+                        <img :src="require('@/assets/img/svg/ask--grey.svg')"/>
+                        <div class="speech">{{ link.speech }}</div>
+                    </div>
+                </div>
             </template>
-        </div>
+        </template>
     </div>
 </template>
 
 <script>
+
 export default {
     name: "PopupFoodsSidebar",
 
+    props: ['page', 'personalFoods'],
+
     data: () => ({
-        links: [
-            {id: 0, name: "+ Добавить блюдо", class: "link-dish unactive", speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”."},
-            {id: 1, name: "+ Добавить свой продукт", class: "link-self-food unactive", speech: "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”."},
-            {id: 2, name: "+ Добавить рацион", class: "link-ration unactive", speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи."},
-        ]
     }),
+
+    computed: {
+        links() {
+            return [
+                {
+                    id: 0,
+                    name: "+ Добавить продукт",
+                    class: "link link-food",
+                    active: true
+                },
+                {
+                    id: 1,
+                    name: "+ Добавить блюдо",
+                    class: "link link-dish",
+                    classUnactive: "link link-dish unactive",
+                    speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”.",
+                    active: false
+                },
+                {
+                    id: 2,
+                    name: "+ Добавить свой продукт",
+                    class: "link link-self-food",
+                    classUnactive: "link link-self-food unactive",
+                    speech: "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”.",
+                    active: this.personalFoods.length
+                },
+                {
+                    id: 3,
+                    name: "+ Добавить рацион",
+                    class: "link link-ration",
+                    classUnactive: "link link-ration unactive",
+                    speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи.",
+                    active: false
+                },
+            ]
+        }
+    },
+
+    methods: {
+        setPage(id) {
+            this.$emit("changePage", id);
+        }
+    },
+
+    mounted() {
+    }
 }
 </script>
 
@@ -31,12 +82,18 @@ export default {
         margin-left: 20px;
         margin-top: 30px;
 
-        .link-dish, .link-self-food, .link-ration {
-            position: relative;
+        .link {
+            margin-top: 20px;
+            display: flex;
             font-family: 'Inter-Medium', sans-serif;
             font-size: 18px;
             line-height: 22px;
             cursor: pointer;
+
+            .speech-area {
+                position: relative;
+                margin-left: 5px;
+            }
 
             img {
                 position: relative;
@@ -48,6 +105,10 @@ export default {
             img:hover ~ .speech {
                 display: block;
             }
+        }
+
+        .link:first-child {
+            margin-top: 0;
         }
 
         .speech {
@@ -71,14 +132,11 @@ export default {
             left: calc(50% - 9px);
         }
 
-        .link-self-food, .link-ration {
-            margin-top: 20px;
-        }
-
         .link-dish {
             .speech {
                 width: 238px;
-                right: -51px;
+                left: calc(-238px / 2 + 3px);
+                //right: -51px;
             }
         }
 
@@ -86,7 +144,8 @@ export default {
             .speech {
                 width: 238px;
                 top: -87px;
-                right: -75px;
+                left: calc(-238px / 1.5 + 4px);
+                //right: -75px;
             }
 
             .speech:before {
@@ -100,7 +159,8 @@ export default {
             .speech {
                 width: 238px;
                 top: -87px;
-                right: -58px;
+                left: calc(-238px / 2 + 3px);
+                //right: -58px;
             }
         }
     }

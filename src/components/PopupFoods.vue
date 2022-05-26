@@ -17,10 +17,18 @@
                     :src="require('../assets/img/png/close.png')"
                 />
             </v-btn>
+            <v-card-text class="popup-progress" v-if="progressPopupPersonalFoods">
+                <v-progress-circular
+                    size="50"
+                    class="icon"
+                    indeterminate
+                    color="#004BD7"
+                ></v-progress-circular>
+            </v-card-text>
             <v-card-text class="popup-foods">
-                <div class="popup-title">Добавление продуктов</div>
+                <div class="popup-title">{{ titleName }}</div>
                 <div class="popup-container">
-                    <div class="popup-content">
+                    <div class="popup-content" v-if="page === 0">
                         <div class="header-popup">
                             <v-text-field
                                 class="input food-name"
@@ -72,7 +80,9 @@
                             <div :key="index" class="item" v-for="(food, index) in foodsFiltered">
                                 <div class="food" :id="`food${food.id}`">
                                     <div class="name"><span>{{ food['name'] }}</span></div>
-                                    <div class="name-speech" :id="`name-speech${food.id}`"><div>{{ food['name'] }}</div></div>
+                                    <div class="name-speech" :id="`name-speech${food.id}`">
+                                        <div>{{ food['name'] }}</div>
+                                    </div>
                                     <div class="proteins"><span>{{ food['proteins'] }}</span></div>
                                     <div class="fats"><span>{{ food['fats'] }}</span></div>
                                     <div class="carbohydrates"><span>{{ food['carbohydrates'] }}</span></div>
@@ -124,7 +134,8 @@
                             </div>
                         </div>
                     </div>
-                    <popup-foods-sidebar/>
+                    <popup-foods-card-personal v-if="page === 2" :foods="personalFoods" :food-cats="foodCats" :progress="progress" @addFood="addPersonalFood"/>
+                    <popup-foods-sidebar :page="page" :personal-foods="this.personalFoods" @changePage="changePage"/>
                 </div>
             </v-card-text>
         </v-card>
@@ -136,23 +147,34 @@ import {mapActions, mapGetters} from "vuex";
 import PopupFoodsSidebar from "@/components/PopupFoodsSidebar";
 import axios from "axios";
 import url from "../services/url";
+import PopupFoodsCardPersonal from "@/components/PopupFoodsCardPersonal";
 
 export default {
     name: "PopupFoods",
 
-    props: ['visible', 'idMeal', 'selectedFood'],
+    props: ['visible', 'idMeal'],
 
     components: {
-        PopupFoodsSidebar
+        PopupFoodsSidebar,
+        PopupFoodsCardPersonal
     },
 
     data: () => ({
+        progressPopupPersonalFoods: true,
+        page: 0,
         popupVisibleFood: false,
         showedFood: -1,
         progress: false,
         idCategory: 0,
         grams: 100,
         foodName: "",
+        titleNameList: [
+            {id: 0, name: "Добавление продуктов"},
+            {id: 1, name: "Добавление блюд"},
+            {id: 2, name: "Добавление своих продуктов"},
+            {id: 3, name: "Добавление рационов"},
+        ]
+
     }),
 
     watch: {
@@ -168,21 +190,25 @@ export default {
             this.grams = 100;
         },
 
-        'selectedFood.id'() {
-            this.showedFood = this.selectedFood.id;
+        foodName() {
+            this.resetShowedFood();
         },
 
-        'selectedFood.name'() {
-            this.foodName = this.selectedFood.name;
+        idCategory() {
+            this.resetShowedFood();
         },
 
-        'selectedFood.amount'() {
-            this.grams = this.selectedFood.amount;
+        page() {
+            this.resetShowedFood();
         }
     },
 
     computed: {
-        ...mapGetters(["foods", "foodCategories"]),
+        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories"]),
+
+        titleName() {
+            return this.titleNameList.find((obj) => obj.id === this.page).name;
+        },
 
         foodCats() {
             if (this.foodCategories) {
@@ -200,8 +226,7 @@ export default {
             let foods = Array.from(this.foods);
             if (this.idCategory && this.foodName) {
                 foods = this.foods.filter(obj => obj.id_food_category === this.idCategory && obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
-            }
-            else if (this.idCategory) {
+            } else if (this.idCategory) {
                 foods = this.foods.filter(obj => obj.id_food_category === this.idCategory);
             } else if (this.foodName) {
                 foods = this.foods.filter(obj => obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
@@ -251,7 +276,16 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showFoods", "showFoodCategories"]),
+        ...mapActions(["showPersonalFoods", "showFoods", "showFoodCategories"]),
+
+        changePage(page) {
+            this.page = page;
+        },
+
+        resetShowedFood() {
+            this.toggleClassArrow();
+            this.showedFood = -1;
+        },
 
         toggleClassArrow() {
             if (this.showedFood !== -1) {
@@ -272,12 +306,18 @@ export default {
         },
 
         closePopup() {
+            this.page = 0;
             this.toggleClassArrow();
             this.popupVisibleFood = false;
             this.$emit('updateVisible', this.popupVisibleFood)
             this.showedFood = -1;
             this.idCategory = 0;
             this.foodName = "";
+        },
+
+        async addPersonalFood(data) {
+            this.grams = data.amount;
+            await this.addFoods(data.idFood);
         },
 
         async addFoods(id) {
@@ -300,6 +340,9 @@ export default {
     mounted() {
         this.showFoods();
         this.showFoodCategories();
+        this.showPersonalFoods(this.userData.id).then(() => {
+            this.progressPopupPersonalFoods = false;
+        });
     }
 }
 </script>
@@ -309,6 +352,16 @@ export default {
 #app {
     .popup-food--content {
         overflow: hidden;
+    }
+
+    .popup-progress {
+        height: 500px !important;
+
+        .icon {
+            position: absolute;
+            left: calc(50% - 50px / 2);
+            bottom: calc(50% - 50px / 2);
+        }
     }
 
     .popup-foods {
