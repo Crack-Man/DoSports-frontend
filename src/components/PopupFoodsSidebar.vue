@@ -1,12 +1,12 @@
 <template>
     <div class="foods-sidebar">
         <template v-for="link in links">
-            <template v-if="link.id !== page">
-                <div v-if="link.active" :class="link.class" @click="setPage(link.id)" :key="link.id">
-                    {{ link.name }}
+            <template>
+                <div v-if="link.active && link.visible" :class="link.class" @click="setPage(link.id)" :key="link.id">
+                    <span :class="link.id === page ? 'active' : ''">{{ link.name }}</span>
                 </div>
-                <div v-else :class="link.classUnactive" :key="link.id">
-                    {{ link.name }}
+                <div v-else-if="link.visible" :class="link.classUnactive" :key="link.id">
+                    <span :class="link.id === page ? 'active' : ''">{{ link.name }}</span>
                     <div class="speech-area" v-if="link.speech">
                         <img :src="require('@/assets/img/svg/ask--grey.svg')"/>
                         <div class="speech">{{ link.speech }}</div>
@@ -22,7 +22,7 @@
 export default {
     name: "PopupFoodsSidebar",
 
-    props: ['page', 'personalFoods'],
+    props: ['page', 'personalFoods', 'rations', 'type'],
 
     data: () => ({
     }),
@@ -34,15 +34,8 @@ export default {
                     id: 0,
                     name: "+ Добавить продукт",
                     class: "link link-food",
-                    active: true
-                },
-                {
-                    id: 1,
-                    name: "+ Добавить блюдо",
-                    class: "link link-dish",
-                    classUnactive: "link link-dish unactive",
-                    speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”.",
-                    active: false
+                    active: true,
+                    visible: true
                 },
                 {
                     id: 2,
@@ -50,7 +43,17 @@ export default {
                     class: "link link-self-food",
                     classUnactive: "link link-self-food unactive",
                     speech: "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”.",
-                    active: this.personalFoods.length
+                    active: this.personalFoods.length,
+                    visible: true
+                },
+                {
+                    id: 1,
+                    name: "+ Добавить блюдо",
+                    class: "link link-dish",
+                    classUnactive: "link link-dish unactive",
+                    speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”.",
+                    active: false,
+                    visible: true
                 },
                 {
                     id: 3,
@@ -58,7 +61,8 @@ export default {
                     class: "link link-ration",
                     classUnactive: "link link-ration unactive",
                     speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи.",
-                    active: false
+                    active: this.rations.length,
+                    visible: this.type !== 'ration'
                 },
             ]
         }
@@ -85,7 +89,7 @@ export default {
         .link {
             margin-top: 20px;
             display: flex;
-            font-family: 'Inter-Medium', sans-serif;
+            font-family: 'Inter-Regular', sans-serif;
             font-size: 18px;
             line-height: 22px;
             cursor: pointer;
@@ -168,8 +172,12 @@ export default {
 
 #app.dark {
     .foods-sidebar {
-        .link-dish, .link-self-food, .link-ration {
+        .link {
             color: white;
+
+            span.active {
+                color: #9196FF;
+            }
         }
 
         .speech {

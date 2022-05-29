@@ -7,6 +7,7 @@
                 <sidebar v-show="barsVisible"/>
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
                 <program-meal v-if="programPage === 1"/>
+                <program-rations v-if="programPage === 4"/>
                 <program-personal-foods v-if="programPage === 6"/>
             </div>
         </v-container>
@@ -21,6 +22,7 @@ import ProgramSidebar from "@/components/ProgramSidebar";
 import ProgramBaseContent from "@/components/ProgramBaseContent";
 import ProgramMeal from "./ProgramMeal";
 import ProgramPersonalFoods from "@/components/ProgramPersonalFoods";
+import ProgramRations from "@/components/ProgramRations";
 
 export default {
     name: "ProgramBaseInfo",
@@ -31,6 +33,7 @@ export default {
         "sidebar": ProgramSidebar,
         "program-base-content": ProgramBaseContent,
         "program-meal": ProgramMeal,
+        "program-rations": ProgramRations,
         "program-personal-foods": ProgramPersonalFoods,
     },
 

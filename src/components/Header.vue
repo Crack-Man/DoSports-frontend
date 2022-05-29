@@ -604,19 +604,19 @@ body.lock {
         }
 
         .mail {
-            margin-top: 45px;
+            margin-top: 40px;
 
             .title {
                 font-family: 'Inter-Regular', sans-serif !important;
-                font-size: 12px !important;
-                line-height: 125% !important;
+                font-size: 14px !important;
+                line-height: 121% !important;
             }
 
             .value {
                 margin-top: 4px;
                 font-family: 'Inter-Medium', sans-serif !important;
-                font-size: 14px !important;
-                line-height: 121% !important;
+                font-size: 18px !important;
+                line-height: 122% !important;
             }
         }
     }

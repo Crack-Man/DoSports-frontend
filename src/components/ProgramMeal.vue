@@ -381,6 +381,7 @@ export default {
             this.page = 2;
             this.idMeal = id;
             this.timeMeal = time;
+            // убирает сайдбар программы
             this.changeBarsVisible(false);
         },
 

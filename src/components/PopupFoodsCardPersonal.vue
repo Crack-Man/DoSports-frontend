@@ -49,9 +49,9 @@
         </div>
         <div class="scroller">
             <div :key="index" class="item" v-for="(food, index) in foodsFiltered">
-                <div class="food" :id="`food${food.id}`">
+                <div class="food" @click="openParams(food.id)" :id="`food${food.id}`">
                     <div class="name"><span>{{ food['name'] }}</span></div>
-                    <div class="name-speech" :id="`name-speech${food.id}`"><div>{{ food['name'] }}</div></div>
+                    <div class="name-speech" :id="`name-speech${index}`"><div>{{ food['name'] }}</div></div>
                     <div class="proteins"><span>{{ food['proteins'] }}</span></div>
                     <div class="fats"><span>{{ food['fats'] }}</span></div>
                     <div class="carbohydrates"><span>{{ food['carbohydrates'] }}</span></div>
@@ -59,7 +59,7 @@
                     <div class="fibers"><span>{{ food['fibers'] }}</span></div>
                     <div class="glycemic-index"><span>{{ food['glycemic_index'] }}</span></div>
                     <div class="arrow">
-                        <img @click="openParams(food.id)" :class="'arrow' + food.id"
+                        <img :class="'arrow' + food.id"
                              :src="require('@/assets/img/png/arrow-right.png')">
                     </div>
                 </div>
@@ -113,7 +113,6 @@ export default {
     props: ["foods", "foodCats", 'progress'],
 
     data: () => ({
-        progress: false,
         showedFood: -1,
         idCategory: 0,
         grams: 100,

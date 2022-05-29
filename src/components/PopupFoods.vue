@@ -17,7 +17,7 @@
                     :src="require('../assets/img/png/close.png')"
                 />
             </v-btn>
-            <v-card-text class="popup-progress" v-if="progressPopupPersonalFoods">
+            <v-card-text class="popup-progress" v-if="progressPopupPersonalFoods || progressPopupRations">
                 <v-progress-circular
                     size="50"
                     class="icon"
@@ -78,9 +78,9 @@
                         </div>
                         <div class="scroller">
                             <div :key="index" class="item" v-for="(food, index) in foodsFiltered">
-                                <div class="food" :id="`food${food.id}`">
+                                <div class="food" @click="openParams(food.id)" :id="`food${food.id}`">
                                     <div class="name"><span>{{ food['name'] }}</span></div>
-                                    <div class="name-speech" :id="`name-speech${food.id}`">
+                                    <div class="name-speech" :id="`name-speech${index}`">
                                         <div>{{ food['name'] }}</div>
                                     </div>
                                     <div class="proteins"><span>{{ food['proteins'] }}</span></div>
@@ -90,7 +90,7 @@
                                     <div class="fibers"><span>{{ food['fibers'] }}</span></div>
                                     <div class="glycemic-index"><span>{{ food['glycemic_index'] }}</span></div>
                                     <div class="arrow">
-                                        <img @click="openParams(food.id)" :class="'arrow' + food.id"
+                                        <img :class="'arrow' + food.id"
                                              :src="require('@/assets/img/png/arrow-right.png')">
                                     </div>
                                 </div>
@@ -134,8 +134,12 @@
                             </div>
                         </div>
                     </div>
-                    <popup-foods-card-personal v-if="page === 2" :foods="personalFoods" :food-cats="foodCats" :progress="progress" @addFood="addPersonalFood"/>
-                    <popup-foods-sidebar :page="page" :personal-foods="this.personalFoods" @changePage="changePage"/>
+                    <popup-foods-card-personal v-if="page === 2" :foods="this.personalFoods" :food-cats="foodCats"
+                                               :progress="progress" @addFood="addPersonalFood"/>
+                    <popup-foods-card-rations v-if="page === 3" :rations="this.rations" :id-meal="idMeal"
+                                              @addRation="addRationToMeal"/>
+                    <popup-foods-sidebar :page="page" :personal-foods="this.personalFoods" :rations="this.rations" :type="type"
+                                         @changePage="changePage"/>
                 </div>
             </v-card-text>
         </v-card>
@@ -148,19 +152,22 @@ import PopupFoodsSidebar from "@/components/PopupFoodsSidebar";
 import axios from "axios";
 import url from "../services/url";
 import PopupFoodsCardPersonal from "@/components/PopupFoodsCardPersonal";
+import PopupFoodsCardRations from "@/components/PopupFoodsCardRations";
 
 export default {
     name: "PopupFoods",
 
-    props: ['visible', 'idMeal'],
+    props: ['visible', 'idMeal', 'idRation', 'type'],
 
     components: {
         PopupFoodsSidebar,
-        PopupFoodsCardPersonal
+        PopupFoodsCardPersonal,
+        PopupFoodsCardRations,
     },
 
     data: () => ({
         progressPopupPersonalFoods: true,
+        progressPopupRations: true,
         page: 0,
         popupVisibleFood: false,
         showedFood: -1,
@@ -204,7 +211,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories"]),
+        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories", "rations"]),
 
         titleName() {
             return this.titleNameList.find((obj) => obj.id === this.page).name;
@@ -276,7 +283,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showPersonalFoods", "showFoods", "showFoodCategories"]),
+        ...mapActions(["showPersonalFoods", "showFoods", "showFoodCategories", "showRations"]),
 
         changePage(page) {
             this.page = page;
@@ -315,6 +322,11 @@ export default {
             this.foodName = "";
         },
 
+        addRationToMeal() {
+            this.$emit("updateDiet");
+            this.closePopup();
+        },
+
         async addPersonalFood(data) {
             this.grams = data.amount;
             await this.addFoods(data.idFood);
@@ -322,18 +334,35 @@ export default {
 
         async addFoods(id) {
             this.progress = true;
-            let food = {
-                idFood: id,
-                amount: this.grams,
-                idMeal: this.idMeal
-            };
-            await axios.post(`${url}/api/programs/add-meal-food`, food).then((res) => {
-                if (res.data.name === "Success") {
-                    this.$emit("updateDiet");
-                    this.closePopup();
-                }
-                this.progress = false;
-            })
+            if (this.type === "ration") {
+                //    добавить продукт в рацион
+                let food = {
+                    idFood: id,
+                    amount: this.grams,
+                    idRation: this.idRation
+                };
+                await axios.post(`${url}/api/programs/add-ration-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            } else {
+                // прием пищи
+                let food = {
+                    idFood: id,
+                    amount: this.grams,
+                    idMeal: this.idMeal
+                };
+                await axios.post(`${url}/api/programs/add-meal-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            }
         }
     },
 
@@ -343,6 +372,9 @@ export default {
         this.showPersonalFoods(this.userData.id).then(() => {
             this.progressPopupPersonalFoods = false;
         });
+        this.showRations(this.userData.id).then(() => {
+            this.progressPopupRations = false;
+        })
     }
 }
 </script>
@@ -365,6 +397,22 @@ export default {
     }
 
     .popup-foods {
+        div {
+            // запрет на выделение
+            // Для эксплорера
+            -ms-user-select: none;
+
+            /**
+             * Для мозилы
+             */
+            -moz-user-select: none;
+
+            // Для конкверора
+            -khtml-user-select: none;
+
+            // Для Сафари и Хрома
+            -webkit-user-select: none;
+        }
 
         .popup-title {
             font-family: 'Inter-SemiBold', sans-serif;
@@ -491,9 +539,11 @@ export default {
                 }
 
                 .item {
+                    margin-top: 10px;
+                    cursor: pointer;
+
                     .food {
                         position: relative;
-                        margin-top: 10px;
                         display: flex;
                         align-items: center;
                         border-radius: 4px;
@@ -518,6 +568,7 @@ export default {
                         }
 
                         .name-speech {
+                            border-radius: 2px;
                             display: none;
                             position: absolute;
                             top: -42px;
@@ -575,7 +626,6 @@ export default {
 
                             img {
                                 float: right;
-                                cursor: pointer;
                                 display: block;
                                 width: 14px;
                                 transition: all 0.3s ease 0s;
@@ -672,6 +722,10 @@ export default {
                             }
                         }
                     }
+                }
+
+                .item:first-child {
+                    margin-top: 0;
                 }
             }
         }

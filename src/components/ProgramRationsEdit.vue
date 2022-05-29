@@ -1,6 +1,6 @@
 <template>
-    <div class="program-meal-edit">
-        <div class="progress-diet" v-if="progressDiet || progressDietMeal">
+    <div class="program-rations-edit">
+        <div class="progress-diet" v-if="progress">
             <v-progress-circular
                 size="50"
                 class="icon"
@@ -9,10 +9,10 @@
             ></v-progress-circular>
         </div>
         <template v-else>
-            <title-page :name="time" class="meals"></title-page>
-            <div class="meal-edit-container">
-                <div class="meal-edit-content">
-                    <div class="item" v-for="food in foods" :key="food.id">
+            <title-page :name="ration.name" class="rations"></title-page>
+            <div class="ration-edit-container">
+                <div class="ration-edit-content">
+                    <div class="item" v-for="food in ration.foods" :key="food.id">
                         <div class="food">
                             <div class="name">
                                 {{ food.name }} ({{ food.amount }}г)
@@ -21,7 +21,7 @@
                                 <div class="edit" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
                                     Редактировать
                                 </div>
-                                <div class="delete" @click="deleteMealFood(food.id)">Удалить</div>
+                                <div class="delete" @click="deleteRationFood(food.id)">Удалить</div>
                             </div>
                         </div>
                         <div class="proteins">
@@ -58,66 +58,16 @@
                             </div>
                             <span>Добавить</span>
                             <!--      Поп-ап для добавления    -->
-                            <popup-foods :visible="popupVisibleFood" :id-meal="idMeal"
+                            <popup-foods :visible="popupVisibleFood"
+                                         :id-ration="ration.id"
+                                         type="ration"
                                          @updateVisible="onUpdateVisibleFood"
                                          @updateDiet="updateFoods"
                             />
                         </div>
-                        <div class="add-ration" @click="popupVisibleRation = true">
-                            Создать рацион
-                        </div>
-                        <v-dialog
-                            v-model="popupVisibleRation"
-                            persistent
-                            width="473px"
-                            dark
-                        >
-                            <v-card>
-                                <v-btn
-                                    icon
-                                    dark
-                                    class="close"
-                                    @click="closePopupRation"
-                                >
-                                    <img
-                                        :src="require('../assets/img/png/close.png')"
-                                    />
-                                </v-btn>
-                                <v-card-text class="popup-create-ration" v-if="ration.page === 0">
-                                    <div class="popup-title">Создание рациона</div>
-                                    <v-form class="form-ration" ref="form" lazy-validation>
-                                        <v-text-field
-                                            label="Название рациона"
-                                            v-model="ration.name"
-                                            class="input growth"
-                                            :rules="rules.name"
-                                            dark
-                                            outlined
-                                            require
-                                        ></v-text-field>
-                                        <v-btn
-                                            @click="this.addRation"
-                                            :loading="ration.progress"
-                                            color="primary"
-                                            class="button"
-                                        >Готово
-                                        </v-btn>
-                                    </v-form>
-                                </v-card-text>
-                                <v-card-text class="popup-create-ration" v-else-if="ration.page === 1">
-                                    <div class="popup-title">Рацион успешно создан!</div>
-                                    <p>Для просмотра и редактирования рациона перейдите в пункт меню “Рационы”.</p>
-                                    <v-btn
-                                        @click="this.closePopupRation"
-                                        color="primary"
-                                        class="button"
-                                    >Понятно
-                                    </v-btn>
-                                </v-card-text>
-                            </v-card>
-                        </v-dialog>
                         <!--      Поп-ап для редактирования    -->
                         <popup-foods-edit :visible="popupVisibleFoodEdit" :selected-food="selectedFood"
+                                          type="ration"
                                           @updateVisible="onUpdateVisibleFoodEdit"
                                           @updateDiet="updateFoods"
                         />
@@ -127,11 +77,11 @@
                             <img :src="require('@/assets/img/png/arrow-back--grey.png')">
                             <img class="active" :src="require('@/assets/img/png/arrow-back--white.png')">
                         </div>
-                        <span>Назад к приемам пищи</span>
+                        <span>Назад к рационам</span>
                     </div>
                 </div>
                 <div class="stat">
-                    <div class="name-stat">Всего в этом приеме</div>
+                    <div class="name-stat">Всего в этом рационе</div>
                     <div class="table-stat">
                         <div class="name-col">
                             <div class="name-row">Белки</div>
@@ -142,30 +92,11 @@
                             <div class="name-row">ГИ</div>
                         </div>
                         <div class="value-col">
-                            <div class="value-row">{{ (+proteinsPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+fatsPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+carbohydratesPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+caloriesPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+fibersPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">0</div>
-                        </div>
-                    </div>
-                    <div class="name-stat">Всего за этот день</div>
-                    <div class="table-stat">
-                        <div class="name-col">
-                            <div class="name-row">Белки</div>
-                            <div class="name-row">Жиры</div>
-                            <div class="name-row">Углеводы</div>
-                            <div class="name-row">Калории</div>
-                            <div class="name-row">Клетчатка</div>
-                            <div class="name-row">ГИ</div>
-                        </div>
-                        <div class="value-col">
-                            <div class="value-row">{{ programDiet.proteins }}</div>
-                            <div class="value-row">{{ programDiet.fats }}</div>
-                            <div class="value-row">{{ programDiet.carbohydrates }}</div>
-                            <div class="value-row">{{ programDiet.calories }}</div>
-                            <div class="value-row">{{ programDiet.fibers }}</div>
+                            <div class="value-row">{{ ration.proteins }}</div>
+                            <div class="value-row">{{ ration.fats }}</div>
+                            <div class="value-row">{{ ration.carbohydrates }}</div>
+                            <div class="value-row">{{ ration.calories }}</div>
+                            <div class="value-row">{{ ration.fibers }}</div>
                             <div class="value-row">0</div>
                         </div>
                     </div>
@@ -176,17 +107,17 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
 import axios from "axios";
 import url from "@/services/url";
 import Title from "@/components/Title";
-import {mapActions, mapGetters} from "vuex";
 import PopupFoods from "@/components/PopupFoods";
 import PopupFoodsEdit from "@/components/PopupFoodsEdit";
 
 export default {
-    name: "ProgramMealEdit",
+    name: "ProgramRationsEdit",
 
-    props: ['idMeal', 'time'],
+    props: ['ration', 'progress'],
 
     components: {
         "title-page": Title,
@@ -195,117 +126,33 @@ export default {
     },
 
     data: () => ({
-        ration: {
-            name: "",
-            page: 0,
-            progress: false,
-            foods: [],
-            idUser: 0,
-        },
-        progressDiet: true,
-        progressDietMeal: true,
-        popupVisibleRation: false,
         selectedFood: {
             idFood: -1,
-            idMealFood: -1,
+            idRationFood: -1,
             amount: 100,
         },
-        proteinsPerMeal: 0,
-        fatsPerMeal: 0,
-        carbohydratesPerMeal: 0,
-        caloriesPerMeal: 0,
-        fibersPerMeal: 0,
         popupVisibleFood: false,
         popupVisibleFoodEdit: false,
-        foods: [],
-
-        rules: {
-            name: [
-                v => !!v || "Введите название"
-            ]
-        }
     }),
 
     computed: {
-        ...mapGetters(["programDiet", "userData"]),
-    },
-
-    watch: {
-        programDiet() {
-            this.progressDiet = false;
-        }
+        ...mapGetters(["userData"]),
     },
 
     methods: {
         ...mapActions(["changeBarsVisible"]),
 
-        async addRation() {
-            this.ration.progress = true;
-            this.ration.foods = this.foods;
-            this.ration.idUser = this.userData.id;
-            await axios.post(`${url}/api/programs/add-ration`, this.ration).then((res) => {
-                if (res.data.name === "Success") {
-                    this.ration.page++;
-                }
-                this.ration.progress = false;
-            });
-        },
-
-        closePopupRation() {
-            this.popupVisibleRation = false;
-            this.ration.name = "";
-            this.ration.page = 0;
-            this.ration.progress = false;
-            this.ration.foods = [];
-        },
-
-        async getMealFoods() {
-            this.$emit("updateProgramDiet")
-            this.proteinsPerMeal = 0;
-            this.fatsPerMeal = 0;
-            this.carbohydratesPerMeal = 0;
-            this.caloriesPerMeal = 0;
-            this.fibersPerMeal = 0;
-            await axios.get(`${url}/api/programs/get-meal-foods/${this.idMeal}`).then((res) => {
-                this.foods = res.data;
-                for (let i = 0; i < this.foods.length; i++) {
-                    this.foods[i].proteinsCalc = this.calcParams(this.foods[i].proteins, this.foods[i].amount);
-                    this.foods[i].fatsCalc = this.calcParams(this.foods[i].fats, this.foods[i].amount);
-                    this.foods[i].carbohydratesCalc = this.calcParams(this.foods[i].carbohydrates, this.foods[i].amount);
-                    this.foods[i].caloriesCalc = this.calcParams(this.foods[i].calories, this.foods[i].amount);
-                    this.foods[i].fibersCalc = this.calcParams(this.foods[i].fibers, this.foods[i].amount);
-
-                    this.proteinsPerMeal += this.foods[i].proteinsCalc;
-                    this.fatsPerMeal += this.foods[i].fatsCalc;
-                    this.carbohydratesPerMeal += this.foods[i].carbohydratesCalc;
-                    this.caloriesPerMeal += this.foods[i].caloriesCalc;
-                    this.fibersPerMeal += this.foods[i].fibersCalc;
-                }
-                this.progressDietMeal = false;
-            });
-        },
-
-        calcParams(ratio, grams) {
-            let value = ratio * grams / 100
-            return (+value.toFixed(1));
-        },
-
-        back() {
-            this.changeBarsVisible(true);
-            this.$emit("back");
+        openPopupFoodEdit(idFood, idRationFood, amount) {
+            this.popupVisibleFoodEdit = true;
+            this.selectedFood = {
+                idFood: idFood,
+                idRationFood: idRationFood,
+                amount: amount
+            }
         },
 
         openPopupFood() {
             this.popupVisibleFood = true;
-        },
-
-        openPopupFoodEdit(idFood, idMealFood, amount) {
-            this.popupVisibleFoodEdit = true;
-            this.selectedFood = {
-                idFood: idFood,
-                idMealFood: idMealFood,
-                amount: amount
-            }
         },
 
         onUpdateVisibleFood(data) {
@@ -316,51 +163,44 @@ export default {
             this.popupVisibleFoodEdit = data;
         },
 
-        updateFoods() {
-            this.progressDiet = true;
-            this.progressDietMeal = true;
-            this.getMealFoods();
+        back() {
+            this.changeBarsVisible(true);
+            this.$emit("back");
         },
 
-        async deleteMealFood(id) {
+        async deleteRationFood(id) {
             let food = {
                 id: id
             }
             this.progressDiet = true;
             this.progressDietMeal = true;
-            await axios.post(`${url}/api/programs/delete-meal-food`, food).then((res) => {
+            await axios.post(`${url}/api/programs/delete-ration-food`, food).then((res) => {
                 if (res.data.name === "Success") {
-                    this.getMealFoods();
+                    this.updateFoods();
                 }
             });
+        },
+
+        updateFoods() {
+            this.$emit("updateRationFoods", this.ration.id);
         }
     },
 
     mounted() {
-        this.getMealFoods();
+
     }
 }
 </script>
 
 <style lang="scss">
-@import "../assets/scss/popups.scss";
-
 #app {
-    .program-meal-edit {
-        .progress-diet {
-            height: 500px !important;
-        }
-
-        .title-page.meals {
-            margin-top: 10px !important;
-        }
-
-        .meal-edit-container {
+    .program-rations-edit {
+        .ration-edit-container {
             display: flex;
             align-items: flex-start;
             margin-top: 30px;
 
-            .meal-edit-content {
+            .ration-edit-content {
                 flex: 0 0 825px;
 
                 .item {
@@ -398,10 +238,6 @@ export default {
 
                     .proteins, .fats, .carbohydrates {
                         flex: 0 0 62px;
-                    }
-
-                    .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
-                        //margin-left: 45px;
                     }
 
                     .calories {
@@ -530,39 +366,11 @@ export default {
             }
         }
     }
-
-    .popup-create-ration {
-        .popup-title {
-
-        }
-
-        p {
-            margin-top: 25px !important;
-            margin-bottom: 0 !important;
-        }
-
-        .button {
-            margin-top: 20px;
-            width: 100%;
-            height: 50px;
-        }
-
-        .form-ration {
-            .input {
-                margin-top: 50px;
-                width: 100%;
-            }
-
-            .button {
-                margin-top: -2px;
-            }
-        }
-    }
 }
 
 #app.dark {
-    .program-meal-edit {
-        .meal-edit-container {
+    .program-rations-edit {
+        .ration-edit-container {
             .item {
                 background: #1A1A27;
 

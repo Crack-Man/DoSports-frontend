@@ -114,7 +114,7 @@ import url from "../services/url";
 export default {
     name: "PopupFoodsEdit",
 
-    props: ['visible', 'idMeal', 'selectedFood'],
+    props: ['visible', 'selectedFood', 'type'],
 
     components: {},
 
@@ -214,17 +214,33 @@ export default {
 
         async changeFood() {
             this.progress = true;
-            let food = {
-                id: this.selectedFood.idMealFood,
-                amount: this.grams,
-            };
-            await axios.post(`${url}/api/programs/update-amount-food`, food).then((res) => {
-                if (res.data.name === "Success") {
-                    this.$emit("updateDiet");
-                    this.closePopup();
-                }
-                this.progress = false;
-            })
+            if (this.type === "ration") {
+                //    рацион
+                let food = {
+                    id: this.selectedFood.idRationFood,
+                    amount: this.grams,
+                };
+                await axios.post(`${url}/api/programs/update-amount-ration-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            } else {
+                // прием пищи
+                let food = {
+                    id: this.selectedFood.idMealFood,
+                    amount: this.grams,
+                };
+                await axios.post(`${url}/api/programs/update-amount-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            }
         }
     },
 

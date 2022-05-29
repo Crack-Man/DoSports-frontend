@@ -13,6 +13,7 @@ export default {
         page: 0,
         programFoods: [],
         programPersonalFoods: [],
+        programRations: [],
         programFoodById: [],
         programFoodCats: [],
         diet: [],
@@ -124,6 +125,68 @@ export default {
                 if (res.data.name === "Success") {
                     ctx.commit(`updateFoodById`, res.data.food);
                 }
+            });
+        },
+
+        async showRations(ctx, id) {
+            let calcParams = (ratio, grams) => {
+                let value = ratio * grams / 100;
+                return (+value.toFixed(1));
+            }
+
+            let round = (value) => {
+                return (+value.toFixed(1));
+            }
+
+            await axios.get(`${url}/api/programs/get-users-rations/${id}`).then(async (resRations) => {
+                let rations = Array.from(resRations.data);
+                for (let i = 0; i < rations.length; i++) {
+                    await axios.get(`${url}/api/programs/get-ration-foods/${rations[i].id}`).then(async (resFoods) => {
+                        let foods = Array.from(resFoods.data);
+                        rations[i].proteins = 0;
+                        rations[i].fats = 0;
+                        rations[i].carbohydrates = 0;
+                        rations[i].calories = 0;
+                        rations[i].fibers = 0;
+                        rations[i].glycemic_index = 0;
+
+                        for (let j = 0; j < foods.length; j++) {
+                            await axios.get(`${url}/api/programs/get-food-by-id/${foods[j].id_food}`).then((resFood) => {
+                                let food = resFood.data.food
+                                if (food.length) {
+                                    foods[j].name = food[0].name;
+                                    foods[j].id_food_category = food[0].id_food_category;
+                                    foods[j].proteins = food[0].proteins;
+                                    foods[j].fats = food[0].fats;
+                                    foods[j].carbohydrates = food[0].carbohydrates;
+                                    foods[j].calories = food[0].calories;
+                                    foods[j].fibers = food[0].fibers;
+                                    foods[j].glycemic_index = food[0].glycemic_index;
+                                    foods[j].author = food[0].author;
+                                    foods[j].proteinsCalc = calcParams(foods[j].proteins, foods[j].amount);
+                                    foods[j].fatsCalc = calcParams(foods[j].fats, foods[j].amount);
+                                    foods[j].carbohydratesCalc = calcParams(foods[j].carbohydrates, foods[j].amount);
+                                    foods[j].caloriesCalc = calcParams(foods[j].calories, foods[j].amount);
+                                    foods[j].fibersCalc = calcParams(foods[j].fibers, foods[j].amount);
+
+                                    rations[i].proteins += foods[j].proteinsCalc;
+                                    rations[i].fats += foods[j].fatsCalc;
+                                    rations[i].carbohydrates += foods[j].carbohydratesCalc;
+                                    rations[i].calories += foods[j].caloriesCalc;
+                                    rations[i].fibers += foods[j].fibersCalc;
+                                }
+                            })
+                        }
+                        rations[i].proteins = round(rations[i].proteins);
+                        rations[i].fats = round(rations[i].fats);
+                        rations[i].carbohydrates = round(rations[i].carbohydrates);
+                        rations[i].calories = round(rations[i].calories);
+                        rations[i].fibers = round(rations[i].fibers);
+
+                        rations[i].foods = foods;
+                    });
+                }
+                ctx.commit("updateRations", rations);
             });
         },
 
@@ -252,6 +315,10 @@ export default {
             state.programFoodById = food;
         },
 
+        updateRations(state, rations) {
+            state.programRations = rations;
+        },
+
         updateProgramDiet(state, diet) {
             state.diet = diet;
         },
@@ -308,6 +375,10 @@ export default {
 
         foodById(state) {
             return state.programFoodById;
+        },
+
+        rations(state) {
+            return state.programRations;
         },
 
         programDiet(state) {
