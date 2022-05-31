@@ -17,7 +17,7 @@
                     :src="require('../assets/img/png/close.png')"
                 />
             </v-btn>
-            <v-card-text class="popup-progress" v-if="progressPopupPersonalFoods || progressPopupRations">
+            <v-card-text class="popup-progress" v-if="progressPopupFoods || progressPopupPersonalFoods || progressPopupRations || progressPopupDishes">
                 <v-progress-circular
                     size="50"
                     class="icon"
@@ -25,7 +25,7 @@
                     color="#004BD7"
                 ></v-progress-circular>
             </v-card-text>
-            <v-card-text class="popup-foods">
+            <v-card-text v-else class="popup-foods">
                 <div class="popup-title">{{ titleName }}</div>
                 <div class="popup-container">
                     <div class="popup-content" v-if="page === 0">
@@ -109,7 +109,7 @@
                                                 step="5"
                                             >
                                                 <template v-slot:thumb-label="{ value }">
-                                                    {{ value }} гр
+                                                    {{ value }} г
                                                 </template>
                                             </v-slider>
                                         </div>
@@ -134,11 +134,14 @@
                             </div>
                         </div>
                     </div>
+                    <popup-foods-card-dishes v-if="page === 1" :dishes="this.dishes" :id-meal="idMeal"
+                                              @addDish="addDishToMeal"/>
                     <popup-foods-card-personal v-if="page === 2" :foods="this.personalFoods" :food-cats="foodCats"
                                                :progress="progress" @addFood="addPersonalFood"/>
                     <popup-foods-card-rations v-if="page === 3" :rations="this.rations" :id-meal="idMeal"
                                               @addRation="addRationToMeal"/>
-                    <popup-foods-sidebar :page="page" :personal-foods="this.personalFoods" :rations="this.rations" :type="type"
+                    <popup-foods-sidebar :page="page" :personal-foods="this.personalFoods" :rations="this.rations"
+                                         :dishes="this.dishes" :type="type"
                                          @changePage="changePage"/>
                 </div>
             </v-card-text>
@@ -153,21 +156,25 @@ import axios from "axios";
 import url from "../services/url";
 import PopupFoodsCardPersonal from "@/components/PopupFoodsCardPersonal";
 import PopupFoodsCardRations from "@/components/PopupFoodsCardRations";
+import PopupFoodsCardDishes from "@/components/PopupFoodsCardDishes";
 
 export default {
     name: "PopupFoods",
 
-    props: ['visible', 'idMeal', 'idRation', 'type'],
+    props: ['visible', 'idMeal', 'idRation', 'idDish', 'type', 'dishName'],
 
     components: {
         PopupFoodsSidebar,
+        PopupFoodsCardDishes,
         PopupFoodsCardPersonal,
         PopupFoodsCardRations,
     },
 
     data: () => ({
+        progressPopupFoods: true,
         progressPopupPersonalFoods: true,
         progressPopupRations: true,
+        progressPopupDishes: true,
         page: 0,
         popupVisibleFood: false,
         showedFood: -1,
@@ -207,11 +214,11 @@ export default {
 
         page() {
             this.resetShowedFood();
-        }
+        },
     },
 
     computed: {
-        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories", "rations"]),
+        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories", "rations", "dishes"]),
 
         titleName() {
             return this.titleNameList.find((obj) => obj.id === this.page).name;
@@ -283,7 +290,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showPersonalFoods", "showFoods", "showFoodCategories", "showRations"]),
+        ...mapActions(["showPersonalFoods", "showFoods", "showFoodCategories", "showRations", "showDishes"]),
 
         changePage(page) {
             this.page = page;
@@ -327,6 +334,11 @@ export default {
             this.closePopup();
         },
 
+        addDishToMeal() {
+            this.$emit("updateDiet");
+            this.closePopup();
+        },
+
         async addPersonalFood(data) {
             this.grams = data.amount;
             await this.addFoods(data.idFood);
@@ -342,6 +354,44 @@ export default {
                     idRation: this.idRation
                 };
                 await axios.post(`${url}/api/programs/add-ration-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            } else if (this.type === "createDish") {
+                // добавить продукт и создать блюдо
+                let dish = {
+                    name: this.dishName,
+                    idUser: this.userData.id,
+                }
+                this.progress = true;
+                await axios.post(`${url}/api/programs/add-dish`, dish).then(async (res) => {
+                    if (res.data.name === "Success") {
+                        let food = {
+                            idFood: id,
+                            amount: this.grams,
+                            idDish: res.data.id,
+                        }
+
+                        await axios.post(`${url}/api/programs/add-dish-food`, food).then((res2) => {
+                            if (res2.data.name === "Success") {
+                                this.$emit("updateDiet", res.data.id);
+                                this.closePopup();
+                            }
+                        })
+                    }
+                    this.progress = false;
+                })
+            } else if (this.type === "dish") {
+                // добавление продукта в блюдо
+                let food = {
+                    idFood: id,
+                    amount: this.grams,
+                    idDish: this.idDish,
+                }
+                await axios.post(`${url}/api/programs/add-dish-food`, food).then((res) => {
                     if (res.data.name === "Success") {
                         this.$emit("updateDiet");
                         this.closePopup();
@@ -367,13 +417,18 @@ export default {
     },
 
     mounted() {
-        this.showFoods();
+        this.showFoods().then(() => {
+            this.progressPopupFoods = false;
+        });
         this.showFoodCategories();
         this.showPersonalFoods(this.userData.id).then(() => {
             this.progressPopupPersonalFoods = false;
         });
         this.showRations(this.userData.id).then(() => {
             this.progressPopupRations = false;
+        })
+        this.showDishes(this.userData.id).then(() => {
+            this.progressPopupDishes = false;
         })
     }
 }
@@ -572,6 +627,7 @@ export default {
                             display: none;
                             position: absolute;
                             top: -42px;
+                            left: 15px;
                             height: 50px;
                             padding: 7px 11px;
                             z-index: 1;
@@ -593,14 +649,15 @@ export default {
                         .name-speech:before {
                             content: '';
                             position: absolute;
-                            transform: rotate(-135deg);
-                            bottom: -5px;
-                            left: calc(50% - 14px / 2);
+                            transform: rotate(90deg), scale(-1, 1);
+                            bottom: -8px;
+                            left: 0;
                         }
 
                         .name-speech#name-speech0:before {
-                            transform: rotate(45deg);
-                            top: -5px;
+                            transform: rotate(135deg);
+                            top: -7px;
+                            left: -7px;
                             bottom: auto;
                         }
 
@@ -762,6 +819,7 @@ export default {
 
             .speech {
                 color: white;
+                border-radius: 2px;
                 background-color: #262635;
             }
 
@@ -782,11 +840,12 @@ export default {
                 .name-speech {
                     color: white;
                     background-color: #262635;
+                    border-radius: 2px;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }
 
                 .name-speech:before {
-                    border: 5px solid;
+                    border: 7px solid;
                     border-color: #262635 transparent transparent #262635;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }

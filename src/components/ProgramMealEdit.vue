@@ -12,13 +12,16 @@
             <title-page :name="time" class="meals"></title-page>
             <div class="meal-edit-container">
                 <div class="meal-edit-content">
-                    <div class="item" v-for="food in foods" :key="food.id">
+                    <div class="item" v-for="food in meal.foods" :key="food.id">
                         <div class="food">
                             <div class="name">
-                                {{ food.name }} ({{ food.amount }}г)
+                                {{ food.name }} ({{ food.amount }} г)
                             </div>
                             <div class="settings">
-                                <div class="edit" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
+                                <div class="edit" v-if="food.id_food" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
+                                    Редактировать
+                                </div>
+                                <div class="edit" v-else-if="food.id_dish" @click="openPopupFoodEditDish(food.id_dish, food.id, food.amount)">
                                     Редактировать
                                 </div>
                                 <div class="delete" @click="deleteMealFood(food.id)">Удалить</div>
@@ -118,6 +121,7 @@
                         </v-dialog>
                         <!--      Поп-ап для редактирования    -->
                         <popup-foods-edit :visible="popupVisibleFoodEdit" :selected-food="selectedFood"
+                                          :type="typeEdit"
                                           @updateVisible="onUpdateVisibleFoodEdit"
                                           @updateDiet="updateFoods"
                         />
@@ -142,11 +146,11 @@
                             <div class="name-row">ГИ</div>
                         </div>
                         <div class="value-col">
-                            <div class="value-row">{{ (+proteinsPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+fatsPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+carbohydratesPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+caloriesPerMeal.toFixed(1)) }}</div>
-                            <div class="value-row">{{ (+fibersPerMeal.toFixed(1)) }}</div>
+                            <div class="value-row">{{ meal.proteins }}</div>
+                            <div class="value-row">{{ meal.fats }}</div>
+                            <div class="value-row">{{ meal.carbohydrates }}</div>
+                            <div class="value-row">{{ meal.calories }}</div>
+                            <div class="value-row">{{ meal.fibers }}</div>
                             <div class="value-row">0</div>
                         </div>
                     </div>
@@ -186,7 +190,7 @@ import PopupFoodsEdit from "@/components/PopupFoodsEdit";
 export default {
     name: "ProgramMealEdit",
 
-    props: ['idMeal', 'time'],
+    props: ['progressMain', 'meal', 'idMeal', 'time'],
 
     components: {
         "title-page": Title,
@@ -195,6 +199,7 @@ export default {
     },
 
     data: () => ({
+        typeEdit: "",
         ration: {
             name: "",
             page: 0,
@@ -210,14 +215,8 @@ export default {
             idMealFood: -1,
             amount: 100,
         },
-        proteinsPerMeal: 0,
-        fatsPerMeal: 0,
-        carbohydratesPerMeal: 0,
-        caloriesPerMeal: 0,
-        fibersPerMeal: 0,
         popupVisibleFood: false,
         popupVisibleFoodEdit: false,
-        foods: [],
 
         rules: {
             name: [
@@ -233,6 +232,11 @@ export default {
     watch: {
         programDiet() {
             this.progressDiet = false;
+        },
+
+        progressMain() {
+            this.progressDiet = this.progressMain;
+            this.progressDietMeal = this.progressMain;
         }
     },
 
@@ -260,29 +264,7 @@ export default {
         },
 
         async getMealFoods() {
-            this.$emit("updateProgramDiet")
-            this.proteinsPerMeal = 0;
-            this.fatsPerMeal = 0;
-            this.carbohydratesPerMeal = 0;
-            this.caloriesPerMeal = 0;
-            this.fibersPerMeal = 0;
-            await axios.get(`${url}/api/programs/get-meal-foods/${this.idMeal}`).then((res) => {
-                this.foods = res.data;
-                for (let i = 0; i < this.foods.length; i++) {
-                    this.foods[i].proteinsCalc = this.calcParams(this.foods[i].proteins, this.foods[i].amount);
-                    this.foods[i].fatsCalc = this.calcParams(this.foods[i].fats, this.foods[i].amount);
-                    this.foods[i].carbohydratesCalc = this.calcParams(this.foods[i].carbohydrates, this.foods[i].amount);
-                    this.foods[i].caloriesCalc = this.calcParams(this.foods[i].calories, this.foods[i].amount);
-                    this.foods[i].fibersCalc = this.calcParams(this.foods[i].fibers, this.foods[i].amount);
-
-                    this.proteinsPerMeal += this.foods[i].proteinsCalc;
-                    this.fatsPerMeal += this.foods[i].fatsCalc;
-                    this.carbohydratesPerMeal += this.foods[i].carbohydratesCalc;
-                    this.caloriesPerMeal += this.foods[i].caloriesCalc;
-                    this.fibersPerMeal += this.foods[i].fibersCalc;
-                }
-                this.progressDietMeal = false;
-            });
+            this.$emit("updateProgramDiet");
         },
 
         calcParams(ratio, grams) {
@@ -300,9 +282,20 @@ export default {
         },
 
         openPopupFoodEdit(idFood, idMealFood, amount) {
+            this.typeEdit = "";
             this.popupVisibleFoodEdit = true;
             this.selectedFood = {
                 idFood: idFood,
+                idMealFood: idMealFood,
+                amount: amount
+            }
+        },
+
+        openPopupFoodEditDish(idDish, idMealFood, amount) {
+            this.typeEdit = "dishInnerMeal";
+            this.popupVisibleFoodEdit = true;
+            this.selectedFood = {
+                idDish: idDish,
                 idMealFood: idMealFood,
                 amount: amount
             }
@@ -387,9 +380,13 @@ export default {
 
                     .food {
                         flex: 0 0 384px;
+                        width: 384px;
                         padding-right: 25px;
 
                         .name {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                             font-family: 'Inter-Medium', sans-serif;
                             font-size: 16px;
                             line-height: 119%;

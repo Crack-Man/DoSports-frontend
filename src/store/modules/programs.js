@@ -14,6 +14,7 @@ export default {
         programFoods: [],
         programPersonalFoods: [],
         programRations: [],
+        programDishes: [],
         programFoodById: [],
         programFoodCats: [],
         diet: [],
@@ -190,6 +191,87 @@ export default {
             });
         },
 
+        async showDishes(ctx, id) {
+            let calcParams = (ratio, grams) => {
+                let value = ratio * grams / 100;
+                return (+value.toFixed(1));
+            }
+
+            let round = (value) => {
+                return (+value.toFixed(1));
+            }
+
+            await axios.get(`${url}/api/programs/get-users-dishes/${id}`).then(async (resDishes) => {
+                let dishes = Array.from(resDishes.data.dishes);
+                for (let i = 0; i < dishes.length; i++) {
+                    await axios.get(`${url}/api/programs/get-dish-foods/${dishes[i].id}`).then(async (resFoods) => {
+                        let foods = Array.from(resFoods.data.foods);
+                        dishes[i].proteins = 0;
+                        dishes[i].fats = 0;
+                        dishes[i].carbohydrates = 0;
+                        dishes[i].calories = 0;
+                        dishes[i].fibers = 0;
+                        dishes[i].glycemic_index = 0;
+                        dishes[i].amount = 0
+
+                        for (let j = 0; j < foods.length; j++) {
+                            foods[j].proteinsCalc = calcParams(foods[j].proteins, foods[j].amount);
+                            foods[j].fatsCalc = calcParams(foods[j].fats, foods[j].amount);
+                            foods[j].carbohydratesCalc = calcParams(foods[j].carbohydrates, foods[j].amount);
+                            foods[j].caloriesCalc = calcParams(foods[j].calories, foods[j].amount);
+                            foods[j].fibersCalc = calcParams(foods[j].fibers, foods[j].amount);
+
+                            dishes[i].proteins += foods[j].proteinsCalc;
+                            dishes[i].fats += foods[j].fatsCalc;
+                            dishes[i].carbohydrates += foods[j].carbohydratesCalc;
+                            dishes[i].calories += foods[j].caloriesCalc;
+                            dishes[i].fibers += foods[j].fibersCalc;
+                            dishes[i].amount += foods[j].amount;
+                        }
+                        dishes[i].proteins = round(dishes[i].proteins);
+                        dishes[i].fats = round(dishes[i].fats);
+                        dishes[i].carbohydrates = round(dishes[i].carbohydrates);
+                        dishes[i].calories = round(dishes[i].calories);
+                        dishes[i].fibers = round(dishes[i].fibers);
+
+                        dishes[i].proteinsCalc = 0;
+                        dishes[i].fatsCalc = 0;
+                        dishes[i].carbohydratesCalc = 0;
+                        dishes[i].caloriesCalc = 0;
+                        dishes[i].fibersCalc = 0;
+                        dishes[i].glycemic_indexCalc = 0;
+                        for (let j = 0; j < foods.length; j++) {
+                            // формула блюда на 100 г: f = (k + d) / 2 * value_per_100, где k - величина вклада свойства продукта, d - величина вклада массы продукта
+                            dishes[i].proteinsCalc += (foods[j].proteinsCalc / dishes[i].proteins + foods[j].amount / dishes[i].amount) / 2 * foods[j].proteins;
+                            dishes[i].fatsCalc += (foods[j].fatsCalc / dishes[i].fats + foods[j].amount / dishes[i].amount) / 2 * foods[j].fats;
+                            dishes[i].carbohydratesCalc += (foods[j].carbohydratesCalc / dishes[i].carbohydrates + foods[j].amount / dishes[i].amount) / 2 * foods[j].carbohydrates;
+                            dishes[i].caloriesCalc += (foods[j].caloriesCalc / dishes[i].calories + foods[j].amount / dishes[i].amount) / 2 * foods[j].calories;
+                            dishes[i].fibersCalc += (foods[j].fibersCalc / dishes[i].fibers + foods[j].amount / dishes[i].amount) / 2 * foods[j].fibers;
+                        }
+
+                        dishes[i].proteinsCalc = round(dishes[i].proteinsCalc);
+                        dishes[i].proteinsCalc = isNaN(dishes[i].proteinsCalc) ? 0 : dishes[i].proteinsCalc;
+
+                        dishes[i].fatsCalc = round(dishes[i].fatsCalc);
+                        dishes[i].fatsCalc = isNaN(dishes[i].fatsCalc) ? 0 : dishes[i].fatsCalc;
+
+                        dishes[i].carbohydratesCalc = round(dishes[i].carbohydratesCalc);
+                        dishes[i].carbohydratesCalc = isNaN(dishes[i].carbohydratesCalc) ? 0 : dishes[i].carbohydratesCalc;
+
+                        dishes[i].caloriesCalc = round(dishes[i].caloriesCalc);
+                        dishes[i].caloriesCalc = isNaN(dishes[i].caloriesCalc) ? 0 : dishes[i].caloriesCalc;
+
+                        dishes[i].fibersCalc = round(dishes[i].fibersCalc);
+                        dishes[i].fibersCalc = isNaN(dishes[i].fibersCalc) ? 0 : dishes[i].fibersCalc;
+
+
+                        dishes[i].foods = foods;
+                    });
+                }
+                ctx.commit("updateDishes", dishes);
+            });
+        },
+
         async showProgramDiet(ctx, input) {
             let calcParams = (ratio, grams) => {
                 let value = ratio * grams / 100;
@@ -211,7 +293,7 @@ export default {
                 diet.fibers = 0;
                 for (let i = 0; i < diet.length; i++) {
                     // на каждый прием пищи получить продукты
-                    await axios.get(`${url}/api/programs/get-meal-foods/${diet[i].id}`).then((res) => {
+                    await axios.get(`${url}/api/programs/get-meal-foods/${diet[i].id}`).then(async (res) => {
                         diet[i].foods = res.data;
                         // свойства на прием пищи
                         diet[i].proteins = 0;
@@ -222,11 +304,71 @@ export default {
 
                         for (let j = 0; j < diet[i].foods.length; j++) {
                             // относительные свойства, зависящие от граммовки
-                            diet[i].foods[j].proteinsCalc = calcParams(diet[i].foods[j].proteins, diet[i].foods[j].amount);
-                            diet[i].foods[j].fatsCalc = calcParams(diet[i].foods[j].fats, diet[i].foods[j].amount);
-                            diet[i].foods[j].carbohydratesCalc = calcParams(diet[i].foods[j].carbohydrates, diet[i].foods[j].amount);
-                            diet[i].foods[j].caloriesCalc = calcParams(diet[i].foods[j].calories, diet[i].foods[j].amount);
-                            diet[i].foods[j].fibersCalc = calcParams(diet[i].foods[j].fibers, diet[i].foods[j].amount);
+                            if (diet[i].foods[j].id_food) {
+                                // если это обычный продукт
+                                diet[i].foods[j].proteinsCalc = calcParams(diet[i].foods[j].proteins, diet[i].foods[j].amount);
+                                diet[i].foods[j].fatsCalc = calcParams(diet[i].foods[j].fats, diet[i].foods[j].amount);
+                                diet[i].foods[j].carbohydratesCalc = calcParams(diet[i].foods[j].carbohydrates, diet[i].foods[j].amount);
+                                diet[i].foods[j].caloriesCalc = calcParams(diet[i].foods[j].calories, diet[i].foods[j].amount);
+                                diet[i].foods[j].fibersCalc = calcParams(diet[i].foods[j].fibers, diet[i].foods[j].amount);
+                            } else if (diet[i].foods[j].id_dish) {
+                                // если это блюдо, необходимо сначала получить данные о входящих продуктах, а затем рассчитать относительные показатели
+                                // чтобы вычислить относительные показатели по блюду, необходимы данные показателей на 100 г (как они высчитываются, показано в функции ShowDishes)
+                                diet[i].foods[j].name = diet[i].foods[j].name_dish;
+                                await axios.get(`${url}/api/programs/get-dish-foods/${diet[i].foods[j].id_dish}`).then(async (resFoods) => {
+                                    let foods = Array.from(resFoods.data.foods);
+                                    let sumAmount = 0,
+                                        sumProteins = 0,
+                                        sumFats = 0,
+                                        sumCarbohydrates = 0,
+                                        sumCalories = 0,
+                                        sumFibers = 0;
+                                    for (let k = 0; k < foods.length; k++) {
+                                        foods[k].proteinsCalc = calcParams(foods[k].proteins, foods[k].amount);
+                                        foods[k].fatsCalc = calcParams(foods[k].fats, foods[k].amount);
+                                        foods[k].carbohydratesCalc = calcParams(foods[k].carbohydrates, foods[k].amount);
+                                        foods[k].caloriesCalc = calcParams(foods[k].calories, foods[k].amount);
+                                        foods[k].fibersCalc = calcParams(foods[k].fibers, foods[k].amount);
+
+                                        sumProteins += foods[k].proteinsCalc;
+                                        sumFats += foods[k].fatsCalc;
+                                        sumCarbohydrates += foods[k].carbohydratesCalc;
+                                        sumCalories += foods[k].caloriesCalc;
+                                        sumFibers += foods[k].fibersCalc;
+                                        sumAmount += foods[k].amount;
+                                    }
+                                    diet[i].foods[j].proteinsPer100 = 0;
+                                    diet[i].foods[j].fatsPer100 = 0;
+                                    diet[i].foods[j].carbohydratesPer100 = 0;
+                                    diet[i].foods[j].caloriesPer100 = 0;
+                                    diet[i].foods[j].fibersPer100 = 0;
+
+                                    for (let k = 0; k < foods.length; k++) {
+                                        diet[i].foods[j].proteinsPer100 += (foods[k].proteinsCalc / sumProteins + foods[k].amount / sumAmount) / 2 * foods[k].proteins;
+                                        diet[i].foods[j].fatsPer100 += (foods[k].fatsCalc / sumFats + foods[k].amount / sumAmount) / 2 * foods[k].fats;
+                                        diet[i].foods[j].carbohydratesPer100 += (foods[k].carbohydratesCalc / sumCarbohydrates + foods[k].amount / sumAmount) / 2 * foods[k].carbohydrates;
+                                        diet[i].foods[j].caloriesPer100 += (foods[k].caloriesCalc / sumCalories + foods[k].amount / sumAmount) / 2 * foods[k].calories;
+                                        diet[i].foods[j].fibersPer100 += (foods[k].fibersCalc / sumFibers + foods[k].amount / sumAmount) / 2 * foods[k].fibers;
+                                    }
+
+                                    diet[i].foods[j].proteinsCalc = calcParams(diet[i].foods[j].proteinsPer100, diet[i].foods[j].amount);
+                                    diet[i].foods[j].proteinsCalc = isNaN(diet[i].foods[j].proteinsCalc) ? 0 : diet[i].foods[j].proteinsCalc;
+
+                                    diet[i].foods[j].fatsCalc = calcParams(diet[i].foods[j].fatsPer100, diet[i].foods[j].amount);
+                                    diet[i].foods[j].fatsCalc = isNaN(diet[i].foods[j].fatsCalc) ? 0 : diet[i].foods[j].fatsCalc;
+
+                                    diet[i].foods[j].carbohydratesCalc = calcParams(diet[i].foods[j].carbohydratesPer100, diet[i].foods[j].amount);
+                                    diet[i].foods[j].carbohydratesCalc = isNaN(diet[i].foods[j].carbohydratesCalc) ? 0 : diet[i].foods[j].carbohydratesCalc;
+
+                                    diet[i].foods[j].caloriesCalc = calcParams(diet[i].foods[j].caloriesPer100, diet[i].foods[j].amount);
+                                    diet[i].foods[j].caloriesCalc = isNaN(diet[i].foods[j].caloriesCalc) ? 0 : diet[i].foods[j].caloriesCalc;
+
+                                    diet[i].foods[j].fibersCalc = calcParams(diet[i].foods[j].fibersPer100, diet[i].foods[j].amount);
+                                    diet[i].foods[j].fibersCalc = isNaN(diet[i].foods[j].fibersCalc) ? 0 : diet[i].foods[j].fibersCalc;
+
+                                    diet[i].foods[j].glycemic_index = 0;
+                                });
+                            }
 
                             diet[i].proteins += diet[i].foods[j].proteinsCalc;
                             diet[i].fats += diet[i].foods[j].fatsCalc;
@@ -319,6 +461,10 @@ export default {
             state.programRations = rations;
         },
 
+        updateDishes(state, dishes) {
+            state.programDishes = dishes;
+        },
+
         updateProgramDiet(state, diet) {
             state.diet = diet;
         },
@@ -379,6 +525,10 @@ export default {
 
         rations(state) {
             return state.programRations;
+        },
+
+        dishes(state) {
+            return state.programDishes;
         },
 
         programDiet(state) {

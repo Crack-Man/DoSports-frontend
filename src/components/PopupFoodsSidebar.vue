@@ -22,7 +22,7 @@
 export default {
     name: "PopupFoodsSidebar",
 
-    props: ['page', 'personalFoods', 'rations', 'type'],
+    props: ['page', 'personalFoods', 'rations', 'dishes', 'type'],
 
     data: () => ({
     }),
@@ -52,8 +52,8 @@ export default {
                     class: "link link-dish",
                     classUnactive: "link link-dish unactive",
                     speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”.",
-                    active: false,
-                    visible: true
+                    active: this.dishes.length,
+                    visible: this.type !== 'dish' && this.type !== 'createDish'
                 },
                 {
                     id: 3,
@@ -62,7 +62,7 @@ export default {
                     classUnactive: "link link-ration unactive",
                     speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи.",
                     active: this.rations.length,
-                    visible: this.type !== 'ration'
+                    visible: this.type !== 'ration' && this.type !== 'dish' && this.type !== 'createDish'
                 },
             ]
         }

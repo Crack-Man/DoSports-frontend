@@ -1,6 +1,6 @@
 <template>
-    <div class="program-rations-edit">
-        <div class="progress-diet" v-if="progress">
+    <div class="program-dishes-edit">
+        <div class="progress-dish" v-if="progress">
             <v-progress-circular
                 size="50"
                 class="icon"
@@ -9,10 +9,10 @@
             ></v-progress-circular>
         </div>
         <template v-else>
-            <title-page :name="ration.name" class="rations"></title-page>
-            <div class="ration-edit-container">
-                <div class="ration-edit-content">
-                    <div class="item" v-for="food in ration.foods" :key="food.id">
+            <title-page :name="dish.name" class="dishes"></title-page>
+            <div class="dish-edit-container">
+                <div class="dish-edit-content">
+                    <div class="item" v-for="food in dish.foods" :key="food.id">
                         <div class="food">
                             <div class="name">
                                 {{ food.name }} ({{ food.amount }} г)
@@ -21,7 +21,7 @@
                                 <div class="edit" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
                                     Редактировать
                                 </div>
-                                <div class="delete" @click="deleteRationFood(food.id)">Удалить</div>
+                                <div class="delete" @click="deleteDishFood(food.id)">Удалить</div>
                             </div>
                         </div>
                         <div class="proteins">
@@ -56,18 +56,18 @@
                                     :src="require('@/assets/img/png/plus.png')"
                                 >
                             </div>
-                            <span>Добавить</span>
+                            <span>Добавить продукт</span>
                             <!--      Поп-ап для добавления    -->
                             <popup-foods :visible="popupVisibleFood"
-                                         :id-ration="ration.id"
-                                         type="ration"
+                                         :id-dish="dish.id"
+                                         type="dish"
                                          @updateVisible="onUpdateVisibleFood"
                                          @updateDiet="updateFoods"
                             />
                         </div>
                         <!--      Поп-ап для редактирования    -->
                         <popup-foods-edit :visible="popupVisibleFoodEdit" :selected-food="selectedFood"
-                                          type="ration"
+                                          type="dish"
                                           @updateVisible="onUpdateVisibleFoodEdit"
                                           @updateDiet="updateFoods"
                         />
@@ -77,11 +77,11 @@
                             <img :src="require('@/assets/img/png/arrow-back--grey.png')">
                             <img class="active" :src="require('@/assets/img/png/arrow-back--white.png')">
                         </div>
-                        <span>Назад к рационам</span>
+                        <span>Назад к блюдам</span>
                     </div>
                 </div>
                 <div class="stat">
-                    <div class="name-stat">Всего в этом рационе</div>
+                    <div class="name-stat">Всего в этом блюде</div>
                     <div class="table-stat">
                         <div class="name-col">
                             <div class="name-row">Белки</div>
@@ -92,11 +92,31 @@
                             <div class="name-row">ГИ</div>
                         </div>
                         <div class="value-col">
-                            <div class="value-row">{{ ration.proteins }}</div>
-                            <div class="value-row">{{ ration.fats }}</div>
-                            <div class="value-row">{{ ration.carbohydrates }}</div>
-                            <div class="value-row">{{ ration.calories }}</div>
-                            <div class="value-row">{{ ration.fibers }}</div>
+                            <div class="value-row">{{ dish.proteins }}</div>
+                            <div class="value-row">{{ dish.fats }}</div>
+                            <div class="value-row">{{ dish.carbohydrates }}</div>
+                            <div class="value-row">{{ dish.calories }}</div>
+                            <div class="value-row">{{ dish.fibers }}</div>
+                            <div class="value-row">0</div>
+                        </div>
+                    </div>
+
+                    <div class="name-stat">В блюде на 100 г</div>
+                    <div class="table-stat">
+                        <div class="name-col">
+                            <div class="name-row">Белки</div>
+                            <div class="name-row">Жиры</div>
+                            <div class="name-row">Углеводы</div>
+                            <div class="name-row">Калории</div>
+                            <div class="name-row">Клетчатка</div>
+                            <div class="name-row">ГИ</div>
+                        </div>
+                        <div class="value-col">
+                            <div class="value-row">{{ dish.proteinsCalc }}</div>
+                            <div class="value-row">{{ dish.fatsCalc }}</div>
+                            <div class="value-row">{{ dish.carbohydratesCalc }}</div>
+                            <div class="value-row">{{ dish.caloriesCalc }}</div>
+                            <div class="value-row">{{ dish.fibersCalc }}</div>
                             <div class="value-row">0</div>
                         </div>
                     </div>
@@ -107,17 +127,17 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
-import axios from "axios";
-import url from "@/services/url";
 import Title from "@/components/Title";
 import PopupFoods from "@/components/PopupFoods";
 import PopupFoodsEdit from "@/components/PopupFoodsEdit";
+import {mapActions, mapGetters} from "vuex";
+import axios from "axios";
+import url from "@/services/url";
 
 export default {
-    name: "ProgramRationsEdit",
+    name: "ProgramDishesEdit",
 
-    props: ['ration', 'progress'],
+    props: ['dish', 'progress'],
 
     components: {
         "title-page": Title,
@@ -128,7 +148,7 @@ export default {
     data: () => ({
         selectedFood: {
             idFood: -1,
-            idRationFood: -1,
+            idDishFood: -1,
             amount: 100,
         },
         popupVisibleFood: false,
@@ -142,11 +162,11 @@ export default {
     methods: {
         ...mapActions(["changeBarsVisible"]),
 
-        openPopupFoodEdit(idFood, idRationFood, amount) {
+        openPopupFoodEdit(idFood, idDishFood, amount) {
             this.popupVisibleFoodEdit = true;
             this.selectedFood = {
                 idFood: idFood,
-                idRationFood: idRationFood,
+                idDishFood: idDishFood,
                 amount: amount
             }
         },
@@ -168,13 +188,11 @@ export default {
             this.$emit("back");
         },
 
-        async deleteRationFood(id) {
+        async deleteDishFood(id) {
             let food = {
                 id: id
             }
-            this.progressDiet = true;
-            this.progressDietMeal = true;
-            await axios.post(`${url}/api/programs/delete-ration-food`, food).then((res) => {
+            await axios.post(`${url}/api/programs/delete-dish-food`, food).then((res) => {
                 if (res.data.name === "Success") {
                     this.updateFoods();
                 }
@@ -182,25 +200,21 @@ export default {
         },
 
         updateFoods() {
-            this.$emit("updateRationFoods", this.ration.id);
+            this.$emit("updateDishFoods", this.dish.id);
         }
-    },
-
-    mounted() {
-
     }
 }
 </script>
 
 <style lang="scss">
 #app {
-    .program-rations-edit {
-        .ration-edit-container {
+    .program-dishes-edit {
+        .dish-edit-container {
             display: flex;
             align-items: flex-start;
             margin-top: 30px;
 
-            .ration-edit-content {
+            .dish-edit-content {
                 flex: 0 0 825px;
 
                 .item {
@@ -212,6 +226,9 @@ export default {
                     align-items: center;
 
                     .name {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                         font-family: "Inter-Regular", sans-serif;
                         font-size: 13px;
                         line-height: 123%;
@@ -226,6 +243,7 @@ export default {
 
 
                     .food {
+                        position: relative;
                         flex: 0 0 384px;
                         width: 384px;
                         padding-right: 25px;
@@ -237,6 +255,9 @@ export default {
                             font-family: 'Inter-Medium', sans-serif;
                             font-size: 16px;
                             line-height: 119%;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         }
                     }
 
@@ -288,10 +309,10 @@ export default {
                     .button.link {
                         margin-top: 0;
                         cursor: pointer;
-                        width: 156px;
+                        width: 235px;
                     }
 
-                    .add-ration {
+                    .add-dish {
                         cursor: pointer;
                         margin-left: 20px;
                         width: 220px;
@@ -373,8 +394,8 @@ export default {
 }
 
 #app.dark {
-    .program-rations-edit {
-        .ration-edit-container {
+    .program-dishes-edit {
+        .dish-edit-container {
             .item {
                 background: #1A1A27;
 
@@ -400,7 +421,7 @@ export default {
             }
 
             .options {
-                .add-ration {
+                .add-dish {
                     border: 2px solid #242CE3;
                 }
             }
@@ -435,4 +456,5 @@ export default {
         }
     }
 }
+
 </style>

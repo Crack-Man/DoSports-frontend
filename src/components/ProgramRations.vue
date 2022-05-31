@@ -22,7 +22,9 @@
                     v-for="ration in rations"
                     :key="ration.id"
                 >
-                    <div class="name-ration">{{ ration.name }}</div>
+                    <div class="name-ration">
+                        <span>{{ ration.name }}</span>
+                    </div>
                     <div class="foods">
                         <div class="list">
                             <div v-if="!ration.foods.length" class="empty">
@@ -37,7 +39,14 @@
                                 </template>
                             </div>
                         </div>
-                        <div v-if="!ration.foods.length" class="add">Добавить</div>
+                        <div v-if="!ration.foods.length" class="settings">
+                            <div class="add" @click="openPopupFoods(ration.id)">
+                                Добавить
+                            </div>
+                            <div class="delete" @click="deleteRation(ration.id)">
+                                Удалить
+                            </div>
+                        </div>
                         <div v-else class="settings">
                             <div class="edit" @click="openEditFrame(ration)">
                                 Редактировать
@@ -73,6 +82,12 @@
                     </div>
                 </div>
             </div>
+            <popup-foods :visible="popupVisibleFood"
+                         :id-ration="rationId"
+                         type="ration"
+                         @updateVisible="onUpdateVisibleFood"
+                         @updateDiet="updateRations"
+            />
         </div>
         <program-rations-edit v-else-if="page === 2" :progress="progressRations" :ration="selectedRation" @updateRationFoods="updateRationFoodsForEdit" @back="returnToRations"/>
     </div>
@@ -84,6 +99,7 @@ import Title from "@/components/Title";
 import axios from "axios";
 import url from "@/services/url";
 import ProgramRationsEdit from "@/components/ProgramRationsEdit";
+import PopupFoods from "@/components/PopupFoods";
 
 export default {
     name: "ProgramRations",
@@ -91,12 +107,15 @@ export default {
     components: {
         "title-page": Title,
         "program-rations-edit": ProgramRationsEdit,
+        "popup-foods": PopupFoods,
     },
 
     data: () => ({
+        popupVisibleFood: false,
         progressRations: true,
         selectedRation: {},
-        page: 1
+        page: 1,
+        rationId: 0,
     }),
 
     computed: {
@@ -105,6 +124,24 @@ export default {
 
     methods: {
         ...mapActions(["showRations", "changeBarsVisible"]),
+
+        onUpdateVisibleFood(data) {
+            this.popupVisibleFood = data;
+        },
+
+        openPopupFoods(id) {
+            this.rationId = id;
+            this.popupVisibleFood = true;
+        },
+
+        updateRations() {
+            this.progressRations = true;
+            this.showRations(this.userData.id).then(() => {
+                this.progressRations = false;
+                this.openEditFrame(this.rations.find(obj => obj.id === this.rationId));
+                this.rationId = 0;
+            });
+        },
 
         returnToRations() {
             this.page = 1;
@@ -122,7 +159,7 @@ export default {
         updateRationFoodsForEdit(id) {
             this.progressRations = true;
             this.showRations(this.userData.id).then(() => {
-                this.selectedRation = this.rations.find((obj) => obj.id = id);
+                this.selectedRation = this.rations.find((obj) => obj.id === id);
                 this.progressRations = false;
             });
         },
@@ -192,8 +229,12 @@ export default {
             border-radius: 4px;
 
             .name-ration {
-                white-space: nowrap;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                word-wrap: break-word;
                 overflow: hidden;
+                height: 60px;
                 text-overflow: ellipsis;
                 flex: 0 0 115px;
                 font-family: 'Inter-Medium', sans-serif;

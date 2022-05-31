@@ -135,7 +135,7 @@
                 </div>
                 <div class="reset-meals" @click="popupVisibleReset = true">
                     <img :src="require('@/assets/img/png/text-reset-meals--white.png')">
-                    <img class="active" :src="require('@/assets/img/png/text-reset-meals--violet.png')">
+                    <img class="active" :src="require('@/assets/img/png/text-reset-meals--red.png')">
                 </div>
                 <v-dialog
                     v-model="popupVisibleReset"
@@ -175,7 +175,7 @@
                 <popup-foods :visible="popupVisibleFood" :idMeal="idMeal" @updateVisible="onUpdateVisibleFood" @updateDiet="openEditFrameAfterPopup(idMeal, timeMeal)"/>
             </div>
         </template>
-        <program-meal-edit v-else :idMeal="idMeal" :time="timeMeal" @back="returnToProgramMeal" @updateProgramDiet="getProgramDiet"/>
+        <program-meal-edit v-else :meal="programDiet.find(obj => obj.id === idMeal)" :progress-main="progressEdit" :idMeal="idMeal" :time="timeMeal" @back="returnToProgramMeal" @updateProgramDiet="getProgramDiet"/>
     </div>
 </template>
 
@@ -197,6 +197,7 @@ export default {
     },
 
     data: () => ({
+        progressEdit: false,
         mealCount: 3,
         mealSchedule: [],
         popupVisibleFood: false,
@@ -292,12 +293,14 @@ export default {
         },
 
         getProgramDiet() {
+            this.progressEdit = true;
             let input = {
                 idProgram: this.programData.id,
                 date: this.date,
             };
             this.showProgramDiet(input).then(() => {
                 this.progressDiet = false;
+                this.progressEdit = false;
             });
         },
 
@@ -378,6 +381,7 @@ export default {
         },
 
         openEditFrame(id, time) {
+            this.progressEdit = true;
             this.page = 2;
             this.idMeal = id;
             this.timeMeal = time;

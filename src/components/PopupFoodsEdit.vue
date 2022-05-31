@@ -128,6 +128,18 @@ export default {
         visible() {
             this.popupVisibleFood = this.visible;
             if (this.visible) {
+                if (this.type === "dishInnerMeal") {
+                    this.showDishes(this.userData.id);
+                } else {
+                    this.showFoodById(this.selectedFood.idFood);
+                }
+            }
+        },
+
+        type() {
+            if (this.type === "dishInnerMeal") {
+                this.showDishes(this.userData.id);
+            } else {
                 this.showFoodById(this.selectedFood.idFood);
             }
         },
@@ -142,9 +154,12 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["foodById"]),
+        ...mapGetters(["foodById", "dishes", "userData"]),
 
         food() {
+            if (this.type === "dishInnerMeal" && this.dishes.length) {
+                return this.dishes.find(obj => obj.id === this.selectedFood.idDish);
+            }
             if (this.foodById.length) {
                 return this.foodById[0];
             }
@@ -204,7 +219,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showFoodById"]),
+        ...mapActions(["showFoodById", "showDishes"]),
 
         closePopup() {
             this.grams = this.selectedFood.amount;
@@ -221,6 +236,19 @@ export default {
                     amount: this.grams,
                 };
                 await axios.post(`${url}/api/programs/update-amount-ration-food`, food).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.$emit("updateDiet");
+                        this.closePopup();
+                    }
+                    this.progress = false;
+                })
+            } else if (this.type === "dish") {
+                // блюдо
+                let food = {
+                    id: this.selectedFood.idDishFood,
+                    amount: this.grams,
+                };
+                await axios.post(`${url}/api/programs/update-amount-dish-food`, food).then((res) => {
                     if (res.data.name === "Success") {
                         this.$emit("updateDiet");
                         this.closePopup();
@@ -401,6 +429,7 @@ export default {
                             display: none;
                             position: absolute;
                             top: -42px;
+                            left: 15px;
                             height: 50px;
                             padding: 7px 11px;
                             z-index: 1;
@@ -422,14 +451,15 @@ export default {
                         .name-speech:before {
                             content: '';
                             position: absolute;
-                            transform: rotate(-135deg);
-                            bottom: -5px;
-                            left: calc(50% - 14px / 2);
+                            transform: rotate(90deg), scale(-1, 1);
+                            bottom: -8px;
+                            left: 0;
                         }
 
                         .name-speech#name-speech0:before {
-                            transform: rotate(45deg);
-                            top: -5px;
+                            transform: rotate(135deg);
+                            top: -7px;
+                            left: -7px;
                             bottom: auto;
                         }
 
@@ -572,6 +602,7 @@ export default {
 
             .speech {
                 color: white;
+                border-radius: 2px;
                 background-color: #262635;
             }
 
@@ -591,12 +622,13 @@ export default {
 
                 .name-speech {
                     color: white;
+                    border-radius: 2px;
                     background-color: #262635;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }
 
                 .name-speech:before {
-                    border: 5px solid;
+                    border: 7px solid;
                     border-color: #262635 transparent transparent #262635;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }

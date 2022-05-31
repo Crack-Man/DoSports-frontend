@@ -9,7 +9,7 @@
                 <h1 class="triple">К ЗДОРОВОМУ</h1>
                 <h1 class="triple">ТЕЛУ С DO SPORTS</h1>
                 <div class="description">
-                    Получи индивидуальный план тренировок совершенно бесплатно
+                    Онлайн-органайзер для контроля питания и режима тренировок
                 </div>
                 <button-join/>
             </v-container>
@@ -451,20 +451,22 @@ export default {
                     margin-top: 15px;
                     font-family: "Inter-Regular", sans-serif;
                     font-size: 24px;
-                    width: 520px;
+                    width: 480px;
                     line-height: 140%;
 
                     @media (max-width: 750px) {
                         font-size: 20px;
+                        width: 400px;
                     }
 
                     @media (max-width: 700px) {
                         font-size: 24px;
-                        width: 470px;
+                        width: 400px;
                     }
 
                     @media (max-width: 700px) and (max-height: 450px) {
                         font-size: 18px;
+                        width: 350px;
                     }
 
                     @media (max-width: 700px) and (max-height: 350px) {
@@ -484,7 +486,7 @@ export default {
 
                     @media (min-width: 750px) and (max-width: 850px) and (max-height: 400px) {
                         margin-top: 10px;
-                        width: 450px;
+                        width: 350px;
                         font-size: 18px;
                     }
                 }

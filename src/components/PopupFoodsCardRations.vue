@@ -95,6 +95,12 @@ export default {
         showedRation: -1,
     }),
 
+    watch: {
+        rationName() {
+            this.resetShowed();
+        },
+    },
+
     computed: {
         rationsFiltered() {
             if (!this.rations) {
@@ -109,6 +115,11 @@ export default {
     },
 
     methods: {
+        resetShowed() {
+            this.toggleClassArrow();
+            this.showedRation = -1;
+        },
+
         toggleClassArrow() {
             if (this.showedRation !== -1) {
                 let arrow = document.querySelector(`.popup-content.rations .arrow${this.showedRation}`);
@@ -254,6 +265,7 @@ export default {
 
                 .foods {
                     margin-top: 20px;
+                    margin-bottom: 20px;
 
                     .item-food {
                         display: flex;

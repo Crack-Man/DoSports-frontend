@@ -1,9 +1,9 @@
 <template>
-    <div class="popup-content">
+    <div class="popup-content dishes">
         <div class="header-popup">
             <v-text-field
                 class="input food-name"
-                v-model="foodName"
+                v-model="dishName"
                 :append-icon="'mdi-magnify'"
                 placeholder="Название продукта..."
                 hide-details="auto"
@@ -11,21 +11,9 @@
                 outlined
                 required
             ></v-text-field>
-            <v-select
-                v-model="idCategory"
-                class="input category"
-                :menu-props="{ bottom: true, offsetY: true }"
-                :append-icon="'mdi-chevron-down'"
-                :items="this.foodCats"
-                :item-text="'name'"
-                :item-value="'id'"
-                dark
-                outlined
-                required
-            ></v-select>
         </div>
         <div class="header-table">
-            <div class="name">Название продукта</div>
+            <div class="name">Название рациона</div>
             <div class="proteins">Б</div>
             <div class="fats">
                 Ж
@@ -48,23 +36,25 @@
             </div>
         </div>
         <div class="scroller">
-            <div :key="index" class="item" v-for="(food, index) in foodsFiltered">
+            <div :key="index" class="item" v-for="(food, index) in dishesFiltered">
                 <div class="food" @click="openParams(food.id)" :id="`food${food.id}`">
                     <div class="name"><span>{{ food['name'] }}</span></div>
-                    <div class="name-speech" :id="`name-speech${index}`"><div>{{ food['name'] }}</div></div>
-                    <div class="proteins"><span>{{ food['proteins'] }}</span></div>
-                    <div class="fats"><span>{{ food['fats'] }}</span></div>
-                    <div class="carbohydrates"><span>{{ food['carbohydrates'] }}</span></div>
-                    <div class="calories"><span>{{ food['calories'] }}</span></div>
-                    <div class="fibers"><span>{{ food['fibers'] }}</span></div>
-                    <div class="glycemic-index"><span>{{ food['glycemic_index'] }}</span></div>
+                    <div class="name-speech" :id="`name-speech${index}`">
+                        <div>{{ food['name'] }}</div>
+                    </div>
+                    <div class="proteins"><span>{{ food['proteinsCalc'] }}</span></div>
+                    <div class="fats"><span>{{ food['fatsCalc'] }}</span></div>
+                    <div class="carbohydrates"><span>{{ food['carbohydratesCalc'] }}</span></div>
+                    <div class="calories"><span>{{ food['caloriesCalc'] }}</span></div>
+                    <div class="fibers"><span>{{ food['fibersCalc'] }}</span></div>
+                    <div class="glycemic-index"><span>{{ food['glycemic_indexCalc'] }}</span></div>
                     <div class="arrow">
                         <img :class="'arrow' + food.id"
                              :src="require('@/assets/img/png/arrow-right.png')">
                     </div>
                 </div>
-                <span class="gram" v-if="showedFood === food.id">Укажите граммовку</span>
-                <div class="params" v-if="showedFood === food.id">
+                <span class="gram" v-if="showedDish === food.id">Укажите граммовку</span>
+                <div class="params" v-if="showedDish === food.id">
                     <div class="slider">
                         <div class="slider-container">
                             <v-slider
@@ -94,7 +84,7 @@
                             class="button add-meal-food"
                             color="primary"
                             :loading="progress"
-                            @click="addFoods(food.id)"
+                            @click="addDishFoods(food.id)"
                         >
                             Добавить
                         </v-btn>
@@ -106,85 +96,78 @@
 </template>
 
 <script>
+import axios from "axios";
+import url from "@/services/url";
 
 export default {
-    name: "PopupFoodsCardPersonal",
+    name: "PopupFoodsCardDishes",
 
-    props: ["foods", "foodCats", 'progress'],
+    props: ['dishes', 'idMeal'],
 
     data: () => ({
-        showedFood: -1,
-        idCategory: 0,
+        progress: false,
+        dishName: "",
+        showedDish: -1,
         grams: 100,
-        foodName: "",
     }),
 
     watch: {
-        showedFood() {
+        showedDish() {
             this.grams = 100;
         },
 
-        idCategory() {
-            this.resetShowed();
-        },
-
-        foodName() {
+        dishName() {
             this.resetShowed();
         },
     },
 
     computed: {
-        foodsFiltered() {
-            if (!this.foods) {
+        dishesFiltered() {
+            if (!this.dishes) {
                 return [];
             }
-            let foods = Array.from(this.foods);
-            if (this.idCategory && this.foodName) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory && obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
+            let dishes = Array.from(this.dishes);
+            if (this.dishName) {
+                dishes = this.dishes.filter(obj => obj.name.toLowerCase().includes(this.dishName.toLowerCase()));
             }
-            else if (this.idCategory) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory);
-            } else if (this.foodName) {
-                foods = this.foods.filter(obj => obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
-            }
-            return foods;
+            return dishes;
         },
 
         proteins() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["proteins"] * this.grams / 100
+            if (this.showedDish !== -1) {
+                let value = this.dishes.find((obj) => obj.id === this.showedDish)["proteinsCalc"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         fats() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["fats"] * this.grams / 100
+            if (this.showedDish !== -1) {
+                let value = this.dishes.find((obj) => obj.id === this.showedDish)["fatsCalc"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         carbohydrates() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["carbohydrates"] * this.grams / 100
+            if (this.showedDish !== -1) {
+                let value = this.dishes.find((obj) => obj.id === this.showedDish)["carbohydratesCalc"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         calories() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["calories"] * this.grams / 100
+            if (this.showedDish !== -1) {
+                let value = this.dishes.find((obj) => obj.id === this.showedDish)["caloriesCalc"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
         },
 
         fibers() {
-            if (this.showedFood !== -1) {
-                let value = this.foods.find((obj) => obj.id === this.showedFood)["fibers"] * this.grams / 100
+            if (this.showedDish !== -1) {
+                let value = this.dishes.find((obj) => obj.id === this.showedDish)["fibersCalc"] * this.grams / 100
                 return (+value.toFixed(1));
             }
             return "";
@@ -194,44 +177,59 @@ export default {
     methods: {
         resetShowed() {
             this.toggleClassArrow();
-            this.showedFood = -1;
-        },
-
-        resetShowedFood() {
-            this.toggleClassArrow();
-            this.showedFood = -1;
+            this.showedDish = -1;
         },
 
         toggleClassArrow() {
-            if (this.showedFood !== -1) {
-                let arrow = document.querySelector(`.popup-foods .arrow${this.showedFood}`);
+            if (this.showedDish !== -1) {
+                let arrow = document.querySelector(`.popup-content.dishes .arrow${this.showedDish}`);
                 arrow.classList.toggle('active');
             }
         },
 
         openParams(index) {
-            if (this.showedFood !== index) {
+            if (this.showedDish !== index) {
                 this.toggleClassArrow();
-                this.showedFood = index;
+                this.showedDish = index;
                 this.toggleClassArrow();
             } else {
                 this.toggleClassArrow();
-                this.showedFood = -1;
+                this.showedDish = -1;
             }
         },
 
-        addFoods(id) {
-            let food = {
-                idFood: id,
+        async addDishFoods(id) {
+            this.progress = true;
+            let dish = {
+                idDish: id,
                 amount: this.grams,
                 idMeal: this.idMeal
-            };
-            this.$emit("addFood", food);
+            }
+            await axios.post(`${url}/api/programs/add-meal-dish`, dish).then((res) => {
+                if (res.data.name === "Success") {
+                    this.$emit("addDish");
+                }
+                this.progress = false;
+                this.grams = 100;
+            })
         }
+    },
+
+    mounted() {
+
     }
 }
 </script>
 
 <style lang="scss">
-
+#app {
+    .dishes {
+        .header-popup {
+            .input {
+                flex: 0 0 calc(100% - 20px) !important;
+                width: 100%;
+            }
+        }
+    }
+}
 </style>

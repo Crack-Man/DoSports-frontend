@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="title-table">
-                Расчет БЖУ и калорий на день
+                Расчет питательных веществ на день
             </div>
             <v-simple-table
                 dark
@@ -61,7 +61,7 @@
             </v-simple-table>
             <div class="reset-program" @click="openPopup">
                 <img :src="require('@/assets/img/png/text-reset-program--white.png')">
-                <img class="active" :src="require('@/assets/img/png/text-reset-program--violet.png')">
+                <img class="active" :src="require('@/assets/img/png/text-reset-program--red.png')">
             </div>
             <v-dialog
                 v-model="popupVisible"
