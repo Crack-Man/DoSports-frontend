@@ -182,7 +182,7 @@ export default {
             if (this.selectedFood && Object.keys(this.selectedFood).length) {
                 this.setForm();
             }
-        }
+        },
     },
 
     methods: {

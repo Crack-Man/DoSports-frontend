@@ -18,7 +18,10 @@
                                 {{ food.name }} ({{ food.amount }} г)
                             </div>
                             <div class="settings">
-                                <div class="edit" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
+                                <div class="edit" v-if="food.id_food" @click="openPopupFoodEdit(food.id_food, food.id, food.amount)">
+                                    Редактировать
+                                </div>
+                                <div class="edit" v-else-if="food.id_dish" @click="openPopupFoodEditDish(food.id_dish, food.id, food.amount)">
                                     Редактировать
                                 </div>
                                 <div class="delete" @click="deleteRationFood(food.id)">Удалить</div>
@@ -67,7 +70,7 @@
                         </div>
                         <!--      Поп-ап для редактирования    -->
                         <popup-foods-edit :visible="popupVisibleFoodEdit" :selected-food="selectedFood"
-                                          type="ration"
+                                          :type="typeEdit"
                                           @updateVisible="onUpdateVisibleFoodEdit"
                                           @updateDiet="updateFoods"
                         />
@@ -126,6 +129,7 @@ export default {
     },
 
     data: () => ({
+        typeEdit: "",
         selectedFood: {
             idFood: -1,
             idRationFood: -1,
@@ -143,9 +147,20 @@ export default {
         ...mapActions(["changeBarsVisible"]),
 
         openPopupFoodEdit(idFood, idRationFood, amount) {
+            this.typeEdit = "ration";
             this.popupVisibleFoodEdit = true;
             this.selectedFood = {
                 idFood: idFood,
+                idRationFood: idRationFood,
+                amount: amount
+            }
+        },
+
+        openPopupFoodEditDish(idDish, idRationFood, amount) {
+            this.typeEdit = "dishInnerRation";
+            this.popupVisibleFoodEdit = true;
+            this.selectedFood = {
+                idDish: idDish,
                 idRationFood: idRationFood,
                 amount: amount
             }
@@ -280,8 +295,11 @@ export default {
                     margin-top: 20px;
                 }
 
-                .options {
+                .item ~ .options {
                     margin-top: 30px;
+                }
+
+                .options {
                     display: flex;
                     align-items: center;
 

@@ -18,7 +18,7 @@
                 </v-btn>
 
                 <v-card-text>
-                    <h1 class="popup-title">Проверьте почту</h1>
+                    <div class="popup-title">Проверьте почту</div>
                     <p>Чтобы завершить регистрацию, перейдите по ссылке из письма, которое мы отправили на <span class="email">{{ this.email }}</span></p>
                     <p v-show="this.nonActiveButton">Не пришло письмо? Нажмите «Отправить повторно» через 00:{{ this.time }}</p>
                 </v-card-text>

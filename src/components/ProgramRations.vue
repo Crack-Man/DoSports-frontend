@@ -146,7 +146,7 @@ export default {
         returnToRations() {
             this.page = 1;
             this.progressRations = true;
-            this.getRations();
+            this.getRationsWithDeleteEmpty();
         },
 
         openEditFrame(ration) {
@@ -178,11 +178,32 @@ export default {
             this.showRations(this.userData.id).then(() => {
                 this.progressRations = false;
             });
+        },
+
+        async getRationsWithDeleteEmpty() {
+            await this.showRations(this.userData.id).then(async () => {
+                let emptyRations = this.rations.filter((obj) => !obj.foods.length);
+                if (emptyRations.length) {
+                    for (let i = 0; i < emptyRations.length; i++) {
+                        let ration = {
+                            id: emptyRations[i].id,
+                        }
+                        await axios.post(`${url}/api/programs/delete-ration`, ration).then(async () => {
+                            if (i === emptyRations.length - 1) {
+                                await this.showRations(this.userData.id).then(() => {
+                                    this.progressRations = false;
+                                })
+                            }
+                        });
+                    }
+                } else this.progressRations = false;
+            });
         }
     },
 
     mounted() {
-        this.getRations();
+        // при загрузке компонента надо не только получить все рационы, но и удалить пустые
+        this.getRationsWithDeleteEmpty();
     }
 }
 </script>

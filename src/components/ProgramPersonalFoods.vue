@@ -64,6 +64,7 @@
             </v-btn>
             <popup-personal-foods :visible="popupVisibleAddFood" @productAdded="getFoods"
                                   @updateVisible="updateVisibleAddFood"/>
+
             <popup-personal-foods :visible="popupVisibleEditFood" type="edit" :selected-food="selectedFood" @productEdited="getFoods"
                                   @updateVisible="updateVisibleEditFood"/>
         </template>
@@ -213,9 +214,13 @@ export default {
 
             .food {
                 flex: 0 0 384px;
+                width: 384px;
                 padding-right: 25px;
 
                 .name {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     font-family: 'Inter-Medium', sans-serif;
                     font-size: 16px;
                     line-height: 119%;

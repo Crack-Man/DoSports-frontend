@@ -137,7 +137,7 @@ export default {
         },
 
         type() {
-            if (this.type === "dishInnerMeal") {
+            if (this.type === "dishInnerMeal" || this.type === "dishInnerRation") {
                 this.showDishes(this.userData.id);
             } else {
                 this.showFoodById(this.selectedFood.idFood);
@@ -157,7 +157,7 @@ export default {
         ...mapGetters(["foodById", "dishes", "userData"]),
 
         food() {
-            if (this.type === "dishInnerMeal" && this.dishes.length) {
+            if ((this.type === "dishInnerMeal" || this.type === "dishInnerRation") && this.dishes.length) {
                 return this.dishes.find(obj => obj.id === this.selectedFood.idDish);
             }
             if (this.foodById.length) {
@@ -229,7 +229,7 @@ export default {
 
         async changeFood() {
             this.progress = true;
-            if (this.type === "ration") {
+            if (this.type === "ration" || this.type === "dishInnerRation") {
                 //    рацион
                 let food = {
                     id: this.selectedFood.idRationFood,

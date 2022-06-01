@@ -245,7 +245,7 @@ export default {
 
         async addRation() {
             this.ration.progress = true;
-            this.ration.foods = this.foods;
+            this.ration.foods = this.meal.foods;
             this.ration.idUser = this.userData.id;
             await axios.post(`${url}/api/programs/add-ration`, this.ration).then((res) => {
                 if (res.data.name === "Success") {

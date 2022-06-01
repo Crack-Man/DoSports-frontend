@@ -301,8 +301,11 @@ export default {
                     margin-top: 20px;
                 }
 
-                .options {
+                .item ~ .options {
                     margin-top: 30px;
+                }
+
+                .options {
                     display: flex;
                     align-items: center;
 

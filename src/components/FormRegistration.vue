@@ -263,7 +263,7 @@ export default {
         },
 
         parseDate(date) {
-            if (!date) return null;
+            if (!date || date.length !== 10) return null;
 
             const [day, month, year] = date.split('.');
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;

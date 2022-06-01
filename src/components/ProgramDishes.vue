@@ -203,6 +203,26 @@ export default {
             });
         },
 
+        async getDishesWithDeleteEmpty() {
+            await this.showDishes(this.userData.id).then(async () => {
+                let emptyDishes = this.dishes.filter((obj) => !obj.foods.length);
+                if (emptyDishes.length) {
+                    for (let i = 0; i < emptyDishes.length; i++) {
+                        let dish = {
+                            id: emptyDishes[i].id,
+                        }
+                        await axios.post(`${url}/api/programs/delete-dish`, dish).then(async () => {
+                            if (i === emptyDishes.length - 1) {
+                                await this.showDishes(this.userData.id).then(() => {
+                                    this.progressDishes = false;
+                                })
+                            }
+                        });
+                    }
+                } else this.progressDishes = false;
+            });
+        },
+
         onUpdateVisibleFood(data) {
             this.popupVisibleFood = data;
         },
@@ -224,7 +244,7 @@ export default {
         returnToDishes() {
             this.page = 1;
             this.progressDishes = true;
-            this.getDishes();
+            this.getDishesWithDeleteEmpty();
         },
 
         async updateDishFoodsForEdit(id) {
@@ -237,7 +257,7 @@ export default {
     },
 
     mounted() {
-        this.getDishes();
+        this.getDishesWithDeleteEmpty();
     }
 }
 </script>
