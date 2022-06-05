@@ -19,6 +19,7 @@ export default {
         programFoodCats: [],
         diet: [],
         visibleBars: true,
+        programTrainMods: [],
     },
 
     actions: {
@@ -446,6 +447,14 @@ export default {
 
         changeBarsVisible(ctx, value) {
             ctx.commit("updateBarsVisible", value);
+        },
+
+        async showTrainMods(ctx, program) {
+            await axios.post(`${url}/api/programs/get-train-mods`, program).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("updateTrainMods", res.data.mods);
+                }
+            });
         }
     },
 
@@ -516,6 +525,10 @@ export default {
 
         updateBarsVisible(state, value) {
             state.visibleBars = value;
+        },
+
+        updateTrainMods(state, mods) {
+            state.programTrainMods = mods;
         }
     },
 
@@ -582,6 +595,10 @@ export default {
 
         barsVisible(state) {
             return state.visibleBars;
+        },
+
+        trainMods(state) {
+            return state.programTrainMods;
         }
     }
 }

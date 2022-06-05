@@ -34,7 +34,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin"]),
+        ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin", "userIsPro"]),
 
         theme() {
             let value = localStorage.getItem("theme") || "";
@@ -47,16 +47,26 @@ export default {
     },
 
     methods: {
-        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin']),
+        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin', 'checkPro']),
+
+        async initUser() {
+            await this.checkAuth().then(async () => {
+                if (this.userIsAuthorized) {
+                    await this.checkPro(this.userData.id).then(() => {
+                        this.progress = false
+                    })
+                } else {
+                    this.progress = false
+                }
+            });
+        }
     },
 
     mounted() {
         setInterval(() => {
             if (this.timerCount > 0) this.timerCount--;
         }, 1000);
-        this.checkAuth().then(() => {
-            this.progress = false
-        });
+        this.initUser();
     }
 };
 </script>

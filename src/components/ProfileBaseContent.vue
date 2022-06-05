@@ -10,7 +10,8 @@
         </div>
         <div class="profile-info">
             <div class="full-name"> {{ userData.fullname }} </div>
-            <div class="status">Cтатус: премиум (действителен до 03.03.2022)</div>
+            <div class="status" v-if="this.userIsPro">Cтатус подписки: премиум (действителен до {{ proLastDatetime }})</div>
+            <div class="status" v-else>Cтатус подписки: стандартный</div>
             <div class="profile-data">Почта: {{ userData.email }}</div>
             <div class="profile-data">Дата рождения: {{ birthday }}</div>
             <div class="profile-data">Регион проживания: {{ userData.region_name }}</div>
@@ -46,7 +47,21 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "activeProgramStatus", "userIsAuthorized", "programData"]),
+        ...mapGetters(["userData", "activeProgramStatus", "userIsAuthorized", "programData", "userIsPro"]),
+
+        proLastDatetime() {
+            if (this.userIsAuthorized) {
+                if (this.userData.pro_last_datetime !== null) {
+                    let date = new Date(this.userData.pro_last_datetime);
+                    let day = date.getDate();
+                    let month = date.getMonth() + 1;
+                    let year = date.getFullYear();
+                    return `${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year}`;
+                }
+                return "";
+            }
+            return "";
+        },
 
         birthday() {
             if (this.userData) {

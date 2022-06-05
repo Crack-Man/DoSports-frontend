@@ -25,12 +25,12 @@
                 Ккал
             </div>
             <div class="fibers">
-                К
+                <span>К</span>
                 <img :src="require('@/assets/img/svg/ask--light-grey.svg')"/>
                 <div class="speech">Клетчатка</div>
             </div>
             <div class="glycemic-index">
-                ГИ
+                <span>ГИ</span>
                 <img :src="require('@/assets/img/svg/ask--light-grey.svg')"/>
                 <div class="speech">Гликемический индекс</div>
             </div>

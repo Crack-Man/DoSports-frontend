@@ -15,7 +15,7 @@ export default {
     data: () => ({
         menuPages: [
             { name: "Основная информация", url: "/profile/base" },
-            { name: "Подписки", url: "/" },
+            { name: "Подписки", url: "/profile/premium" },
             { name: "Настройки", url: "/profile/settings" },
         ],
     }),

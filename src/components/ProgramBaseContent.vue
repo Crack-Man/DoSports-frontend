@@ -10,18 +10,8 @@
         </div>
         <template v-else>
             <div class="info-day">
-                <div class="left">
-                    <div class="border"></div>
-                    <div class="name">
-                        <div class="week-day">{{ weekDay }}</div>
-                        <div class="date">{{ date }}</div>
-                    </div>
-                </div>
-                <div class="center">
-                </div>
-                <div class="right">
-                    Среднеуглеводный день
-                </div>
+                <div class="week-day">{{ weekDay }}</div>
+                <div class="date">{{ date }}</div>
             </div>
             <div class="title-table">
                 Расчет питательных веществ на день
@@ -266,46 +256,25 @@ export default {
 
         .info-day {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding-bottom: 15px;
 
-            .left {
-                display: flex;
-
-                .border {
-                    border-radius: 4px;
-                }
-
-                .name {
-                    margin-left: 15px;
-
-                    .week-day {
-                        font-family: 'Inter-SemiBold', sans-serif;
-                        font-size: 24px;
-                    }
-
-                    .date {
-                        margin-top: 2px;
-                        font-family: 'Inter-Medium', sans-serif;
-                        font-size: 16px;
-                    }
-                }
+            .week-day {
+                font-family: 'Inter-SemiBold', sans-serif;
+                font-size: 24px;
+                line-height: 121%;
             }
 
-            .center {
-                flex: 0 0 209px;
-                margin: 0 35px;
-                border-radius: 4px;
-            }
-
-            .right {
+            .date {
                 font-family: 'Inter-Medium', sans-serif;
-                font-size: 20px;
-                line-height: 135%;
+                font-size: 16px;
+                line-height: 119%;
             }
         }
 
         .title-table {
-            margin-top: 40px;
+            margin-top: 30px;
 
             font-family: 'Inter-Medium', sans-serif;
             font-size: 18px;
@@ -392,15 +361,7 @@ export default {
 #app.dark {
     .program-base-content {
         .info-day {
-            .left {
-                .border {
-                    border-left: 2px solid #9196FF;
-                }
-            }
-
-            .center {
-                border-bottom: 1px solid #B5B5B8;
-            }
+            border-bottom: 1px solid #B5B5B8;
         }
 
         .table {

@@ -9,6 +9,7 @@ export default {
         msgAuth: "",
         auth: false,
         admin: false,
+        pro: false,
         user: null,
         msgRestore: "",
         restorePassData: {name: "", text: ""},
@@ -34,7 +35,7 @@ export default {
 
         async checkAuth(ctx) {
             if (ctx.state.tokenAccess) {
-                await axios.post("https://www.dosports.ru/api/users/verify-token-access", {access: ctx.state.tokenAccess}).then((res) => {
+                await axios.post(`${url}/api/users/verify-token-access`, {access: ctx.state.tokenAccess}).then((res) => {
                     if (res.data.name === "Success") {
                         ctx.commit("authSuccess", null);
                         ctx.commit("updateUserData", res.data.user);
@@ -52,7 +53,7 @@ export default {
 
         async checkTokenRefresh(ctx) {
             if (ctx.state.tokenRefresh) {
-                axios.post("https://www.dosports.ru/api/users/verify-token-refresh", {refresh: ctx.state.tokenRefresh}).then((res) => {
+                axios.post(`${url}/api/users/verify-token-refresh`, {refresh: ctx.state.tokenRefresh}).then((res) => {
                     if (res.data.name === "Success") {
                         let token = {access: res.data.token.access, refresh: res.data.token.refresh};
                         ctx.commit("authSuccess", token);
@@ -84,8 +85,19 @@ export default {
             }
         },
 
+        async checkPro(ctx, idUser) {
+            let user = {
+                id: idUser,
+            }
+            await axios.post(`${url}/api/payment/user-is-pro`, user).then((res) => {
+                if (res.data.name === "Success") {
+                    ctx.commit("updateProStatus", Boolean(res.data.pro));
+                }
+            });
+        },
+
         async sendRestoreCode(ctx, user) {
-            axios.post("https://www.dosports.ru/api/users/restore-password/send-code", user).then((res) => {
+            axios.post(`${url}/api/users/restore-password/send-code`, user).then((res) => {
                 if (res.data.name === "Success") {
                     ctx.commit("increaseRestoreStep");
                     ctx.commit("updateRestoreMessage", res.data.text);
@@ -97,7 +109,7 @@ export default {
         },
 
         async resendRestoreCode(ctx, user) {
-            await axios.post("https://www.dosports.ru/api/users/restore-password/resend-code", user);
+            await axios.post(`${url}/api/users/restore-password/resend-code`, user);
         },
 
         async changeRestoreDataName(ctx, name) {
@@ -109,7 +121,7 @@ export default {
         },
 
         async compareCode(ctx, user) {
-            axios.post("https://www.dosports.ru/api/users/restore-password/compare-code", user).then((res) => {
+            axios.post(`${url}/api/users/restore-password/compare-code`, user).then((res) => {
                 if (res.data.name === "Success") {
                     if (res.data.match) {
                         ctx.commit("increaseRestoreStep");
@@ -126,7 +138,7 @@ export default {
         },
 
         async changePassword(ctx, user) {
-            axios.post("https://www.dosports.ru/api/users/restore-password/change-password", user).then((res) => {
+            axios.post(`${url}/api/users/restore-password/change-password`, user).then((res) => {
                 if (res.data.name === "Success") {
                     ctx.commit("increaseRestoreStep");
                     ctx.commit("updateRestoreData", res.data);
@@ -177,6 +189,10 @@ export default {
             state.admin = value;
         },
 
+        updateProStatus(state, value) {
+            state.pro = value;
+        },
+
         updateRestoreData(state, value) {
             state.restorePassData = value;
         },
@@ -217,6 +233,10 @@ export default {
 
         userIsAdmin(state) {
             return state.admin;
+        },
+
+        userIsPro(state) {
+            return state.pro;
         },
 
         userData(state) {

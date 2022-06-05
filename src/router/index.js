@@ -14,6 +14,7 @@ import ArticleSmoke from "@/views/ArticleSmoke";
 import ArticleBeer from "@/views/ArticleBeer";
 import ProfileBase from "@/views/ProfileBase";
 import ProfileSettings from "@/views/ProfileSettings";
+import ProfilePremium from "@/views/ProfilePremium";
 
 Vue.use(VueRouter)
 
@@ -94,6 +95,12 @@ const routes = [
         path: '/profile/base',
         name: 'Основная информация',
         component: ProfileBase
+    },
+
+    {
+        path: '/profile/premium',
+        name: 'Подписка',
+        component: ProfilePremium
     },
 
     {

@@ -111,6 +111,14 @@ export default {
             }
         }
 
+        .link.unactive:hover .speech {
+            display: block;
+        }
+
+        .link.unactive {
+            cursor: pointer;
+        }
+
         .link:first-child {
             margin-top: 0;
         }

@@ -7,10 +7,12 @@
                 <sidebar v-show="barsVisible"/>
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
                 <program-meal v-if="programPage === 1"/>
+                <program-trains v-if="programPage === 2"/>
                 <program-rations v-if="programPage === 4"/>
                 <program-dishes v-if="programPage === 5"/>
                 <program-personal-foods v-if="programPage === 6"/>
             </div>
+            <popup-education :visible="popupVisibleEducation" @close="popupVisibleEducation = false"/>
         </v-container>
     </div>
 </template>
@@ -25,6 +27,8 @@ import ProgramMeal from "./ProgramMeal";
 import ProgramPersonalFoods from "@/components/ProgramPersonalFoods";
 import ProgramRations from "@/components/ProgramRations";
 import ProgramDishes from "@/components/ProgramDishes";
+import PopupEducation from "@/components/PopupEducation";
+import ProgramTrains from "@/components/ProgramTrains";
 
 export default {
     name: "ProgramBaseInfo",
@@ -38,9 +42,12 @@ export default {
         "program-rations": ProgramRations,
         "program-dishes": ProgramDishes,
         "program-personal-foods": ProgramPersonalFoods,
+        "program-trains": ProgramTrains,
+        "popup-education": PopupEducation,
     },
 
     data: () => ({
+        popupVisibleEducation: false,
     }),
 
     computed: {
