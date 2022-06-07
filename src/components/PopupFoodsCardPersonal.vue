@@ -67,20 +67,27 @@
                 <div class="params" v-if="showedFood === food.id">
                     <div class="slider">
                         <div class="slider-container">
-                            <v-slider
-                                class="slider"
-                                dark
+                            <v-text-field
+                                class="input-grams"
                                 v-model="grams"
-                                thumb-label="always"
-                                hide-details
-                                min="0"
-                                max="1000"
-                                step="5"
-                            >
-                                <template v-slot:thumb-label="{ value }">
-                                    {{ value }} г
-                                </template>
-                            </v-slider>
+                                type="number"
+                                outlined
+                                dark
+                            ></v-text-field>
+                            <div class="slider-input">
+                                <v-slider
+                                    dark
+                                    v-model="grams"
+                                    hide-details
+                                    min="0"
+                                    max="1000"
+                                    step="1"
+                                >
+                                    <template v-slot:thumb-label="{ value }">
+                                        {{ value }} г
+                                    </template>
+                                </v-slider>
+                            </div>
                         </div>
                     </div>
                     <div class="proteins">{{ proteins }}</div>

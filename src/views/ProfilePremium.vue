@@ -190,7 +190,10 @@ export default {
     }
 
     .profile-container {
+        flex: 1 0 auto;
+
         .profile-content {
+            flex: 1 0 auto;
             margin-left: 30px;
 
             .title-page.premium {

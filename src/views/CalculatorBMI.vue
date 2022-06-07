@@ -4,7 +4,11 @@
         <v-container>
             <title-page name="Калькулятор ИМТ"/>
             <form-calc-bmi/>
-            <banner :image="require('@/assets/img/png/banner-join-2.png')"/>
+
+            <div v-if="advertising > 0.5" style="margin-top: 150px; height: 250px;" class="">
+                <div id="yandex_rtb_R-A-1707251-1"></div>
+            </div>
+            <banner v-else :image="require('@/assets/img/png/banner-join-2.png')"/>
         </v-container>
         <footer-main/>
     </div>
@@ -29,8 +33,29 @@ export default {
     },
 
     data: () => ({
-
+        advertising: 1,
     }),
+
+    methods: {
+        getRandomArbitrary() {
+            return Math.random();
+        }
+    },
+
+    mounted() {
+        let script = document.createElement("script");
+        script.type = "text/javascript";
+        script.innerHTML =
+            "window.yaContextCb.push(() => {\n" +
+            "    Ya.Context.AdvManager.render({\n" +
+            "        renderTo: 'yandex_rtb_R-A-1707251-1',\n" +
+            "        blockId: 'R-A-1707251-1'\n" +
+            "    })\n" +
+            "})"
+        let div = document.querySelector("#yandex_rtb_R-A-1707251-1");
+        div.append(script);
+        this.advertising = this.getRandomArbitrary();
+    }
 }
 </script>
 
