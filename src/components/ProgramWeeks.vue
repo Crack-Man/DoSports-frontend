@@ -32,7 +32,7 @@ export default {
                 let startDate = this.schedule['1'].days['1'].date.getTime();
                 let nowDate = new Date().getTime();
                 let oneDay = 1000 * 60 * 60 * 24;
-                let difference = Math.round((nowDate - startDate) / oneDay);
+                let difference = Math.floor((nowDate - startDate) / oneDay);
                 if (difference < 7) {
                     this.setCurrentWeek(1);
                 } else if (difference < 14) {

@@ -2,8 +2,8 @@
     <v-dialog
         v-model="popupVisibleTrains"
         persistent
-        content-class="popup-food--content"
-        width="1110px"
+        content-class="popup-trains--content"
+        width="798px"
         dark
     >
         <v-card>
@@ -25,16 +25,16 @@
                     color="#004BD7"
                 ></v-progress-circular>
             </v-card-text>
-            <v-card-text v-else class="popup-foods">
+            <v-card-text v-else class="popup-trains">
                 <div class="popup-title">Добавление программы тренировок</div>
                 <div class="popup-container">
                     <div class="popup-content">
                         <div class="header-popup">
                             <v-text-field
-                                class="input food-name"
+                                class="input train-name"
                                 v-model="trainName"
                                 :append-icon="'mdi-magnify'"
-                                placeholder="Название продукта..."
+                                placeholder="Название программы..."
                                 hide-details="auto"
                                 dark
                                 outlined
@@ -55,7 +55,7 @@
                         </div>
                         <div class="scroller">
                             <div :key="index" class="item" v-for="(train, index) in trainsFiltered">
-                                <div class="food" @click="openParams(train.id)" :id="`train${train.id}`">
+                                <div class="train" @click="openParams(train.id)" :id="`train${train.id}`">
                                     <div class="name"><span>{{ train['name'] }}</span></div>
                                     <div class="arrow">
                                         <img :class="'arrow' + train.id"
@@ -63,8 +63,13 @@
                                     </div>
                                 </div>
                                 <div class="params" v-if="showedTrain === train.id">
+                                    <div class="description">
+                                        <div v-for="(item, index) in train.description" :key="index">
+                                            {{ item }}
+                                        </div>
+                                    </div>
                                     <v-btn
-                                        class="button add-meal-food"
+                                        class="button add-train"
                                         color="primary"
                                         :loading="progress"
                                         @click="addTrain(train.id)"
@@ -89,7 +94,7 @@ import url from "../services/url";
 export default {
     name: "PopupTrains",
 
-    props: ['visible', 'idProgramTrain'],
+    props: ['visible', 'date', 'idProgramTrain'],
 
     components: {
     },
@@ -105,7 +110,7 @@ export default {
 
     watch: {
         visible() {
-            this.popupVisibleFood = this.visible;
+            this.popupVisibleTrains = this.visible;
         },
 
         popupVisibleTrains() {
@@ -122,35 +127,35 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["userData", "foods", "personalFoods", "foodCategories", "rations", "dishes"]),
+        ...mapGetters(["programData", "trainMods", "trains"]),
 
         trainCats() {
-            if (this.trainCategories) {
-                let cats = Array.from(this.foodCategories);
-                cats.splice(0, 0, {id: 0, name: "Все категории"});
+            if (this.trainMods) {
+                let cats = Array.from(this.trainMods);
+                cats.splice(0, 0, {id: 0, name: "Все режимы"});
                 return cats;
             }
             return [];
         },
 
         trainsFiltered() {
-            if (!this.foods) {
+            if (!this.trains) {
                 return [];
             }
-            let foods = Array.from(this.foods);
-            if (this.idCategory && this.foodName) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory && obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
+            let trains = Array.from(this.trains);
+            if (this.idCategory && this.trainName) {
+                trains = this.trains.filter(obj => obj.id_mode === this.idCategory && obj.name.toLowerCase().includes(this.trainName.toLowerCase()));
             } else if (this.idCategory) {
-                foods = this.foods.filter(obj => obj.id_food_category === this.idCategory);
-            } else if (this.foodName) {
-                foods = this.foods.filter(obj => obj.name.toLowerCase().includes(this.foodName.toLowerCase()));
+                trains = this.trains.filter(obj => obj.id_mode === this.idCategory);
+            } else if (this.trainName) {
+                trains = this.trains.filter(obj => obj.name.toLowerCase().includes(this.trainName.toLowerCase()));
             }
-            return foods;
+            return trains;
         },
     },
 
     methods: {
-        ...mapActions([]),
+        ...mapActions(["showTrains"]),
 
         changePage(page) {
             this.page = page;
@@ -163,7 +168,7 @@ export default {
 
         toggleClassArrow() {
             if (this.showedTrain !== -1) {
-                let arrow = document.querySelector(`.popup-foods .arrow${this.showedTrain}`);
+                let arrow = document.querySelector(`.popup-trains .arrow${this.showedTrain}`);
                 arrow.classList.toggle('active');
             }
         },
@@ -180,106 +185,41 @@ export default {
         },
 
         closePopup() {
-            this.page = 0;
             this.toggleClassArrow();
-            this.popupVisibleFood = false;
-            this.$emit('updateVisible', this.popupVisibleFood)
+            this.popupVisibleTrains = false;
+            this.$emit('updateVisible', this.popupVisibleTrains)
             this.showedTrain = -1;
             this.idCategory = 0;
-            this.foodName = "";
-        },
-
-        addRationToMeal() {
-            this.$emit("updateDiet");
-            this.closePopup();
+            this.trainName = "";
         },
 
         async addTrain(id) {
             this.progress = true;
-            if (this.type === "ration") {
-                //    добавить продукт в рацион
-                let food = {
-                    idFood: id,
-                    amount: this.grams,
-                    idRation: this.idRation
-                };
-                await axios.post(`${url}/api/programs/add-ration-food`, food).then((res) => {
-                    if (res.data.name === "Success") {
-                        this.$emit("updateDiet");
-                        this.closePopup();
-                    }
-                    this.progress = false;
-                })
-            } else if (this.type === "createDish") {
-                // добавить продукт и создать блюдо
-                let dish = {
-                    name: this.dishName,
-                    idUser: this.userData.id,
-                }
-                this.progress = true;
-                await axios.post(`${url}/api/programs/add-dish`, dish).then(async (res) => {
-                    if (res.data.name === "Success") {
-                        let food = {
-                            idFood: id,
-                            amount: this.grams,
-                            idDish: res.data.id,
-                        }
-
-                        await axios.post(`${url}/api/programs/add-dish-food`, food).then((res2) => {
-                            if (res2.data.name === "Success") {
-                                this.$emit("updateDiet", res.data.id);
-                                this.closePopup();
-                            }
-                        })
-                    }
-                    this.progress = false;
-                })
-            } else if (this.type === "dish") {
-                // добавление продукта в блюдо
-                let food = {
-                    idFood: id,
-                    amount: this.grams,
-                    idDish: this.idDish,
-                }
-                await axios.post(`${url}/api/programs/add-dish-food`, food).then((res) => {
-                    if (res.data.name === "Success") {
-                        this.$emit("updateDiet");
-                        this.closePopup();
-                    }
-                    this.progress = false;
-                })
-            } else {
-                // прием пищи
-                let food = {
-                    idFood: id,
-                    amount: this.grams,
-                    idMeal: this.idMeal
-                };
-                await axios.post(`${url}/api/programs/add-meal-food`, food).then((res) => {
-                    if (res.data.name === "Success") {
-                        this.$emit("updateDiet");
-                        this.closePopup();
-                    }
-                    this.progress = false;
-                })
+            let program = {
+                idProgram: this.idProgramTrain,
+                date: this.date,
+                idTrainExample: id,
             }
+            await axios.post(`${url}/api/programs/add-train-program`, program).then((res) => {
+                if (res.data.name === "Success") {
+                    this.progress = false;
+                    this.$emit("updateTrains");
+                    this.closePopup();
+                }
+            })
         }
     },
 
     mounted() {
-        this.showFoods().then(() => {
-            this.progressPopupFoods = false;
-        });
-        this.showFoodCategories();
-        this.showPersonalFoods(this.userData.id).then(() => {
-            this.progressPopupPersonalFoods = false;
-        });
-        this.showRations(this.userData.id).then(() => {
-            this.progressPopupRations = false;
-        })
-        this.showDishes(this.userData.id).then(() => {
-            this.progressPopupDishes = false;
-        })
+        if (this.trainMods) {
+            let program = {
+                aim: this.programData.aim,
+                trainPrepare: this.programData.train_prepare,
+            }
+            this.showTrains(program).then(() => {
+                this.progressPopupTrains = false;
+            })
+        }
     }
 }
 </script>
@@ -287,7 +227,7 @@ export default {
 <style lang="scss">
 
 #app {
-    .popup-food--content {
+    .popup-trains--content {
         overflow: hidden;
     }
 
@@ -301,15 +241,13 @@ export default {
         }
     }
 
-    .popup-foods {
+    .popup-trains {
         div {
             // запрет на выделение
             // Для эксплорера
             -ms-user-select: none;
 
-            /**
-             * Для мозилы
-             */
+            // Для мозилы
             -moz-user-select: none;
 
             // Для конкверора
@@ -326,12 +264,10 @@ export default {
         }
 
         .popup-container {
-            display: flex;
             margin-top: 5px;
 
             .popup-content {
                 margin-top: 30px;
-                flex: 0 0 698px;
 
                 .header-popup {
                     display: flex;
@@ -340,7 +276,7 @@ export default {
                         margin-top: 0;
                     }
 
-                    .food-name {
+                    .train-name {
                         flex: 0 0 430px;
                     }
 
@@ -368,90 +304,10 @@ export default {
                     width: 3px;
                 }
 
-                .header-table {
-                    margin-top: 5px;
-                    display: flex;
-
-                    div {
-                        font-family: 'Inter-Regular', sans-serif;
-                        font-size: 13px;
-                        line-height: 16px;
-                    }
-
-                    .name {
-                        margin-left: 15px;
-                        flex: 0 0 200px;
-                    }
-
-                    .proteins, .fats, .carbohydrates, .fibers {
-                        position: relative;
-                        flex: 0 0 58px;
-                    }
-
-                    .glycemic-index {
-                        position: relative;
-
-                        .speech {
-                            width: 162px;
-                            padding: 8px 12px;
-                            left: -55px;
-                        }
-
-                        .speech:before {
-                            left: 75px;
-                        }
-                    }
-
-                    img {
-                        cursor: pointer;
-                        position: relative;
-                        top: -10px;
-                        left: 4px;
-                        width: 8px;
-                    }
-
-                    .fibers span, .glycemic-index span {
-                        cursor: pointer;
-                    }
-
-                    img:hover ~ .speech, .fibers span:hover ~ .speech, .glycemic-index span:hover ~ .speech {
-                        display: block;
-                    }
-
-                    .speech {
-                        display: none;
-                        padding: 8px 21px;
-                        border-radius: 2px;
-                        position: absolute;
-                        top: -43px;
-                        left: -35px;
-                        font-family: 'Inter-Regular', sans-serif;
-                        font-size: 12px;
-                        line-height: 145%;
-                    }
-
-                    .speech:before {
-                        content: '';
-                        position: absolute;
-                        transform: rotate(-135deg);
-                        bottom: -1px;
-                        left: 46px;
-                    }
-
-
-                    .calories {
-                        flex: 0 0 78px;
-                    }
-
-                    .glycemic-index {
-                        flex: 0 0 51px;
-                    }
-                }
-
                 .item {
                     margin-top: 10px;
 
-                    .food {
+                    .train {
                         cursor: pointer;
                         position: relative;
                         display: flex;
@@ -470,66 +326,7 @@ export default {
                             overflow: hidden;
                             text-overflow: ellipsis;
                             margin-left: 15px;
-                            flex: 0 0 170px;
-                        }
-
-                        .name:hover ~ .name-speech {
-                            display: flex;
-                        }
-
-                        .name-speech {
-                            border-radius: 2px;
-                            display: none;
-                            position: absolute;
-                            top: -42px;
-                            left: 15px;
-                            height: 50px;
-                            padding: 7px 11px;
-                            z-index: 1;
-
-                            justify-content: center;
-                            align-items: center;
-
-                            div {
-                                //text-align: center;
-                                //width: 120px;
-                            }
-                        }
-
-                        .name-speech#name-speech0 {
-                            top: auto;
-                            bottom: -42px;
-                        }
-
-                        .name-speech:before {
-                            content: '';
-                            position: absolute;
-                            transform: rotate(90deg), scale(-1, 1);
-                            bottom: -8px;
-                            left: 0;
-                        }
-
-                        .name-speech#name-speech0:before {
-                            transform: rotate(135deg);
-                            top: -7px;
-                            left: -7px;
-                            bottom: auto;
-                        }
-
-                        .proteins {
-                            margin-left: 30px;
-                        }
-
-                        .proteins, .fats, .carbohydrates, .fibers {
-                            flex: 0 0 58px;
-                        }
-
-                        .calories {
-                            flex: 0 0 78px;
-                        }
-
-                        .glycemic-index {
-                            flex: 0 0 51px;
+                            flex: 0 0 300px;
                         }
 
                         .arrow {
@@ -549,116 +346,33 @@ export default {
                         }
                     }
 
-                    #food0 {
-                        margin-top: 0;
-                    }
-
-                    span.gram {
-                        margin-left: 15px;
-                        display: block;
-                        font-family: 'Inter-Regular', sans-serif;
-                        font-size: 13px;
-                        line-height: 180%;
-                        margin-top: 15px;
-                    }
-
                     .params {
-                        margin-top: 10px;
-                        display: flex;
+                        margin-top: 20px;
+                        padding-left: 15px;
+                        padding-right: 15px;
                         align-items: center;
-                        margin-bottom: 35px;
+                        margin-bottom: 20px;
 
-                        .proteins, .fats, .carbohydrates, .fibers {
-                            flex: 0 0 58px;
-                        }
+                        .description {
+                            white-space: pre-line;
+                            font-family: 'Inter-Regular', sans-serif;
+                            font-size: 14px;
+                            line-height: 145%;
 
-                        .calories {
-                            flex: 0 0 78px;
-                        }
-
-                        .glycemic-index {
-                            flex: 0 0 51px;
-                        }
-
-                        .button-add-meal-food {
-                            flex: 1 0 auto;
-
-                            .button.add-meal-food {
-                                margin-top: 0;
-                                width: 90px;
-                                height: 30px;
-                                border-radius: 2px;
-
-                                font-family: 'Inter-Regular', sans-serif;
-                                font-size: 12px;
-                                line-height: 180%;
+                            div:not(:first-child):not(:only-child) {
+                                margin-top: 10px;
                             }
                         }
 
-                        .slider {
-                            flex: 0 0 215px;
-                        }
+                        .button.add-train {
+                            margin-top: 20px;
+                            width: 100%;
+                            height: 30px;
+                            border-radius: 2px;
 
-                        .slider-container {
-                            margin-left: 15px;
-                            width: 165px;
-
-                            .v-slider {
-                                cursor: pointer;
-                                min-height: 0;
-                                margin: 0;
-
-                                .v-slider__thumb-label {
-                                    display: none !important;
-                                }
-
-                                .v-slider__track-container {
-                                    height: 1px;
-                                }
-                            }
-
-                            .slider-input {
-                                position: relative;
-                                top: 1px;
-                                width: 160px;
-                            }
-
-                            .input-grams.v-text-field--outlined {
-                                position: relative;
-                                bottom: 15px;
-                                width: 33px;
-                                height: 28px;
-                                margin: auto;
-
-                                .v-input__slot {
-                                    padding: 0;
-                                }
-
-                                input {
-                                    text-align: center;
-                                    font-family: 'Inter-Regular', sans-serif;
-                                    font-size: 12px;
-                                    line-height: 180%;
-                                }
-
-                                fieldset {
-                                    border: none;
-                                }
-                            }
-
-                            .v-slider__thumb {
-                                width: 5px;
-                                height: 5px;
-                                transform: translateY(-50%) translateX(100%) !important;
-                            }
-
-                            .v-slider__thumb::before {
-                                display: none;
-                            }
-
-                            .v-slider__thumb::after {
-                                display: none;
-                            }
+                            font-family: 'Inter-Regular', sans-serif;
+                            font-size: 12px;
+                            line-height: 180%;
                         }
                     }
                 }
@@ -672,7 +386,7 @@ export default {
 }
 
 #app.dark {
-    .popup-foods {
+    .popup-trains {
         .scroller {
             scrollbar-color: #9196FF #262635;
             //scrollbar-width: thin;
@@ -694,42 +408,12 @@ export default {
             border: 3px solid #9196FF;
         }
 
-        .header-table {
-            div {
-                color: #B5B5B8;
-            }
-
-            .speech {
-                color: white;
-                border-radius: 2px;
-                background-color: #262635;
-            }
-
-            .speech:before {
-                border: 5px solid;
-                border-color: #262635 transparent transparent #262635;
-            }
-        }
-
         .item {
-            .food {
+            .train {
                 background: #262635;
 
                 div {
                     color: white;
-                }
-
-                .name-speech {
-                    color: white;
-                    background-color: #262635;
-                    border-radius: 2px;
-                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-                }
-
-                .name-speech:before {
-                    border: 7px solid;
-                    border-color: #262635 transparent transparent #262635;
-                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }
             }
 

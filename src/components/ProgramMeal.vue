@@ -605,6 +605,7 @@ export default {
             font-family: 'Inter-SemiBold', sans-serif !important;
             font-size: 28px !important;
             line-height: 115% !important;
+            width: 280px;
         }
 
         .info-day {

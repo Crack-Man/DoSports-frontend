@@ -29,8 +29,8 @@ export default {
                 let startDate = this.schedule['1'].days['1'].date.getTime();
                 let nowDate = new Date().getTime();
                 let oneDay = 1000 * 60 * 60 * 24;
-                let difference = Math.round((nowDate - startDate) / oneDay) % 7;
-                difference = difference <= 21 ? difference % 7 : 7;
+                let difference = Math.floor((nowDate - startDate) / oneDay) % 7;
+                difference = difference < 21 ? difference % 7 : 7;
                 this.setCurrentDay(difference + 1);
             }
         },

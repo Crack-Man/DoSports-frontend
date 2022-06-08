@@ -20,6 +20,8 @@ export default {
         diet: [],
         visibleBars: true,
         programTrainMods: [],
+        programTrains: [],
+        programTrainsToday: [],
     },
 
     actions: {
@@ -455,6 +457,38 @@ export default {
                     ctx.commit("updateTrainMods", res.data.mods);
                 }
             });
+        },
+
+        async showTrains(ctx, program) {
+            await axios.post(`${url}/api/programs/get-trains`, program).then((res) => {
+                if (res.data.name === "Success") {
+                    let trains = Array.from(res.data.trains);
+                    for (let i = 0; i < trains.length; i++) {
+                        trains[i].description = trains[i].description.split("\n");
+                        for (let j = 0; j < trains[i].description.length; j++) {
+                            trains[i].description[j] = trains[i].description[j].trim()
+                        }
+                        trains[i].description = trains[i].description.filter(value => !!value);
+                    }
+                    ctx.commit("updateTrains", trains);
+                }
+            });
+        },
+
+        async showTrainProgram(ctx, program) {
+            await axios.post(`${url}/api/programs/get-train-program`, program).then((res) => {
+                if (res.data.name === "Success") {
+                    let trains = Array.from(res.data.trains);
+                    for (let i = 0; i < trains.length; i++) {
+                        trains[i].description = trains[i].description.split("\n");
+                        for (let j = 0; j < trains[i].description.length; j++) {
+                            trains[i].description[j] = trains[i].description[j].trim()
+                        }
+                        trains[i].description = trains[i].description.filter(value => !!value);
+                    }
+                    ctx.commit("updateTrainProgram", trains);
+                }
+            })
         }
     },
 
@@ -529,6 +563,14 @@ export default {
 
         updateTrainMods(state, mods) {
             state.programTrainMods = mods;
+        },
+
+        updateTrains(state, trains) {
+            state.programTrains = trains;
+        },
+
+        updateTrainProgram(state, trains) {
+            state.programTrainsToday = trains;
         }
     },
 
@@ -599,6 +641,14 @@ export default {
 
         trainMods(state) {
             return state.programTrainMods;
+        },
+
+        trains(state) {
+            return state.programTrains;
+        },
+
+        trainProgram(state) {
+            return state.programTrainsToday;
         }
     }
 }

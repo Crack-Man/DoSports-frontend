@@ -30,12 +30,12 @@
                     </div>
                 </div>
             </div>
-            <div>
+            <div v-if="!trainProgram.length">
                 <div class="text">
                     Здесь будет отображаться информация о ваших тренировках. Необходимо добавить программу из
                     предложенных под вашу весовую категорию и уровень подготовки.
                 </div>
-                <div class="button link">
+                <div class="button link" @click="openPopupTrains">
                     <div class="image">
                         <img
                             :src="require('@/assets/img/png/plus.png')"
@@ -44,22 +44,86 @@
                     <span>Добавить программу</span>
                 </div>
             </div>
+            <div v-else>
+                <div class="item" v-for="train in trainProgram" :key="train.id">
+                    <div class="header-item">
+                        <div class="name">
+                            {{ train.name }}
+                        </div>
+                        <div class="count-examples">
+                            {{ train.count_examples }} упражнений
+                        </div>
+                    </div>
+                    <div class="description">
+                        <div v-for="(item, index) in train.description" :key="index">
+                            {{ item }}
+                        </div>
+                    </div>
+                </div>
+                <div class="reset-train" @click="popupVisibleReset = true">
+                    <img :src="require('@/assets/img/png/text-reset-program--white.png')">
+                    <img class="active" :src="require('@/assets/img/png/text-reset-program--red.png')">
+                </div>
+            </div>
+            <popup-trains :visible="popupVisibleTrains" :date="date" :id-program-train="programData.id" @updateVisible="onUpdateVisibleTrains" @updateTrains="updateTrains"/>
         </template>
+        <v-dialog
+            v-model="popupVisibleReset"
+            persistent
+            max-width="473px"
+            dark
+        >
+            <v-card>
+                <v-btn
+                    icon
+                    dark
+                    class="close"
+                    @click="popupVisibleReset = false"
+                >
+                    <img
+                        :src="require('../assets/img/png/close.png')"
+                    />
+                </v-btn>
+
+                <v-card-text class="popup-reset">
+                    <div class="popup-title">Вы точно хотите</div>
+                    <div class="popup-title">сбросить тренировку?</div>
+                    <v-card-actions>
+                        <v-btn
+                            class="button cancel"
+                            @click="popupVisibleReset = false"
+                        >Отменить</v-btn>
+                        <v-btn
+                            class="button reset"
+                            :loading="progressResetTrain"
+                            @click="resetTrain"
+                        >Сбросить</v-btn>
+                    </v-card-actions>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
 <script>
 import Title from "@/components/Title";
 import {mapActions, mapGetters} from "vuex";
+import PopupTrains from "@/components/PopupTrains";
+import axios from "axios";
+import url from "../services/url";
 
 export default {
     name: "ProgramTrains",
 
     components: {
         "title-page": Title,
+        "popup-trains": PopupTrains,
     },
 
     data: () => ({
+        popupVisibleTrains: false,
+        progressResetTrain: false,
+        popupVisibleReset: false,
         progressTrain: false,
     }),
 
@@ -68,7 +132,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["programData", "trainMods"]),
+        ...mapGetters(["currentDate", "programData", "trainMods", "schedule", "trainProgram"]),
+
+        date() {
+            return this.formatDate(this.getScheduleDay());
+        },
 
         aim() {
             if (!this.programData) {
@@ -101,7 +169,62 @@ export default {
     },
 
     methods: {
-        ...mapActions(["showTrainMods"]),
+        ...mapActions(["showTrainMods", "showTrainProgram"]),
+
+        async resetTrain() {
+            this.progressResetTrain = true;
+            this.progressTrain = true;
+            let program = {
+                idProgram: this.programData.id,
+                date: this.date
+            }
+            await axios.post(`${url}/api/programs/delete-train-program`, program).then((res) => {
+                if (res.data.name === "Success") {
+                    this.updateTrains()
+                }
+            })
+        },
+
+        getScheduleDay() {
+            let week = this.currentDate.week;
+            let day = this.currentDate.day;
+            if (this.schedule[week]) {
+                return this.schedule[week].days[day].date;
+            }
+            return "";
+        },
+
+        formatDate(date) {
+            if (date) {
+                let day = date.getDate();
+                let month = date.getMonth() + 1;
+                let year = date.getFullYear();
+                return `${day < 10 ? '0' + day : day}.${month < 10 ? '0' + month : month}.${year}`;
+            }
+            return "";
+        },
+
+        openPopupTrains() {
+            this.popupVisibleTrains = true;
+        },
+
+        onUpdateVisibleTrains(value) {
+            this.popupVisibleTrains = value;
+        },
+
+        async updateTrains() {
+            this.progressTrain = true;
+            this.progressResetTrain = true;
+            let program = {
+                id: this.programData.id,
+                date: this.date
+            }
+            await this.showTrainProgram(program).then(() => {
+                this.popupVisibleReset = false;
+                this.progressResetTrain = false;
+                this.progressTrain = false;
+            })
+        },
 
         getTrainMods() {
             let program = {
@@ -114,6 +237,7 @@ export default {
 
     mounted() {
         this.getTrainMods();
+        this.updateTrains();
     }
 }
 </script>
@@ -229,6 +353,67 @@ export default {
             width: 260px;
             height: 50px;
         }
+
+        .item {
+            margin-top: 25px;
+            border-radius: 5px;
+            padding: 20px;
+
+            .header-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+                padding-bottom: 15px;
+
+                .name {
+                    font-family: 'Inter-Medium', sans-serif;
+                    font-size: 18px;
+                    line-height: 122%;
+                }
+
+                .count-examples {
+                    font-family: 'Inter-Regular', sans-serif;
+                    font-size: 12px;
+                    line-height: 145%;
+                }
+            }
+
+            .description {
+                margin-top: 25px;
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 14px;
+                line-height: 145%;
+
+                div:not(:first-child):not(:only-child) {
+                    margin-top: 10px;
+                }
+            }
+        }
+
+        .reset-train {
+            cursor: pointer;
+            width: 207px;
+            margin-top: 30px;
+
+            img {
+                width: 100%;
+                display: block;
+            }
+
+            img.active {
+                display: none;
+            }
+        }
+
+        .reset-train:hover {
+            img {
+                display: none;
+            }
+
+            img.active {
+                display: block;
+            }
+        }
     }
 }
 
@@ -245,6 +430,14 @@ export default {
                     border-color: #262635 transparent transparent #262635;
                     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
                 }
+            }
+        }
+
+        .item {
+            background: #1A1A27;
+
+            .header-item {
+                border-bottom: 1px solid rgba(181, 181, 184, 0.5);
             }
         }
     }
