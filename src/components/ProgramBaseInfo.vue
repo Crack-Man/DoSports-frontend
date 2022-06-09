@@ -4,7 +4,12 @@
             <weeks v-show="barsVisible"/>
             <days v-show="barsVisible"/>
             <div class="program-base-container">
-                <sidebar v-show="barsVisible"/>
+                <div class="side" v-show="barsVisible">
+                    <sidebar/>
+                    <div class="advertising" v-show="!this.userIsPro">
+                        <div id="yandex_rtb_R-A-1707251-1"></div>
+                    </div>
+                </div>
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
                 <program-meal v-if="programPage === 1"/>
                 <program-trains v-if="programPage === 2"/>
@@ -51,7 +56,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "currentDate", "schedule", "programData", "programDiet", "programPage", "barsVisible"]),
+        ...mapGetters(["userData", "userIsPro", "currentDate", "schedule", "programData", "programDiet", "programPage", "barsVisible"]),
 
         aim() {
             if (!this.programData) return {};
@@ -76,11 +81,28 @@ export default {
                 this.$router.push("/start-program");
             })
         },
+
+        pushAdvertising() {
+            if (!this.userIsPro) {
+                let script = document.createElement("script");
+                script.type = "text/javascript";
+                script.innerHTML =
+                    "window.yaContextCb.push(() => {\n" +
+                    "    Ya.Context.AdvManager.render({\n" +
+                    "        renderTo: 'yandex_rtb_R-A-1707251-1',\n" +
+                    "        blockId: 'R-A-1707251-1'\n" +
+                    "    })\n" +
+                    "})"
+                let div = document.querySelector("#yandex_rtb_R-A-1707251-1");
+                div.append(script);
+            }
+        }
     },
 
     mounted() {
         this.changeBarsVisible(true);
         this.showProgram(this.userData);
+        this.pushAdvertising();
     }
 }
 </script>
@@ -91,6 +113,15 @@ export default {
         margin-top: 40px;
         display: flex;
         align-items: flex-start;
+
+        .side {
+            flex: 0 0 255px;
+
+            .advertising {
+                margin-top: 20px;
+                max-height: 132px;
+            }
+        }
     }
 }
 </style>

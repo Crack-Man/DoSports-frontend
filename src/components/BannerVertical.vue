@@ -36,4 +36,12 @@ export default {
         }
     }
 }
+
+#app.dark {
+    .banner-vertical {
+        a:hover {
+            color: white !important;
+        }
+    }
+}
 </style>

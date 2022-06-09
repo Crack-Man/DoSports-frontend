@@ -80,10 +80,6 @@ export default {
                     url: '/calc-pfc'
                 },
                 {
-                    name: 'Атлас тела',
-                    url: '/'
-                },
-                {
                     name: 'Статьи',
                     url: '/articles'
                 },

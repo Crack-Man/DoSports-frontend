@@ -19,6 +19,8 @@
 
 <script>
 
+import {mapGetters} from "vuex";
+
 export default {
     name: "PopupFoodsSidebar",
 
@@ -28,6 +30,8 @@ export default {
     }),
 
     computed: {
+        ...mapGetters(["userIsPro"]),
+
         links() {
             return [
                 {
@@ -41,27 +45,27 @@ export default {
                     id: 2,
                     name: "+ Добавить свой продукт",
                     class: "link link-self-food",
-                    classUnactive: "link link-self-food unactive",
-                    speech: "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”.",
-                    active: this.personalFoods.length,
+                    classUnactive: "link link-self-food unactive" + (!this.userIsPro ? " without-pro" : ""),
+                    speech: this.userIsPro ? "У вас еще нет своих продуктов. Создайте свой продукт в пункте меню “Свои продукты”." : "Доступно только премиум-пользователям",
+                    active: this.userIsPro && this.personalFoods.length,
                     visible: true
                 },
                 {
                     id: 1,
                     name: "+ Добавить блюдо",
                     class: "link link-dish",
-                    classUnactive: "link link-dish unactive",
-                    speech: "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”.",
-                    active: this.dishes.length,
+                    classUnactive: "link link-dish unactive" + (!this.userIsPro ? " without-pro" : ""),
+                    speech: this.userIsPro ? "У вас еще нет блюд. Создайте свое блюдо в пункте меню “Блюда”." : "Доступно только премиум-пользователям",
+                    active: this.userIsPro && this.dishes.length,
                     visible: this.type !== 'dish' && this.type !== 'createDish'
                 },
                 {
                     id: 3,
                     name: "+ Добавить рацион",
                     class: "link link-ration",
-                    classUnactive: "link link-ration unactive",
-                    speech: "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи.",
-                    active: this.rations.length,
+                    classUnactive: "link link-ration unactive" + (!this.userIsPro ? " without-pro" : ""),
+                    speech: this.userIsPro ? "У вас еще нет рационов. Создайте рацион при добавлении продуктов в прием пищи." : "Доступно только премиум-пользователям",
+                    active: this.userIsPro && this.rations.length,
                     visible: this.type !== 'ration' && this.type !== 'dish' && this.type !== 'createDish'
                 },
             ]
@@ -173,6 +177,26 @@ export default {
                 top: -87px;
                 left: calc(-238px / 2 + 3px);
                 //right: -58px;
+            }
+        }
+
+        .without-pro {
+            .speech {
+                left: calc(-173px / 2 + 3px);
+                width: 173px;
+            }
+        }
+
+        .link-self-food.without-pro {
+            .speech {
+                top: -70px;
+                left: calc(-238px / 2 - 4px);
+            }
+        }
+
+        .link-ration.without-pro {
+            .speech {
+                top: -70px;
             }
         }
     }

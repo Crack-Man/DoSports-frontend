@@ -66,7 +66,7 @@
                                          @updateDiet="updateFoods"
                             />
                         </div>
-                        <div class="add-ration" @click="popupVisibleRation = true">
+                        <div v-if="userIsPro" class="add-ration" @click="popupVisibleRation = true">
                             Создать рацион
                         </div>
                         <v-dialog
@@ -226,7 +226,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["programDiet", "userData"]),
+        ...mapGetters(["programDiet", "userData", "userIsPro"]),
     },
 
     watch: {

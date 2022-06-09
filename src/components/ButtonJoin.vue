@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="link" :class="type !== 'premium' ? 'button link' : 'button link premium'">
+    <router-link :to="link" :class="linkClass">
         <div class="image">
             <img
                 :src="require('@/assets/img/png/plus.png')"
@@ -16,7 +16,7 @@ import {mapGetters} from "vuex";
 export default {
     name: "ButtonJoin",
 
-    props: ['type'],
+    props: ['type', 'lightOff'],
 
     computed: {
         ...mapGetters(['userIsAuthorized']),
@@ -26,6 +26,19 @@ export default {
                 return "/";
             }
             return this.userIsAuthorized ? '/sport-program' : '/auth';
+        },
+
+        linkClass() {
+            let classList = "";
+            if (this.type === 'premium') {
+                classList = "button link premium";
+            } else {
+                classList = "button link";
+            }
+            if (this.lightOff) {
+                classList += " light-off"
+            }
+            return classList;
         }
     },
 }
@@ -56,6 +69,10 @@ export default {
             font-family: "Inter-Medium", sans-serif;
             font-size: 18px;
         }
+    }
+
+    .button.link.light-off::before {
+        background-color: #004BD7;
     }
 
     .button.link.premium {

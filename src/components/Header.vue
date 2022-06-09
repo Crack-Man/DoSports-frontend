@@ -146,10 +146,6 @@ export default {
                     ]
                 },
                 {
-                    name: 'Атлас тела',
-                    url: '/'
-                },
-                {
                     name: 'Статьи',
                     url: '/articles'
                 },

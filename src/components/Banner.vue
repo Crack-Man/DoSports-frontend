@@ -3,7 +3,7 @@
         <div :class="type !== 'premium' ? 'banner' : 'banner premium'">
             <div v-if="type !== 'premium'" class="title">ВСТУПАЙ В НАШ КЛУБ</div>
             <div v-else class="title premium">ПОЧУВСТВУЙ ВСЕ ПЛЮСЫ <span>PREMIUM</span> ПОДПИСКИ</div>
-            <button-join :type="this.type === 'premium' ? 'premium' : ''"/>
+            <button-join :type="this.type === 'premium' ? 'premium' : ''" :light-off="true"/>
         </div>
     </v-container>
 </template>

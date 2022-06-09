@@ -56,8 +56,8 @@ export default {
                 url: '/calc-pfc'
             },
             {
-                name: 'Атлас\nтела',
-                url: '/'
+                name: 'Статьи',
+                url: '/articles'
             },
         ],
     }),
