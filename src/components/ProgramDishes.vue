@@ -70,7 +70,7 @@
                     </div>
                     <div class="glycemic-index">
                         <div class="name">ГИ</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ dish.glycemic_index }}</div>
                     </div>
                 </div>
             </div>
@@ -104,24 +104,26 @@
 
                     <v-card-text class="popup-dish">
                         <div class="popup-title">Добавление блюда</div>
-                        <v-text-field
-                            label="Название блюда"
-                            class="input dish-name"
-                            v-model="dishName"
-                            :rules="rules.name"
-                            hide-details="auto"
-                            dark
-                            outlined
-                            required
-                        ></v-text-field>
-                        <v-btn
-                            class="button add-dish"
-                            color="primary"
-                            :loading="progressAddDish"
-                            @click="openPopupFoods"
-                        >
-                            Продолжить
-                        </v-btn>
+                        <v-form ref="form" lazy-validation>
+                            <v-text-field
+                                label="Название блюда"
+                                class="input dish-name"
+                                v-model="dishName"
+                                :rules="rules.name"
+                                hide-details="auto"
+                                dark
+                                outlined
+                                required
+                            ></v-text-field>
+                            <v-btn
+                                class="button add-dish"
+                                color="primary"
+                                :loading="progressAddDish"
+                                @click="openPopupFoods"
+                            >
+                                Продолжить
+                            </v-btn>
+                        </v-form>
                     </v-card-text>
                 </v-card>
             </v-dialog>
@@ -131,7 +133,7 @@
                          @updateDiet="updateDishes"/>
         </template>
         <program-dishes-edit v-else-if="page === 2" :progress="progressDishes" :dish="selectedDish"
-                              @updateDishFoods="updateDishFoodsForEdit" @back="returnToDishes"/>
+                             @updateDishFoods="updateDishFoodsForEdit" @back="returnToDishes"/>
     </div>
 </template>
 
@@ -163,7 +165,8 @@ export default {
 
         rules: {
             name: [
-                v => !!v || "Введите название"
+                v => !!v || "Введите название",
+                v => v.length <= 20 || "Слишком длинное название"
             ]
         }
     }),
@@ -176,8 +179,10 @@ export default {
         ...mapActions(["showDishes", "changeBarsVisible"]),
 
         openPopupFoods() {
-            this.popupVisibleDish = false;
-            this.popupVisibleFood = true;
+            if (this.$refs.form.validate()) {
+                this.popupVisibleDish = false;
+                this.popupVisibleFood = true;
+            }
         },
 
         async deleteDish(id) {
@@ -311,6 +316,10 @@ export default {
         display: flex;
         border-radius: 4px;
 
+        @media (max-width: 1263px) {
+            height: auto;
+        }
+
         .name-dish {
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -324,6 +333,10 @@ export default {
             font-family: 'Inter-Medium', sans-serif;
             font-size: 16px;
             line-height: 119%;
+
+            @media (max-width: 1263px) {
+                flex: 0 0 100px;
+            }
         }
 
         .foods {
@@ -338,10 +351,14 @@ export default {
             flex: 0 0 203px;
             margin-left: 25px;
 
+            @media (max-width: 1263px) {
+                flex: 0 0 100px;
+            }
+
             .empty {
                 font-family: 'Inter-Regular', sans-serif;
                 font-size: 13px;
-                line-height: 16px;
+                line-height: 123%;
             }
 
             .item {
@@ -371,10 +388,25 @@ export default {
 
             .settings {
                 display: flex;
+
+                @media (max-width: 1263px) {
+                    flex-direction: column;
+                }
+            }
+
+            .edit {
+                @media (max-width: 1263px) {
+                    margin-top: 5px;
+                }
             }
 
             .delete {
                 margin-left: 35px;
+
+                @media (max-width: 1263px) {
+                    margin-top: 5px;
+                    margin-left: 0px;
+                }
             }
         }
 
@@ -393,18 +425,34 @@ export default {
 
         .proteins {
             margin-left: 47px;
+
+            @media (max-width: 1263px) {
+                margin-left: 25px;
+            }
         }
 
         .proteins, .fats, .carbohydrates {
             flex: 0 0 62px;
+
+            @media (max-width: 1263px) {
+                flex: 0 0 50px;
+            }
         }
 
         .calories {
             flex: 0 0 77px;
+
+            @media (max-width: 1263px) {
+                flex: 0 0 70px;
+            }
         }
 
         .fibers {
             flex: 0 0 112px;
+
+            @media (max-width: 1263px) {
+                flex: 0 0 85px;
+            }
         }
 
         .glycemic-index {

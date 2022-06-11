@@ -6,7 +6,6 @@
             :key="item.id"
         >
             <span :class="currentDate.week === item.id ? 'active' : ''" @click="setWeek(item.id)">Неделя {{ item.id }}</span>
-            <div v-if="item.id < 3" class="spacer-week"></div>
         </div>
     </div>
 </template>
@@ -72,24 +71,22 @@ export default {
         justify-content: space-between;
         align-items: center;
 
-        .spacer-week {
-            flex: 0 0 1px;
-            width: 1px;
-            height: 50px;
-        }
-
         .item {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            height: 50px;
             flex: 1 0 auto;
             align-items: center;
-            margin-left: 131px;
 
             span {
                 cursor: pointer;
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 24px;
                 line-height: 180%;
+
+                @media (max-width: 1263px) {
+                    font-size: 22px;
+                }
             }
         }
     }
@@ -99,12 +96,12 @@ export default {
     .weeks {
         background: #1A1A27;
 
-        .spacer-week {
-            border-left: 1px solid #B5B5B8;
-        }
-
         .item {
             color: #B5B5B8;
+        }
+
+        .item:not(:last-child):not(:only-child) {
+            border-right: 1px solid #B5B5B8;
         }
 
         .item {

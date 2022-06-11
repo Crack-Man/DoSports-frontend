@@ -188,6 +188,10 @@ export default {
                         text-overflow: ellipsis;
                         margin-left: 15px;
                         flex: 0 0 170px;
+
+                        @media (max-width: 1050px) {
+                            flex: 0 0 140px;
+                        }
                     }
 
                     .name:hover ~ .name-speech {
@@ -232,10 +236,22 @@ export default {
 
                     .proteins, .fats, .carbohydrates, .fibers {
                         flex: 0 0 58px;
+
+                        @media (max-width: 1100px) {
+                            flex: 0 0 50px;
+                        }
+
+                        @media (max-width: 1050px) {
+                            flex: 0 0 45px;
+                        }
                     }
 
                     .calories {
                         flex: 0 0 78px;
+
+                        @media (max-width: 1100px) {
+                            flex: 0 0 70px;
+                        }
                     }
 
                     .glycemic-index {
@@ -279,6 +295,10 @@ export default {
                             text-overflow: ellipsis;
                             margin-left: 15px;
                             flex: 0 0 170px;
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 140px;
+                            }
                         }
 
                         .name:hover ~ .name-speech {
@@ -312,10 +332,22 @@ export default {
 
                         .proteins, .fats, .carbohydrates, .fibers {
                             flex: 0 0 58px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 50px;
+                            }
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 45px;
+                            }
                         }
 
                         .calories {
                             flex: 0 0 78px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 70px;
+                            }
                         }
 
                         .glycemic-index {
@@ -330,10 +362,18 @@ export default {
 
                 .button.add-ration {
                     font-size: 12px;
-                    width: 525px;
+                    width: 529px;
                     height: 30px;
                     margin-top: 20px;
                     margin-left: 15px;
+
+                    @media (max-width: 1100px) {
+                        width: 489px;
+                    }
+
+                    @media (max-width: 1050px) {
+                        width: 439px;
+                    }
                 }
             }
         }

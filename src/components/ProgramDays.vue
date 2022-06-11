@@ -6,7 +6,6 @@
             :key="item.id"
         >
             <span :class="currentDate.day === item.id ? 'active' : ''" @click="setDay(item.id)">День {{ item.id }}</span>
-            <div v-if="item.id < 7" class="spacer-days"></div>
         </div>
     </div>
 </template>
@@ -64,24 +63,22 @@ export default {
         justify-content: space-between;
         align-items: center;
 
-        .spacer-days {
-            flex: 0 0 1px;
-            width: 1px;
-            height: 25px;
-        }
-
         .item {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             flex: 1 0 auto;
             align-items: center;
-            margin-left: 53px;
+            height: 25px;
 
             span {
                 cursor: pointer;
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 16px;
                 line-height: 180%;
+
+                @media (max-width: 1263px) {
+                    font-size: 14px;
+                }
             }
         }
     }
@@ -91,14 +88,14 @@ export default {
     .days {
         background: #1A1A27;
 
-        .spacer-days {
-            border-left: 1px solid #B5B5B8;
-        }
-
         .item {
             span {
                 color: #B5B5B8;
             }
+        }
+
+        .item:not(:last-child):not(:only-child) {
+            border-right: 1px solid #B5B5B8;
         }
 
         .item {

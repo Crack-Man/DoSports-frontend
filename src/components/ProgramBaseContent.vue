@@ -44,7 +44,7 @@
                         <td class="name">{{ item.name }}</td>
                         <td class="aim">{{ item.aim }}</td>
                         <td class="eaten">{{ item.eaten }}</td>
-                        <td class="amendment">{{ item.amendment }}</td>
+                        <td class="amendment" :class="Math.abs(item.amendment / item.aim) >= 0.1 ? 'not-normal' : ''">{{ item.amendment }}</td>
                     </tr>
                     </tbody>
                 </template>
@@ -239,6 +239,9 @@ export default {
 
 #app {
     .program-base-content {
+        flex: 1 1 auto;
+        margin-left: 30px;
+
         .progress-base-content {
             position: relative;
             width: 100%;
@@ -250,9 +253,6 @@ export default {
                 bottom: calc(50% - 50px / 2);
             }
         }
-
-        flex: 1 0 auto;
-        margin-left: 30px;
 
         .info-day {
             display: flex;
@@ -379,6 +379,11 @@ export default {
             td {
                 color: white;
                 border: none;
+            }
+
+
+            td.amendment.not-normal {
+                color: #FF5B5B;
             }
         }
 

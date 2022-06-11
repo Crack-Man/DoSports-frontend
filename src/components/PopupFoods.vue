@@ -489,6 +489,14 @@ export default {
             .popup-content {
                 margin-top: 30px;
                 flex: 0 0 698px;
+                
+                @media (max-width: 1100px) {
+                    flex: 0 0 650px;
+                }
+
+                @media (max-width: 1050px) {
+                    flex: 0 0 600px;
+                }
 
                 .header-popup {
                     display: flex;
@@ -499,10 +507,18 @@ export default {
 
                     .food-name {
                         flex: 0 0 430px;
+
+                        @media (max-width: 1100px) {
+                            flex: 0 0 380px;
+                        }
+
+                        @media (max-width: 1050px) {
+                            flex: 0 0 330px;
+                        }
                     }
 
                     .category {
-                        flex: 0 0 230px;
+                        flex: 0 1 230px;
                         width: 230px;
                         margin-left: 20px;
                         margin-right: 18px;
@@ -538,11 +554,23 @@ export default {
                     .name {
                         margin-left: 15px;
                         flex: 0 0 200px;
+
+                        @media (max-width: 1050px) {
+                            flex: 0 0 170px;
+                        }
                     }
 
                     .proteins, .fats, .carbohydrates, .fibers {
                         position: relative;
                         flex: 0 0 58px;
+
+                        @media (max-width: 1100px) {
+                            flex: 0 0 50px;
+                        }
+
+                        @media (max-width: 1050px) {
+                            flex: 0 0 45px;
+                        }
                     }
 
                     .glycemic-index {
@@ -598,6 +626,10 @@ export default {
 
                     .calories {
                         flex: 0 0 78px;
+
+                        @media (max-width: 1100px) {
+                            flex: 0 0 70px;
+                        }
                     }
 
                     .glycemic-index {
@@ -628,6 +660,10 @@ export default {
                             text-overflow: ellipsis;
                             margin-left: 15px;
                             flex: 0 0 170px;
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 140px;
+                            }
                         }
 
                         .name:hover ~ .name-speech {
@@ -679,10 +715,22 @@ export default {
 
                         .proteins, .fats, .carbohydrates, .fibers {
                             flex: 0 0 58px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 50px;
+                            }
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 45px;
+                            }
                         }
 
                         .calories {
                             flex: 0 0 78px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 70px;
+                            }
                         }
 
                         .glycemic-index {
@@ -725,16 +773,38 @@ export default {
                         align-items: center;
                         margin-bottom: 35px;
 
+                        .proteins {
+                            @media (max-width: 1050px) {
+                                margin-left: 30px;
+                            }
+                        }
+
                         .proteins, .fats, .carbohydrates, .fibers {
                             flex: 0 0 58px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 50px;
+                            }
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 45px;
+                            }
                         }
 
                         .calories {
                             flex: 0 0 78px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 70px;
+                            }
                         }
 
                         .glycemic-index {
                             flex: 0 0 51px;
+
+                            @media (max-width: 1100px) {
+                                flex: 0 0 40px;
+                            }
                         }
 
                         .button-add-meal-food {
@@ -754,11 +824,19 @@ export default {
 
                         .slider {
                             flex: 0 0 215px;
+
+                            @media (max-width: 1050px) {
+                                flex: 0 0 155px;
+                            }
                         }
 
                         .slider-container {
                             margin-left: 15px;
                             width: 165px;
+
+                            @media (max-width: 1050px) {
+                                width: 130px;
+                            }
 
                             .v-slider {
                                 cursor: pointer;
@@ -777,7 +855,7 @@ export default {
                             .slider-input {
                                 position: relative;
                                 top: 1px;
-                                width: 160px;
+                                width: calc(100% - 3px);
                             }
 
                             .input-grams.v-text-field--outlined {

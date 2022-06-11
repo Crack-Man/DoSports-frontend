@@ -138,8 +138,8 @@ export default {
                 return (+value.toFixed(1));
             }
 
-            let round = (value) => {
-                return (+value.toFixed(1));
+            let round = (value, fix=1) => {
+                return (+value.toFixed(fix));
             }
 
             await axios.get(`${url}/api/programs/get-users-rations/${id}`).then(async (resRations) => {
@@ -153,6 +153,7 @@ export default {
                         rations[i].carbohydrates = 0;
                         rations[i].calories = 0;
                         rations[i].fibers = 0;
+                        rations[i].glycemic_index = 0;
 
                         for (let j = 0; j < rations[i].foods.length; j++) {
                             // относительные свойства, зависящие от граммовки
@@ -174,7 +175,8 @@ export default {
                                         sumFats = 0,
                                         sumCarbohydrates = 0,
                                         sumCalories = 0,
-                                        sumFibers = 0;
+                                        sumFibers = 0,
+                                        sumGI = 0;
                                     for (let k = 0; k < foods.length; k++) {
                                         foods[k].proteinsCalc = calcParams(foods[k].proteins, foods[k].amount);
                                         foods[k].fatsCalc = calcParams(foods[k].fats, foods[k].amount);
@@ -187,6 +189,7 @@ export default {
                                         sumCarbohydrates += foods[k].carbohydratesCalc;
                                         sumCalories += foods[k].caloriesCalc;
                                         sumFibers += foods[k].fibersCalc;
+                                        sumGI += foods[k].glycemic_index;
                                         sumAmount += foods[k].amount;
                                     }
                                     rations[i].foods[j].proteinsPer100 = 0;
@@ -218,7 +221,7 @@ export default {
                                     rations[i].foods[j].fibersCalc = calcParams(rations[i].foods[j].fibersPer100, rations[i].foods[j].amount);
                                     rations[i].foods[j].fibersCalc = isNaN(rations[i].foods[j].fibersCalc) ? 0 : rations[i].foods[j].fibersCalc;
 
-                                    rations[i].foods[j].glycemic_index = 0;
+                                    rations[i].foods[j].glycemic_index = round(sumGI / foods.length, 0);
                                 });
                             }
 
@@ -227,12 +230,14 @@ export default {
                             rations[i].carbohydrates += rations[i].foods[j].carbohydratesCalc;
                             rations[i].calories += rations[i].foods[j].caloriesCalc;
                             rations[i].fibers += rations[i].foods[j].fibersCalc;
+                            rations[i].glycemic_index += rations[i].foods[j].glycemic_index;
                         }
                         rations[i].proteins = round(rations[i].proteins);
                         rations[i].fats = round(rations[i].fats);
                         rations[i].carbohydrates = round(rations[i].carbohydrates);
                         rations[i].calories = round(rations[i].calories);
                         rations[i].fibers = round(rations[i].fibers);
+                        rations[i].glycemic_index = round(rations[i].glycemic_index / rations[i].foods.length, 0);
                     });
                 }
                 ctx.commit("updateRations", rations);
@@ -245,8 +250,8 @@ export default {
                 return (+value.toFixed(1));
             }
 
-            let round = (value) => {
-                return (+value.toFixed(1));
+            let round = (value, fix=1) => {
+                return (+value.toFixed(fix));
             }
 
             await axios.get(`${url}/api/programs/get-users-dishes/${id}`).then(async (resDishes) => {
@@ -274,12 +279,14 @@ export default {
                             dishes[i].carbohydrates += foods[j].carbohydratesCalc;
                             dishes[i].calories += foods[j].caloriesCalc;
                             dishes[i].fibers += foods[j].fibersCalc;
+                            dishes[i].glycemic_index += foods[j].glycemic_index;
                             dishes[i].amount += foods[j].amount;
                         }
                         dishes[i].proteins = round(dishes[i].proteins);
                         dishes[i].fats = round(dishes[i].fats);
                         dishes[i].carbohydrates = round(dishes[i].carbohydrates);
                         dishes[i].calories = round(dishes[i].calories);
+                        dishes[i].glycemic_index = round(dishes[i].glycemic_index / foods.length, 0);
                         dishes[i].fibers = round(dishes[i].fibers);
 
                         dishes[i].proteinsCalc = 0;
@@ -287,7 +294,6 @@ export default {
                         dishes[i].carbohydratesCalc = 0;
                         dishes[i].caloriesCalc = 0;
                         dishes[i].fibersCalc = 0;
-                        dishes[i].glycemic_indexCalc = 0;
                         for (let j = 0; j < foods.length; j++) {
                             // формула блюда на 100 г: f = (k + d) / 2 * value_per_100, где k - величина вклада свойства продукта, d - величина вклада массы продукта
                             dishes[i].proteinsCalc += (foods[j].proteinsCalc / dishes[i].proteins + foods[j].amount / dishes[i].amount) / 2 * foods[j].proteins;
@@ -326,8 +332,8 @@ export default {
                 return (+value.toFixed(1));
             }
 
-            let round = (value) => {
-                return (+value.toFixed(1));
+            let round = (value, fix=1) => {
+                return (+value.toFixed(fix));
             }
             // получить все приемы пищи
             await axios.post(`${url}/api/programs/get-program-diet`, input).then(async (res) => {
@@ -339,6 +345,7 @@ export default {
                 diet.carbohydrates = 0;
                 diet.calories = 0;
                 diet.fibers = 0;
+                diet.glycemic_index = 0;
                 for (let i = 0; i < diet.length; i++) {
                     // на каждый прием пищи получить продукты
                     await axios.get(`${url}/api/programs/get-meal-foods/${diet[i].id}`).then(async (res) => {
@@ -349,6 +356,7 @@ export default {
                         diet[i].carbohydrates = 0;
                         diet[i].calories = 0;
                         diet[i].fibers = 0;
+                        diet[i].glycemic_index = 0;
 
                         for (let j = 0; j < diet[i].foods.length; j++) {
                             // относительные свойства, зависящие от граммовки
@@ -370,6 +378,7 @@ export default {
                                         sumFats = 0,
                                         sumCarbohydrates = 0,
                                         sumCalories = 0,
+                                        sumGI = 0,
                                         sumFibers = 0;
                                     for (let k = 0; k < foods.length; k++) {
                                         foods[k].proteinsCalc = calcParams(foods[k].proteins, foods[k].amount);
@@ -383,6 +392,7 @@ export default {
                                         sumCarbohydrates += foods[k].carbohydratesCalc;
                                         sumCalories += foods[k].caloriesCalc;
                                         sumFibers += foods[k].fibersCalc;
+                                        sumGI += foods[k].glycemic_index;
                                         sumAmount += foods[k].amount;
                                     }
                                     diet[i].foods[j].proteinsPer100 = 0;
@@ -414,7 +424,7 @@ export default {
                                     diet[i].foods[j].fibersCalc = calcParams(diet[i].foods[j].fibersPer100, diet[i].foods[j].amount);
                                     diet[i].foods[j].fibersCalc = isNaN(diet[i].foods[j].fibersCalc) ? 0 : diet[i].foods[j].fibersCalc;
 
-                                    diet[i].foods[j].glycemic_index = 0;
+                                    diet[i].foods[j].glycemic_index = round(sumGI / foods.length, 0);
                                 });
                             }
 
@@ -423,6 +433,7 @@ export default {
                             diet[i].carbohydrates += diet[i].foods[j].carbohydratesCalc;
                             diet[i].calories += diet[i].foods[j].caloriesCalc;
                             diet[i].fibers += diet[i].foods[j].fibersCalc;
+                            diet[i].glycemic_index += diet[i].foods[j].glycemic_index;
                         }
 
                         diet[i].proteins = round(diet[i].proteins);
@@ -430,12 +441,15 @@ export default {
                         diet[i].carbohydrates = round(diet[i].carbohydrates);
                         diet[i].calories = round(diet[i].calories);
                         diet[i].fibers = round(diet[i].fibers);
+                        diet[i].glycemic_index = round(diet[i].glycemic_index / (diet[i].foods.length ? diet[i].foods.length : 1), 0);
+
 
                         diet.proteins += diet[i].proteins;
                         diet.fats += diet[i].fats;
                         diet.carbohydrates += diet[i].carbohydrates;
                         diet.calories += diet[i].calories;
                         diet.fibers += diet[i].fibers;
+                        diet.glycemic_index += diet[i].glycemic_index;
                     });
                     diet.proteins = round(diet.proteins);
                     diet.fats = round(diet.fats);

@@ -151,7 +151,7 @@
                             <div class="value-row">{{ meal.carbohydrates }}</div>
                             <div class="value-row">{{ meal.calories }}</div>
                             <div class="value-row">{{ meal.fibers }}</div>
-                            <div class="value-row">0</div>
+                            <div class="value-row">{{ meal.glycemic_index }}</div>
                         </div>
                     </div>
                     <div class="name-stat">Всего за этот день</div>
@@ -170,7 +170,7 @@
                             <div class="value-row">{{ programDiet.carbohydrates }}</div>
                             <div class="value-row">{{ programDiet.calories }}</div>
                             <div class="value-row">{{ programDiet.fibers }}</div>
-                            <div class="value-row">0</div>
+                            <div class="value-row">{{ programDiet.glycemic_index }}</div>
                         </div>
                     </div>
                 </div>
@@ -220,7 +220,8 @@ export default {
 
         rules: {
             name: [
-                v => !!v || "Введите название"
+                v => !!v || "Введите название",
+                v => v.length <= 20 || 'Слишком длинное название',
             ]
         }
     }),
@@ -244,15 +245,17 @@ export default {
         ...mapActions(["changeBarsVisible"]),
 
         async addRation() {
-            this.ration.progress = true;
-            this.ration.foods = this.meal.foods;
-            this.ration.idUser = this.userData.id;
-            await axios.post(`${url}/api/programs/add-ration`, this.ration).then((res) => {
-                if (res.data.name === "Success") {
-                    this.ration.page++;
-                }
-                this.ration.progress = false;
-            });
+            if (this.$refs.form.validate()) {
+                this.ration.progress = true;
+                this.ration.foods = this.meal.foods;
+                this.ration.idUser = this.userData.id;
+                await axios.post(`${url}/api/programs/add-ration`, this.ration).then((res) => {
+                    if (res.data.name === "Success") {
+                        this.ration.page++;
+                    }
+                    this.ration.progress = false;
+                });
+            }
         },
 
         closePopupRation() {
@@ -354,10 +357,10 @@ export default {
             margin-top: 30px;
 
             .meal-edit-content {
-                flex: 0 0 825px;
+                flex: 0 0 calc(100% - 255px);
 
                 .item {
-                    padding: 0 25px;
+                    padding: 20px;
                     height: 90px;
                     border-radius: 4px;
 
@@ -379,9 +382,11 @@ export default {
 
 
                     .food {
-                        flex: 0 0 384px;
-                        width: 384px;
-                        padding-right: 25px;
+                        flex: 0 0 392px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 262px;
+                        }
 
                         .name {
                             white-space: nowrap;
@@ -395,6 +400,10 @@ export default {
 
                     .proteins, .fats, .carbohydrates {
                         flex: 0 0 62px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 49px;
+                        }
                     }
 
                     .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
@@ -403,10 +412,18 @@ export default {
 
                     .calories {
                         flex: 0 0 77px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 70px;
+                        }
                     }
 
                     .fibers {
                         flex: 0 0 112px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 80px;
+                        }
                     }
 
                     .glycemic-index {

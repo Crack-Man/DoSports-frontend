@@ -192,7 +192,7 @@ export default {
         }
 
         .item {
-            padding: 0 25px;
+            padding: 20px;
             height: 90px;
             display: flex;
             align-items: center;
@@ -217,6 +217,11 @@ export default {
                 width: 384px;
                 padding-right: 25px;
 
+                @media (max-width: 1263px) {
+                    flex: 0 0 252px;
+                    width: 252px;
+                }
+
                 .name {
                     white-space: nowrap;
                     overflow: hidden;
@@ -229,18 +234,26 @@ export default {
 
             .proteins, .fats, .carbohydrates {
                 flex: 0 0 62px;
-            }
 
-            .proteins, .fats, .carbohydrates, .calories, .fibers, .glycemic-index {
-                //margin-left: 45px;
+                @media (max-width: 1263px) {
+                    flex: 0 0 50px;
+                }
             }
 
             .calories {
                 flex: 0 0 77px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 70px;
+                }
             }
 
             .fibers {
                 flex: 0 0 112px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 85px;
+                }
             }
 
             .glycemic-index {

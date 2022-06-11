@@ -100,7 +100,7 @@
                             <div class="value-row">{{ ration.carbohydrates }}</div>
                             <div class="value-row">{{ ration.calories }}</div>
                             <div class="value-row">{{ ration.fibers }}</div>
-                            <div class="value-row">0</div>
+                            <div class="value-row">{{ ration.glycemic_index }}</div>
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@ export default {
             margin-top: 30px;
 
             .ration-edit-content {
-                flex: 0 0 825px;
+                flex: 0 0 calc(100% - 255px);
 
                 .item {
                     padding: 0 25px;
@@ -245,6 +245,10 @@ export default {
                         width: 384px;
                         padding-right: 25px;
 
+                        @media (max-width: 1263px) {
+                            flex: 0 0 262px;
+                        }
+
                         .name {
                             white-space: nowrap;
                             overflow: hidden;
@@ -257,14 +261,26 @@ export default {
 
                     .proteins, .fats, .carbohydrates {
                         flex: 0 0 62px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 49px;
+                        }
                     }
 
                     .calories {
                         flex: 0 0 77px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 70px;
+                        }
                     }
 
                     .fibers {
                         flex: 0 0 112px;
+
+                        @media (max-width: 1263px) {
+                            flex: 0 0 80px;
+                        }
                     }
 
                     .glycemic-index {

@@ -130,7 +130,7 @@
                     </div>
                     <div class="glycemic-index">
                         <div class="name">ГИ</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ meal.glycemic_index }}</div>
                     </div>
                 </div>
                 <div class="reset-meals" @click="popupVisibleReset = true">
@@ -426,7 +426,7 @@ export default {
 <style lang="scss">
 #app {
     .program-meal {
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         margin-left: 30px;
 
         .progress-diet {
@@ -451,7 +451,7 @@ export default {
 
         .text {
             margin-top: 20px;
-            width: 620px;
+            max-width: 620px;
             font-family: 'Inter-Regular', sans-serif;
             font-size: 18px;
             line-height: 145%;
@@ -487,7 +487,12 @@ export default {
                 flex: 0 0 95px;
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 16px;
-                line-height: 19px;
+                line-height: 119%;
+                
+                @media (max-width: 1263px) {
+                    flex: 0 0 85px;
+                    font-size: 14px;
+                }
             }
 
             .foods {
@@ -502,10 +507,19 @@ export default {
                 flex: 0 0 203px;
                 margin-left: 45px;
 
+                @media (max-width: 1263px) {
+                    flex: 0 0 120px;
+                    margin-left: 25px;
+                }
+
                 .empty {
                     font-family: 'Inter-Regular', sans-serif;
                     font-size: 13px;
                     line-height: 16px;
+
+                    @media (max-width: 1263px) {
+                        white-space: pre-line;
+                    }
                 }
 
                 .item {
@@ -549,18 +563,34 @@ export default {
 
             .proteins {
                 margin-left: 47px;
+
+                @media (max-width: 1263px) {
+                    margin-left: 25px;
+                }
             }
 
             .proteins, .fats, .carbohydrates {
                 flex: 0 0 62px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 50px;
+                }
             }
 
             .calories {
                 flex: 0 0 77px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 70px;
+                }
             }
 
             .fibers {
                 flex: 0 0 112px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 85px;
+                }
             }
 
             .glycemic-index {

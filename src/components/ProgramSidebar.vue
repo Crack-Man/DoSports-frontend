@@ -10,7 +10,11 @@
                 <span>{{ page.name }}</span>
                 <div class="speech-area">
                     <img :src="require('@/assets/img/svg/ask--grey.svg')"/>
-                    <div class="speech">{{ speech }}</div>
+                    <div class="speech-wrapper">
+                        <div class="speech">
+                            Доступно только <router-link to='/profile/premium'>премиум</router-link>-пользователям
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -24,7 +28,6 @@ export default {
     name: "ProgramSidebar",
 
     data: () => ({
-        speech: "Доступно только премиум-пользователям"
     }),
 
     computed: {
@@ -79,9 +82,19 @@ export default {
                     position: relative;
                     margin-left: 5px;
 
-                    .speech {
+                    .speech-wrapper {
                         display: none;
+                        top: -100vh;
+                        width: 171px;
+                        height: 65px;
                         position: absolute;
+                        left: calc(100% - 91px);
+                    }
+
+                    .speech {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
                         width: 171px;
 
                         font-family: 'Inter-Medium', sans-serif;
@@ -90,8 +103,13 @@ export default {
                         text-align: center;
                         border-radius: 2px;
                         padding: 7px 11px;
-                        top: -63px;
-                        left: calc(100% - 91px);
+
+                        a {
+                            font-family: 'Inter-Medium', sans-serif;
+                            font-size: 12px;
+                            line-height: 145%;
+                            text-decoration: underline !important;
+                        }
                     }
 
                     .speech:before {
@@ -108,14 +126,17 @@ export default {
                         bottom: 7px;
                     }
 
-                    img:hover ~ .speech {
+                    img:hover ~ .speech-wrapper {
+
+                        top: -62px;
                         display: block;
                     }
                 }
             }
 
             .unactive:hover {
-                .speech {
+                .speech-wrapper {
+                    top: -62px;
                     display: block;
                 }
             }
@@ -148,6 +169,10 @@ export default {
                 .speech {
                     color: white;
                     background: #262635;
+
+                    a {
+                        color: white !important;
+                    }
                 }
 
                 .speech:before {

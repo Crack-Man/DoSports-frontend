@@ -78,7 +78,7 @@
                     </div>
                     <div class="glycemic-index">
                         <div class="name">ГИ</div>
-                        <div class="value">0</div>
+                        <div class="value">{{ ration.glycemic_index }}</div>
                     </div>
                 </div>
             </div>
@@ -249,6 +249,10 @@ export default {
             display: flex;
             border-radius: 4px;
 
+            @media (max-width: 1263px) {
+                height: auto;
+            }
+
             .name-ration {
                 display: -webkit-box;
                 -webkit-line-clamp: 3;
@@ -261,6 +265,10 @@ export default {
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 16px;
                 line-height: 119%;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 100px;
+                }
             }
 
             .foods {
@@ -271,14 +279,17 @@ export default {
                 overflow: hidden;
                 text-overflow: ellipsis;
 
-                width: 203px;
                 flex: 0 0 203px;
                 margin-left: 25px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 100px;
+                }
 
                 .empty {
                     font-family: 'Inter-Regular', sans-serif;
                     font-size: 13px;
-                    line-height: 16px;
+                    line-height: 123%;
                 }
 
                 .item {
@@ -301,17 +312,32 @@ export default {
                 .edit, .add, .delete {
                     font-family: 'Inter-Regular', sans-serif;
                     font-size: 13px;
-                    line-height: 16px;
+                    line-height: 123%;
                     text-decoration-line: underline;
                     cursor: pointer;
                 }
 
                 .settings {
                     display: flex;
+
+                    @media (max-width: 1263px) {
+                        flex-direction: column;
+                    }
+                }
+
+                .edit {
+                    @media (max-width: 1263px) {
+                        margin-top: 5px;
+                    }
                 }
 
                 .delete {
                     margin-left: 35px;
+
+                    @media (max-width: 1263px) {
+                        margin-top: 5px;
+                        margin-left: 0px;
+                    }
                 }
             }
 
@@ -330,18 +356,34 @@ export default {
 
             .proteins {
                 margin-left: 47px;
+
+                @media (max-width: 1263px) {
+                    margin-left: 25px;
+                }
             }
 
             .proteins, .fats, .carbohydrates {
                 flex: 0 0 62px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 50px;
+                }
             }
 
             .calories {
                 flex: 0 0 77px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 70px;
+                }
             }
 
             .fibers {
                 flex: 0 0 112px;
+
+                @media (max-width: 1263px) {
+                    flex: 0 0 85px;
+                }
             }
 
             .glycemic-index {

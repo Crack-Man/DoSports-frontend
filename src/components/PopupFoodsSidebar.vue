@@ -98,6 +98,11 @@ export default {
             line-height: 22px;
             cursor: pointer;
 
+            @media (max-width: 1000px) {
+                margin-top: 10px;
+                font-size: 14px;
+            }
+
             .speech-area {
                 position: relative;
                 margin-left: 5px;
