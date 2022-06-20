@@ -13,6 +13,7 @@
                 <program-base-content v-if="programPage === 0" :aim="aim"/>
                 <program-meal v-if="programPage === 1"/>
                 <program-trains v-if="programPage === 2"/>
+                <program-diary v-if="programPage === 3"/>
                 <program-rations v-if="programPage === 4"/>
                 <program-dishes v-if="programPage === 5"/>
                 <program-personal-foods v-if="programPage === 6"/>
@@ -34,6 +35,7 @@ import ProgramRations from "@/components/ProgramRations";
 import ProgramDishes from "@/components/ProgramDishes";
 import PopupEducation from "@/components/PopupEducation";
 import ProgramTrains from "@/components/ProgramTrains";
+import ProgramDiary from "@/components/ProgramDiary";
 
 export default {
     name: "ProgramBaseInfo",
@@ -44,6 +46,7 @@ export default {
         "sidebar": ProgramSidebar,
         "program-base-content": ProgramBaseContent,
         "program-meal": ProgramMeal,
+        "program-diary": ProgramDiary,
         "program-rations": ProgramRations,
         "program-dishes": ProgramDishes,
         "program-personal-foods": ProgramPersonalFoods,

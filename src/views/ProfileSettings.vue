@@ -8,7 +8,7 @@
             <v-container v-else>
                 <banner class="profile-banner" type="premium" :image="require('@/assets/img/png/banner-join-2.png')"/>
                 <div class="profile-container">
-                    <profile-sidebar active-page="2"/>
+                    <profile-sidebar active-page="3"/>
                     <div class="forms">
                         <form-personal-data/>
                         <form-change-password/>

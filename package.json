@@ -11,6 +11,7 @@
   "dependencies": {
     "@mdi/font": "5.9.55",
     "axios": "^0.25.0",
+    "chart.js": "^3.8.0",
     "core-js": "^3.6.5",
     "filepond": "^4.30.3",
     "filepond-plugin-file-validate-type": "^1.2.8",
@@ -19,6 +20,7 @@
     "roboto-fontface": "*",
     "v-mask": "^2.3.0",
     "vue": "^2.6.11",
+    "vue-chartjs": "^4.1.1",
     "vue-filepond": "^6.0.0",
     "vue-owl-carousel": "^2.0.3",
     "vue-router": "^3.2.0",

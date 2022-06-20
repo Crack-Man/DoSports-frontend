@@ -57,7 +57,7 @@ export default {
         margin-top: 25px;
         width: 100%;
         height: 50px;
-        border-radius: 4px;
+        border-radius: 2px;
 
         display: flex;
         justify-content: space-between;

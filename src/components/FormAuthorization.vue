@@ -1,5 +1,5 @@
 <template>
-    <div  v-if="!userIsAuthorized">
+    <div v-if="!userIsAuthorized">
         <title-page name="Вход"></title-page>
         <v-form class="form-auth" ref="form">
             <v-text-field

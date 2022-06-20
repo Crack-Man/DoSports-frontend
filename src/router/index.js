@@ -15,6 +15,7 @@ import ArticleBeer from "@/views/ArticleBeer";
 import ProfileBase from "@/views/ProfileBase";
 import ProfileSettings from "@/views/ProfileSettings";
 import ProfilePremium from "@/views/ProfilePremium";
+import ProfileGraph from "@/views/ProfileGraph";
 
 Vue.use(VueRouter)
 
@@ -107,6 +108,12 @@ const routes = [
         path: '/profile/settings',
         name: 'Настройки',
         component: ProfileSettings
+    },
+
+    {
+        path: '/profile/stat',
+        name: 'Графики',
+        component: ProfileGraph
     },
 ]
 

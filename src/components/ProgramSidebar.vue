@@ -39,7 +39,7 @@ export default {
                 {name: "Основная информация", visible: true},
                 {name: "Приемы пищи", visible: true},
                 {name: "Тренировки", visible: true},
-                {name: "Дневники", visible: true},
+                {name: "Дневник", visible: true},
                 {name: "Рационы", visible: this.userIsPro},
                 {name: "Блюда", visible: this.userIsPro},
                 {name: "Свои продукты", visible: this.userIsPro},

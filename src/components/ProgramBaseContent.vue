@@ -163,7 +163,6 @@ export default {
                     return (+value.toFixed(1));
                 }
                 return [
-
                     { name: "Белки", aim: aim.proteins, eaten: eaten.proteins, amendment: round(aim.proteins -  eaten.proteins)},
                     { name: "Жиры", aim: aim.fats, eaten: eaten.fats, amendment: round(aim.fats -  eaten.fats)},
                     { name: "Углеводы", aim: aim.carbohydrates, eaten: eaten.carbohydrates, amendment: round(aim.carbohydrates -  eaten.carbohydrates)},

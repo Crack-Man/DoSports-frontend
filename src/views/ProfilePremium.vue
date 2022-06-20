@@ -15,7 +15,7 @@
             <v-container v-else>
                 <banner class="profile-banner" type="premium" :image="require('@/assets/img/png/banner-join-2.png')"/>
                 <div class="profile-container">
-                    <profile-sidebar active-page="1"/>
+                    <profile-sidebar active-page="2"/>
                     <div class="profile-content">
                         <title-page class="premium" name="Подписка"/>
                         <div class="status" v-if="this.userIsPro">Cтатус подписки: премиум (действителен до
@@ -193,7 +193,7 @@ export default {
         flex: 1 0 auto;
 
         .profile-content {
-            flex: 1 0 auto;
+            flex: 1 1 auto;
             margin-left: 30px;
 
             .title-page.premium {

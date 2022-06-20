@@ -115,9 +115,10 @@ export default {
         display: flex;
         align-items: flex-start;
         margin-left: 30px;
-        flex: 1 0 auto;
+        flex: 1 1 auto;
 
         .avatar-container {
+
             .avatar {
                 display: flex;
                 align-items: center;
@@ -151,13 +152,17 @@ export default {
         }
 
         .profile-info {
-            flex: 1 0 auto;
+            flex: 1 1 auto;
             margin-left: 30px;
 
             .full-name {
                 font-family: 'Inter-SemiBold', sans-serif;
                 font-size: 24px;
                 line-height: 121%;
+
+                @media (max-width: 1263px) {
+                    font-size: 20px;
+                }
             }
 
             .status {
@@ -165,6 +170,10 @@ export default {
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 18px;
                 line-height: 140%;
+
+                @media (max-width: 1263px) {
+                    font-size: 14px;
+                }
             }
 
             .profile-data {
@@ -172,6 +181,10 @@ export default {
                 font-family: 'Inter-Medium', sans-serif;
                 font-size: 18px;
                 line-height: 140%;
+
+                @media (max-width: 1263px) {
+                    font-size: 14px;
+                }
             }
 
             .spacer-profile {
@@ -184,6 +197,10 @@ export default {
                 font-family: 'Inter-SemiBold', sans-serif;
                 font-size: 24px;
                 line-height: 121%;
+
+                @media (max-width: 1263px) {
+                    font-size: 20px;
+                }
             }
 
             .profile-group-data {
@@ -204,14 +221,26 @@ export default {
                 font-family: 'Inter-Regular', sans-serif;
                 font-size: 18px;
                 line-height: 140%;
+
+                @media (max-width: 1263px) {
+                    font-size: 14px;
+                }
             }
 
             .explain.personal-data {
                 width: 550px;
+
+                @media (max-width: 1263px) {
+                    width: 420px;
+                }
             }
 
             .explain.program-parameters {
                 width: 520px;
+
+                @media (max-width: 1263px) {
+                    width: 420px;
+                }
             }
         }
     }
