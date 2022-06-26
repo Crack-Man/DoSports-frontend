@@ -4,10 +4,14 @@
         <v-container>
             <div class="article-header">
                 <img :src="require('@/assets/img/png/article-header--beer.png')">
+                <img class="mobile" :src="require('@/assets/img/png/article-beer.png')">
             </div>
             <div class="divider"></div>
             <div class="article-container beer">
                 <div class="article-content">
+                    <div class="title-mobile">
+                        Разрушает ли пиво мыщцы?
+                    </div>
                     <div class="article-banner">
                         <span>Умеренное употребление алкоголя — не более 30–40 г этанола в день — не вредит вашей физической форме.</span>
                     </div>
@@ -97,6 +101,10 @@ export default {
             .article-banner {
                 span {
                     width: 668px;
+
+                    @media (max-width: 1263px) {
+                        width: 468px;
+                    }
                 }
             }
         }

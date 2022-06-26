@@ -25,6 +25,11 @@ export default {
         height: 380px;
         background: url("../assets/img/png/banner-vertical.png");
 
+
+        @media (max-width: 960px) {
+            display: none;
+        }
+
         display: flex;
         align-items: center;
         justify-content: center;

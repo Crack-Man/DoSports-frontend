@@ -11,11 +11,13 @@
                     <div class="text">
                         <router-link :to="article.link">
                             <div class="title">
-                                {{ article.title }}
+                                <span>
+                                    {{ article.title }}
+                                </span>
                                 <div class="image">
                                     <img :src="require('@/assets/img/svg/arrow-link-article--white.svg')">
-                                    <img class="active" :src="require('@/assets/img/svg/arrow-link-article--violet.svg')">
-
+                                    <img class="active"
+                                         :src="require('@/assets/img/svg/arrow-link-article--violet.svg')">
                                 </div>
                             </div>
                         </router-link>
@@ -115,7 +117,25 @@ export default {
 <style lang="scss">
 #app {
     .article-list {
+        @media (max-width: 960px) {
+            flex: 0 0 555px;
+        }
 
+        @media (max-width: 900px) {
+            flex: 0 0 500px;
+        }
+
+        @media (max-width: 850px) {
+            flex: 0 0 450px;
+        }
+
+        @media (max-width: 790px) {
+            flex: 0 0 400px;
+        }
+
+        @media (max-width: 790px) {
+            margin-top: 35px;
+        }
 
         .track {
             display: grid;
@@ -130,21 +150,54 @@ export default {
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            @media (max-width: 760px) {
+                grid-row-gap: 30px;
+                grid-template-columns: repeat(1, 1fr);
+            }
+
             .image {
                 display: block;
                 width: 100%;
                 height: 135px;
 
                 @media (max-width: 1263px) {
-                    //height: 160px;
+                    height: 90px;
                 }
 
                 @media (max-width: 960px) {
-                    //height: 220px;
+                    height: 135px;
+                }
+
+                @media (max-width: 900px) {
+                    height: 120px;
                 }
 
                 @media (max-width: 850px) {
-                    //height: 200px;
+                    height: 110px;
+                }
+
+                @media (max-width: 760px) {
+                    height: 250px;
+                }
+
+                @media (max-width: 760px) {
+                    height: 400px;
+                }
+
+                @media (max-width: 650px) {
+                    height: 350px;
+                }
+
+                @media (max-width: 600px) {
+                    height: 300px;
+                }
+
+                @media (max-width: 550px) {
+                    height: 250px;
+                }
+
+                @media (max-width: 450px) {
+                    height: 207px;
                 }
 
                 img {
@@ -161,21 +214,27 @@ export default {
                 margin-top: 15px;
 
                 .title {
+                    padding-right: 15px;
                     font-family: 'Inter-SemiBold', sans-serif !important;
                     font-size: 18px !important;
                     line-height: 120% !important;
                     position: relative;
 
                     @media (max-width: 1263px) {
-                        //font-size: 20px !important;
+                        font-size: 14px !important;
                     }
 
                     @media (max-width: 960px) {
-                        //font-size: 24px !important;
+                        font-size: 18px !important;
                     }
 
-                    @media (max-width: 850px) {
-                        //font-size: 20px !important;
+                    @media (max-width: 790px) {
+                        font-size: 16px !important;
+                    }
+
+                    @media (max-width: 760px) {
+                        padding-right: 35px;
+                        font-size: 20px !important;
                     }
 
                     .image {

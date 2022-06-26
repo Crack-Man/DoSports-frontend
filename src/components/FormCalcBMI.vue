@@ -100,13 +100,31 @@ export default {
         display: flex;
         align-items: flex-start;
 
+        @media (max-width: 960px) {
+            justify-content: space-between;
+        }
+
+        @media (max-width: 760px) {
+            flex-direction: column;
+        }
+
         .container-explanation {
             margin-top: 5px;
             margin-left: 0;
             margin-right: 30px;
 
+            @media (max-width: 930px) {
+                margin-top: -30px;
+            }
+
             @media (max-width: 1263px) {
                 margin-right: 20px;
+            }
+
+            .explanation {
+                @media (max-width: 760px) {
+                    margin-top: 15px;
+                }
             }
 
             .text {
@@ -115,6 +133,11 @@ export default {
                 
                 @media (max-width: 1263px) {
                     width: 330px;
+                }
+
+                @media (max-width: 930px) {
+                    font-size: 12px !important;
+                    width: 280px;
                 }
             }
         }
@@ -127,29 +150,72 @@ export default {
                 flex: 0 0 300px;
             }
 
+            @media (max-width: 930px) {
+                flex: 0 0 250px;
+            }
+
+            @media (max-width: 800px) {
+                flex: 0 0 230px;
+            }
+
+            @media (max-width: 760px) {
+                flex: 0 0 auto;
+                width: 330px;
+            }
+
+            @media (max-width: 400px) {
+                width: 100%;
+            }
+
             .input {
                 width: 100%;
+
+                @media (max-width: 930px) {
+                    margin-top: 22px;
+                }
+            }
+
+            .input:first-child {
+                @media (max-width: 760px) {
+                    margin-top: 60px;
+                }
             }
 
             .button {
                 margin-top: 10px;
                 width: 100%;
                 height: 50px;
+
+                @media (max-width: 930px) {
+                    margin-top: 0;
+                }
+
+                @media (max-width: 760px) {
+                    margin-top: 10px;
+                }
             }
         }
 
         .results {
-            margin-top: 15px;
+            margin-top: 40px;
             margin-left: 30px;
 
             @media (max-width: 1263px) {
                 margin-left: 20px;
             }
 
+            @media (max-width: 930px) {
+                margin-top: 0;
+            }
+
+            @media (max-width: 760px) {
+                margin-top: 30px;
+                margin-left: 0;
+            }
+
             .index {
                 display: flex;
                 align-items: flex-end;
-                margin-top: 30px;
 
                 p {
                     margin: 0;
@@ -164,6 +230,18 @@ export default {
                     @media (max-width: 1263px) {
                         font-size: 20px;
                     }
+
+                    @media (max-width: 830px) {
+                        font-size: 16px;
+                    }
+
+                    @media (max-width: 800px) {
+                        font-size: 14px;
+                    }
+
+                    @media (max-width: 760px) {
+                        font-size: 18px;
+                    }
                 }
 
                 .value {
@@ -175,6 +253,18 @@ export default {
 
                     @media (max-width: 1263px) {
                         font-size: 20px;
+                    }
+
+                    @media (max-width: 830px) {
+                        font-size: 16px;
+                    }
+
+                    @media (max-width: 800px) {
+                        font-size: 14px;
+                    }
+
+                    @media (max-width: 760px) {
+                        font-size: 18px;
                     }
                 }
             }
@@ -188,6 +278,14 @@ export default {
                 letter-spacing: 0.02em;
 
                 @media (max-width: 1263px) {
+                    font-size: 14px;
+                }
+
+                @media (max-width: 830px) {
+                    font-size: 12px;
+                }
+
+                @media (max-width: 760px) {
                     font-size: 14px;
                 }
             }

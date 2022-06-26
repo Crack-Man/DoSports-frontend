@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-container>
+        <v-container class="banned-low-screen" v-if="!this.isPhone">
             <weeks v-show="barsVisible"/>
             <days v-show="barsVisible"/>
             <div class="program-base-container">
@@ -20,6 +20,8 @@
             </div>
             <popup-education :visible="popupVisibleEducation" @close="popupVisibleEducation = false"/>
         </v-container>
+        <popup-baned-mobile v-else/>
+        <popup-baned-low-screen/>
     </div>
 </template>
 
@@ -36,6 +38,8 @@ import ProgramDishes from "@/components/ProgramDishes";
 import PopupEducation from "@/components/PopupEducation";
 import ProgramTrains from "@/components/ProgramTrains";
 import ProgramDiary from "@/components/ProgramDiary";
+import PopupBanedLowScreen from "@/components/PopupBanedLowScreen";
+import PopupBanedMobile from "@/components/PopupBanedMobile";
 
 export default {
     name: "ProgramBaseInfo",
@@ -52,6 +56,8 @@ export default {
         "program-personal-foods": ProgramPersonalFoods,
         "program-trains": ProgramTrains,
         "popup-education": PopupEducation,
+        "popup-baned-low-screen": PopupBanedLowScreen,
+        "popup-baned-mobile": PopupBanedMobile,
     },
 
     data: () => ({
@@ -59,7 +65,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userData", "userIsPro", "currentDate", "schedule", "programData", "programDiet", "programPage", "barsVisible"]),
+        ...mapGetters(["userData", "userIsPro", "currentDate", "schedule", "programData", "programDiet", "programPage", "barsVisible", "isPhone"]),
 
         aim() {
             if (!this.programData) return {};

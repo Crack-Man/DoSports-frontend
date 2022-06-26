@@ -2,7 +2,7 @@
     <div class="">
         <header-main/>
         <v-container>
-            <title-page name="Полезные статьи"></title-page>
+            <title-page class="articles" name="Полезные статьи"></title-page>
             <div class="article-container">
                 <explanation :texts="explanation"/>
                 <article-list/>
@@ -38,13 +38,31 @@ export default {
 
 <style lang="scss">
 #app {
+    .title-page.articles {
+        @media (max-width: 760px) {
+            margin-bottom: 0;
+        }
+    }
+
     .article-container {
         display: flex;
+
+        @media (max-width: 760px) {
+            flex-direction: column;
+        }
 
         .container-explanation {
             flex: 0 0 297px;
             margin-left: 0;
             margin-right: 50px;
+
+            @media (max-width: 960px) {
+                flex: 1 1 auto;
+            }
+
+            @media (max-width: 760px) {
+                margin-top: 15px;
+            }
 
             .explanation {
                 margin-top: 0;

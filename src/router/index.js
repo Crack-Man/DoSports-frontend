@@ -16,6 +16,7 @@ import ProfileBase from "@/views/ProfileBase";
 import ProfileSettings from "@/views/ProfileSettings";
 import ProfilePremium from "@/views/ProfilePremium";
 import ProfileGraph from "@/views/ProfileGraph";
+import AdminUsers from "@/views/AdminUsers";
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,7 @@ const routes = [
         name: 'Главная',
         component: Home
     },
+
 
     {
         path: '/calc-bmi',
@@ -114,6 +116,12 @@ const routes = [
         path: '/profile/stat',
         name: 'Графики',
         component: ProfileGraph
+    },
+
+    {
+        path: '/admin/users',
+        name: 'Пользователи',
+        component: AdminUsers
     },
 ]
 

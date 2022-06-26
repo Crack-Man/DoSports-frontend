@@ -6,20 +6,20 @@
                     <router-link to="/" class="logo">
                         <img
                             class="mobile main-page"
-                            :src="require('../assets/img/svg/logo-white.svg')"
+                            :src="require('@/assets/img/svg/logo-white.svg')"
                         />
                         <img
                             class="mobile active"
-                            :src="require('../assets/img/png/logo.png')"
+                            :src="require('@/assets/img/png/logo.png')"
                         />
                         <img
                             class="pc"
-                            :src="require('../assets/img/svg/logo.svg')"
+                            :src="require('@/assets/img/svg/logo.svg')"
                         />
                     </router-link>
                     <router-link to="/" class="text">
                         <img
-                            :src="require('../assets/img/svg/DO_SPORTS-small.svg')"
+                            :src="require('@/assets/img/svg/DO_SPORTS-small.svg')"
                         />
                     </router-link>
                 </div>
@@ -50,8 +50,8 @@
                             :src="require('../assets/img/png/menu-button.png')"
                         />
                     </div>
-                    <div class="profile-menu">
-                        <router-link v-if="userIsAdmin" to="/">Админ-панель</router-link>
+                    <div :class="'profile-menu' + (userIsAdmin ? ' admin' : '')">
+                        <router-link v-if="userIsAdmin" to="/admin/users">Админ</router-link>
                         <router-link to="/profile/base">Профиль</router-link>
                         <span @click="this.logout">Выйти</span>
                     </div>
@@ -420,6 +420,7 @@ body.lock {
 
             .icon {
                 @media (max-width: 960px) {
+                    display: none; // потом вернуть (человечек авторизации)
                     width: 18px;
                     margin-right: 25px;
                 }
@@ -499,6 +500,10 @@ body.lock {
                 span:not(:last-child):not(:only-child) {
                     margin-bottom: 15px;
                 }
+            }
+
+            .profile-menu.admin {
+                margin-top: 172px;
             }
 
             .menu-button {

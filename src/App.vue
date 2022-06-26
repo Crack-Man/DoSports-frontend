@@ -33,6 +33,18 @@ export default {
         timerCount: 3,
     }),
 
+    watch: {
+        userIsAuthorized() {
+            if (this.userIsAuthorized) {
+                this.checkPro(this.userData.id);
+            }
+        },
+
+        '$route.path'() {
+            document.body.classList.remove("lock");
+        }
+    },
+
     computed: {
         ...mapGetters(['userIsAuthorized', "userData", "userIsAdmin", "userIsPro"]),
 
@@ -47,7 +59,7 @@ export default {
     },
 
     methods: {
-        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin', 'checkPro']),
+        ...mapActions(['checkAuth', 'unauthorized', 'checkAdmin', 'checkPro', 'checkDevice']),
 
         async initUser() {
             await this.checkAuth().then(async () => {
@@ -59,7 +71,7 @@ export default {
                     this.progress = false
                 }
             });
-        }
+        },
     },
 
     mounted() {
@@ -67,12 +79,14 @@ export default {
             if (this.timerCount > 0) this.timerCount--;
         }, 1000);
         this.initUser();
+        this.checkDevice();
     }
 };
 </script>
 
 <style lang="scss">
 @import "assets/scss/fonts.css";
+@import "assets/scss/ban-low-screen.scss";
 
 #app {
     margin: 0;

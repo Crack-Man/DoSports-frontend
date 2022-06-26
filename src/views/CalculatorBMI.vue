@@ -8,7 +8,7 @@
             <div v-if="!userIsPro && advertising > 0.5" class="advertising bmi">
                 <div id="yandex_rtb_R-A-1707251-1"></div>
             </div>
-            <banner v-else :image="require('@/assets/img/png/banner-join-2.png')"/>
+            <banner class="bmi-banner" v-else :image="require('@/assets/img/png/banner-join-2.png')"/>
         </v-container>
         <footer-main/>
     </div>
@@ -73,6 +73,12 @@ export default {
     .advertising.bmi {
         margin-top: 150px;
         max-height: 250px;
+    }
+    
+    .bmi-banner {
+        @media (max-width: 960px) {
+            display: none;
+        }
     }
 }
 </style>

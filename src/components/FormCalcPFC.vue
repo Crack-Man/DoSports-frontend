@@ -94,7 +94,7 @@
         </v-btn>
 
         <div v-if="Object.keys(pfc.norm).length" class="results">
-            <p class="daily-norm-calories">Суточная норма калорий: {{ pfc.norm.calories }} ккал</p>
+            <p class="daily-norm-calories">Суточная норма калорий: <span>{{ pfc.norm.calories }} ккал</span></p>
             <p class="recommend">Рекомендации для {{ pfc.norm.aimText }}:</p>
             <p class="norm first">суточная норма белка: {{ pfc.norm.proteins }} грамм</p>
             <p class="norm">суточная норма жиров: {{ pfc.norm.fats }} грамм</p>
@@ -224,18 +224,42 @@ export default {
     .form-pfc {
         flex: 0 0 540px;
 
+        @media (max-width: 960px) {
+            flex: 0 0 450px;
+        }
+
+        @media (max-width: 850px) {
+            flex: 0 0 400px;
+        }
+
+        @media (max-width: 820px) {
+            flex: 0 0 350px;
+        }
+
         .input {
             width: 100% !important;
+
+            @media (max-width: 930px) {
+                margin-top: 22px;
+            }
         }
 
         .input:first-child {
              margin-top: 30px;
+
+            @media (max-width: 760px) {
+                margin-top: 60px;
+            }
         }
 
         .input-group {
             display: flex;
             align-items: flex-start;
             margin-top: 30px;
+
+            @media (max-width: 930px) {
+                margin-top: 22px;
+            }
 
             .input {
                 margin-top: 0;
@@ -279,6 +303,10 @@ export default {
         .button {
             width: 255px;
             height: 50px;
+
+            @media (max-width: 670px) {
+                width: 100%;
+            }
         }
 
         .results {
@@ -293,6 +321,18 @@ export default {
                 font-size: 24px;
                 line-height: 145%;
                 letter-spacing: 0.02em;
+
+                span {
+                    @media (max-width: 550px) {
+                        margin-top: 5px;
+                        display: block;
+                    }
+                }
+
+                @media (max-width: 550px) {
+                    margin-top: 30px;
+                    font-size: 18px;
+                }
             }
 
             .recommend {
@@ -302,6 +342,10 @@ export default {
                 font-size: 24px;
                 line-height: 145%;
                 letter-spacing: 0.02em;
+
+                @media (max-width: 550px) {
+                    font-size: 18px;
+                }
             }
 
             .norm {
@@ -312,7 +356,9 @@ export default {
                 line-height: 145%;
                 letter-spacing: 0.02em;
 
-
+                @media (max-width: 550px) {
+                    font-size: 14px;
+                }
             }
 
             .norm.first {

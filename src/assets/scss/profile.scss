@@ -10,7 +10,6 @@
 
         .profile-sidebar {
             flex: 0 0 255px;
-            background: #1A1A27;
             border-radius: 4px;
             padding: 25px;
 
@@ -31,6 +30,8 @@
 #app.dark {
     .profile-container {
         .profile-sidebar {
+            background: #1A1A27;
+
             a {
                 color: #B5B5B8 !important;
             }

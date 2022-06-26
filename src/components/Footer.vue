@@ -40,16 +40,16 @@
                     </ul>
                 </div>
                 <div class="right">
-                    <router-link class="google-play" to="/">
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.gravermedia.DoSports" class="google-play" to="/">
                         <img
                             :src="require('@/assets/img/png/download-google-play.png')"
                         >
-                    </router-link>
-                    <router-link class="app-store" to="/">
+                    </a>
+                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.gravermedia.DoSports" class="app-store" to="/">
                         <img
                             :src="require('@/assets/img/png/download-app-store.png')"
                         >
-                    </router-link>
+                    </a>
                 </div>
             </div>
         </v-container>

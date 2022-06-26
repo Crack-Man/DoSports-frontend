@@ -145,7 +145,7 @@ export default {
             height: 500px;
         }
 
-        @media (min-height: 1300px) {
+        @media (max-width: 1920px) and (min-height: 1300px) {
             height: 690px;
         }
 
@@ -223,7 +223,7 @@ export default {
                 background-position: 80%;
             }
 
-            @media (min-height: 1300px) {
+            @media (max-width: 1920px) and (min-height: 1300px) {
                 height: 500px;
             }
 
@@ -557,7 +557,7 @@ export default {
                 height: 190px;
             }
 
-            @media (min-height: 1300px) {
+            @media (max-width: 1920px) and (min-height: 1300px) {
                 display: grid;
                 height: 194px;
             }

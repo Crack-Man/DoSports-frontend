@@ -6,11 +6,12 @@ import userAuth from "./modules/userAuth";
 import timer from "./modules/timer";
 import activeStatusButton from "./modules/activeStatusButton"
 import programs from "./modules/programs"
+import device from "./modules/device"
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     modules: {
-        region, userReg, userAuth, timer, activeStatusButton, programs
+        region, userReg, userAuth, timer, activeStatusButton, programs, device
     }
 })

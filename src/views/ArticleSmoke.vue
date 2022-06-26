@@ -4,10 +4,14 @@
         <v-container>
             <div class="article-header">
                 <img :src="require('@/assets/img/png/article-header--smoke.png')">
+                <img class="mobile" :src="require('@/assets/img/png/article-smoke.png')">
             </div>
             <div class="divider"></div>
             <div class="article-container smoke">
                 <div class="article-content">
+                    <div class="title-mobile">
+                        Ухудшает ли курение память?
+                    </div>
                     <div class="article-banner">
                         <span>Курение буквально "разлагает" мозг, нарушая способность к обучению и рассуждению, а также ухудшая память.</span>
                     </div>
@@ -64,6 +68,10 @@ export default {
             .article-banner {
                 span {
                     width: 668px;
+
+                    @media (max-width: 1263px) {
+                        width: 468px;
+                    }
                 }
             }
         }

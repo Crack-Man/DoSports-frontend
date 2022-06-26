@@ -1,0 +1,7 @@
+#app {
+    .banned-low-screen {
+        @media (max-width: 960px) {
+            display: none;
+        }
+    }
+}

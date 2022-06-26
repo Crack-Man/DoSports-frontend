@@ -16,7 +16,6 @@
                 </div>
                 <v-btn
                     @click="popupVisibleCounter = true"
-                    color="primary"
                     class="button set-meals"
                 >Установить
                 </v-btn>

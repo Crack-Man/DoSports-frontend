@@ -2,13 +2,15 @@
     <div class="">
         <header-main/>
         <div v-if="!userIsAuthorized">
-            <v-container>
+            <v-container class="banned-low-screen" v-if="!isPhone">
                 <title-page name="Регистрация"></title-page>
                 <div class="page-content">
                     <form-reg/>
                     <explanation :texts="this.explanation"/>
                 </div>
             </v-container>
+            <popup-baned-mobile v-else/>
+            <popup-baned-low-screen/>
             <footer-main/>
         </div>
         <v-container v-else>
@@ -25,6 +27,8 @@ import Error405 from "@/components/Error405";
 import {mapGetters} from "vuex";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import PopupBanedLowScreen from "@/components/PopupBanedLowScreen";
+import PopupBanedMobile from "@/components/PopupBanedMobile";
 
 export default {
     name: "Registration",
@@ -35,6 +39,8 @@ export default {
         'explanation': Explanation,
         "error-405": Error405,
         "footer-main": Footer,
+        "popup-baned-low-screen": PopupBanedLowScreen,
+        "popup-baned-mobile": PopupBanedMobile,
     },
 
     data: () => ({
@@ -49,7 +55,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(['userIsAuthorized']),
+        ...mapGetters(['userIsAuthorized', "isPhone"]),
     },
 }
 </script>

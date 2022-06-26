@@ -4,10 +4,14 @@
         <v-container>
             <div class="article-header">
                 <img :src="require('@/assets/img/png/article-header--sweets.png')">
+                <img class="mobile" :src="require('@/assets/img/png/article-sweets.png')">
             </div>
             <div class="divider"></div>
             <div class="article-container">
                 <div class="article-content">
+                    <div class="title-mobile">
+                        Почему мне хочется сладкого?
+                    </div>
                     <div class="article-banner">
                         <span>Если вам постоянно хочется сладкого, стоит задуматься — причина может быть далеко не безобидная.</span>
                     </div>

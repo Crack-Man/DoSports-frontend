@@ -2,7 +2,7 @@
     <div class="">
         <header-main/>
         <v-container>
-            <title-page name="Калькулятор БЖУ"/>
+            <title-page class="pfc" name="Калькулятор БЖУ"/>
             <div class="content-calculator-pfc">
                 <form-calc-pfc/>
                 <explanation :texts="explanation"/>
@@ -41,13 +41,37 @@ export default {
 
 <style lang="scss">
 #app {
+    .title-page.pfc {
+        @media (max-width: 760px) {
+            margin-bottom: 0;
+        }
+    }
+
     .content-calculator-pfc {
         display: flex;
         align-items: flex-start;
+
+        @media (max-width: 760px) {
+            flex-direction: column-reverse;
+        }
+
+        .container-explanation {
+            @media (max-width: 760px) {
+                margin-left: 0;
+            }
+
+            .explanation {
+                margin-top: 15px;
+            }
+        }
     }
 
     .container-banner {
         margin-top: 150px;
+
+        @media (max-width: 960px) {
+            display: none;
+        }
     }
 }
 </style>

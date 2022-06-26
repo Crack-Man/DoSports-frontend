@@ -28,6 +28,10 @@ export default {
         @media (max-width: 945px) {
             font-size: 34px;
         }
+
+        @media (max-width: 760px) {
+            margin-top: 25px;
+        }
     }
 }
 

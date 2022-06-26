@@ -11,7 +11,7 @@
                 </span>
             </div>
             <div class="links">
-                <router-link to="/" class="google-play">
+                <a target="_blank" href="https://play.google.com/store/apps/details?id=com.gravermedia.DoSports" class="google-play">
                     <img
                         class="pc"
                         :src="require('@/assets/img/png/download-google-play.png')"
@@ -24,8 +24,8 @@
                         </div>
                         <div class="text">Скачать в Google Play</div>
                     </div>
-                </router-link>
-                <router-link to="/" class="app-store">
+                </a>
+                <a target="_blank" href="https://play.google.com/store/apps/details?id=com.gravermedia.DoSports" class="app-store">
                     <img
                         class="pc"
                         :src="require('@/assets/img/png/download-app-store.png')"
@@ -38,7 +38,7 @@
                         </div>
                         <div class="text">Скачать в App Store</div>
                     </div>
-                </router-link>
+                </a>
             </div>
             <img
                 class="iphone"

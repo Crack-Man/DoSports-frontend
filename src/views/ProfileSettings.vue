@@ -5,7 +5,7 @@
         <div v-else>
             <header-main/>
             <error-405 v-if="!userIsAuthorized"></error-405>
-            <v-container v-else>
+            <v-container class="banned-low-screen" v-else-if="!isPhone">
                 <banner class="profile-banner" type="premium" :image="require('@/assets/img/png/banner-join-2.png')"/>
                 <div class="profile-container">
                     <profile-sidebar active-page="3"/>
@@ -15,6 +15,8 @@
                     </div>
                 </div>
             </v-container>
+            <popup-baned-mobile v-else/>
+            <popup-baned-low-screen/>
             <footer-main/>
         </div>
     </div>
@@ -29,6 +31,8 @@ import Footer from "@/components/Footer";
 import {mapGetters} from "vuex";
 import FormPersonalData from "@/components/FormPersonalData";
 import FormChangePassword from "@/components/FormChangePassword";
+import PopupBanedLowScreen from "@/components/PopupBanedLowScreen";
+import PopupBanedMobile from "@/components/PopupBanedMobile";
 
 export default {
     name: "ProfileSettings",
@@ -41,6 +45,8 @@ export default {
         "form-personal-data": FormPersonalData,
         "form-change-password": FormChangePassword,
         "footer-main": Footer,
+        "popup-baned-low-screen": PopupBanedLowScreen,
+        "popup-baned-mobile": PopupBanedMobile,
     },
 
     data: () => ({
@@ -48,7 +54,7 @@ export default {
     }),
 
     computed: {
-        ...mapGetters(["userIsAuthorized"]),
+        ...mapGetters(["userIsAuthorized", "isPhone"]),
     },
 
     mounted() {
