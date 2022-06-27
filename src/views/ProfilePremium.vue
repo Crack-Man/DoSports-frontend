@@ -28,21 +28,38 @@
                             оплатить подписку.
                         </div>
                         <div class="pricelist">
-                            <div class="item" v-for="(item, index) in pricelist" :key="item.id">
+                            <div class="item" v-for="item in pricelist" :key="item.id">
                                 <div class="period">
                                     DO SPORTS ({{ item.name }})
                                 </div>
                                 <div class="cost">
                                     {{ item.cost }} руб.
                                 </div>
-                                <v-btn
-                                    class="button"
-                                    color="primary"
-                                    @click="getPayLink(index, item.days, item.cost)"
-                                    :loading="item.progress"
-                                >
-                                    Купить
-                                </v-btn>
+
+                                <form method="POST" action="https://yoomoney.ru/quickpay/confirm.xml">
+                                    <input type="hidden" name="receiver" value="4100117862329785"/>
+                                    <input type="hidden" name="formcomment"
+                                           :value="`Оплата премиум-статуса на ${item.days} дней`"/>
+                                    <input type="hidden" name="short-dest"
+                                           :value="`Оплата премиум-статуса на ${item.days} дней`"/>
+                                    <input type="hidden" name="label"
+                                           :value="
+                                                JSON.stringify(
+                                              {
+                                                        idUser: userData.id,
+                                                        days: item.days,
+                                                        cost: item.cost,
+                                                    }
+                                                )
+                                            "/>
+                                    <input type="hidden" name="quickpay-form" value="shop"/>
+                                    <input type="hidden" name="targets" :value="`Оплата премиум-статуса на ${item.days} дней`"/>
+                                    <input type="hidden" name="sum" :value="item.cost" data-type="number"/>
+                                    <input type="hidden" name="paymentType" value="AC"/>
+                                    <input type="hidden" name="successURL"
+                                           value="https://www.dosports.ru/profile/premium"/>
+                                    <input class="button submit" type="submit" value="Купить"/>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -126,40 +143,6 @@ export default {
                     this.pricelist[i].progress = false;
                 }
                 this.progress = false;
-            })
-            // let payData = {
-            //     client_email: "crack-man228@ya.ru",
-            //     id: 50,
-            //     sum: 13,
-            //     orderid: 15,
-            // }
-            // await axios.post(`${url}/api/payment/add-premium`, payData).then((res) => {
-            //     console.log(res.data)
-            // })
-        },
-
-        async getPayLink(id, days, cost) {
-            // this.pricelist[id].progress = true; - не срабатывает реактивность (почему - хороший вопрос), поэтому альтернатива:
-            this.$set(this.pricelist, id, {
-                id: this.pricelist[id].id,
-                name: this.pricelist[id].name,
-                cost: this.pricelist[id].cost,
-                days: this.pricelist[id].days,
-                progress: true,
-            });
-
-
-            let payData = {
-                days: days,
-                cost: cost,
-                user: this.userData
-            }
-            await axios.post(`${url}/api/payment/get-pay-link`, payData).then((res) => {
-                if (res.data.name === "Success") {
-                    // а здесь реактивность работает...
-                    this.pricelist[id].progress = false;
-                    window.open(res.data.link, "_blank");
-                }
             })
         },
     },
@@ -256,6 +239,10 @@ export default {
 
                         width: 204px;
                         height: 50px;
+                    }
+
+                    .button.submit {
+                        border-radius: 4px;
                     }
                 }
             }
