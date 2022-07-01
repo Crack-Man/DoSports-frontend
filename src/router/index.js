@@ -17,6 +17,7 @@ import ProfileSettings from "@/views/ProfileSettings";
 import ProfilePremium from "@/views/ProfilePremium";
 import ProfileGraph from "@/views/ProfileGraph";
 import AdminUsers from "@/views/AdminUsers";
+import AdminPrice from "@/views/AdminPrice";
 
 Vue.use(VueRouter)
 
@@ -122,6 +123,12 @@ const routes = [
         path: '/admin/users',
         name: 'Пользователи',
         component: AdminUsers
+    },
+
+    {
+        path: '/admin/price-list',
+        name: 'Прайс-лист',
+        component: AdminPrice
     },
 ]
 

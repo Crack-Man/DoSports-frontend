@@ -3,9 +3,9 @@
         <header-main/>
         <v-container v-if="userIsAdmin">
             <div class="admin-container">
-                <admin-sidebar active-page="0"/>
+                <admin-sidebar active-page="1"/>
                 <div class="admin-content">
-                    <admin-user-list/>
+                    <admin-price-list/>
                 </div>
             </div>
         </v-container>
@@ -20,15 +20,15 @@ import Error405 from "@/components/Error405";
 import Footer from "@/components/Footer";
 import {mapGetters} from "vuex";
 import AdminSidebar from "@/components/AdminSidebar";
-import AdminUserList from "@/components/AdminUserList";
+import AdminPriceList from "@/components/AdminPriceList";
 
 export default {
-    name: "AdminUsers",
+    name: "AdminPrice",
 
     components: {
         "header-main": Header,
         "admin-sidebar": AdminSidebar,
-        "admin-user-list": AdminUserList,
+        "admin-price-list": AdminPriceList,
         "error-405": Error405,
         "footer-main": Footer,
     },

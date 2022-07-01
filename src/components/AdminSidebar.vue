@@ -44,7 +44,7 @@ export default {
     }
 }
 
-#app {
+#app.dark {
     .admin-sidebar {
         background: #1A1A27;
         a {

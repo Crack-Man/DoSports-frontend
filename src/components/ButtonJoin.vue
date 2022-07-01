@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="link" :class="linkClass">
+    <a :href="link" :class="linkClass">
         <div class="image">
             <img
                 :src="require('@/assets/img/png/plus.png')"
@@ -7,7 +7,7 @@
         </div>
         <span v-if="type !== 'premium'">Присоединиться</span>
         <span v-else>Оформить подписку</span>
-    </router-link>
+    </a>
 </template>
 
 <script>
@@ -23,7 +23,7 @@ export default {
 
         link() {
             if (this.type === "premium") {
-                return "/";
+                return "/profile/premium#buy";
             }
             return this.userIsAuthorized ? '/sport-program' : '/auth';
         },

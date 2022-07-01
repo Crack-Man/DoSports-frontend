@@ -27,7 +27,7 @@
                             Оплата происходит разово, по истечении купленного количества дней необходимо повторно
                             оплатить подписку.
                         </div>
-                        <div class="pricelist">
+                        <div id="buy" class="pricelist">
                             <div class="item" v-for="item in pricelist" :key="item.id">
                                 <div class="period">
                                     DO SPORTS ({{ item.name }})
@@ -133,6 +133,12 @@ export default {
         },
     },
 
+    watch: {
+        '$route.hash'() {
+            this.anchor();
+        }
+    },
+
     methods: {
         ...mapActions(["checkPro"]),
 
@@ -144,7 +150,15 @@ export default {
                 }
                 this.progress = false;
             })
+            this.anchor();
         },
+
+        anchor() {
+            if (this.$route.hash.indexOf("#buy") !== -1) {
+                let el = document.querySelector(".pricelist");
+                el.scrollIntoView();
+            }
+        }
     },
 
     mounted() {
@@ -210,41 +224,41 @@ export default {
                 line-height: 145%;
                 letter-spacing: 0.02em;
             }
+        }
+    }
 
-            .pricelist {
-                margin-top: 30px;
+    .pricelist {
+        margin-top: 30px;
+        border-radius: 4px;
+        padding: 0 30px;
+
+        .item {
+            padding: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .period {
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 18px;
+                line-height: 122%;
+            }
+
+            .cost {
+                font-family: 'Inter-Regular', sans-serif;
+                font-size: 18px;
+                line-height: 122%;
+            }
+
+            .button {
+                margin: 0;
+
+                width: 204px;
+                height: 50px;
+            }
+
+            .button.submit {
                 border-radius: 4px;
-                padding: 0 30px;
-
-                .item {
-                    padding: 30px 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-
-                    .period {
-                        font-family: 'Inter-Regular', sans-serif;
-                        font-size: 18px;
-                        line-height: 122%;
-                    }
-
-                    .cost {
-                        font-family: 'Inter-Regular', sans-serif;
-                        font-size: 18px;
-                        line-height: 122%;
-                    }
-
-                    .button {
-                        margin: 0;
-
-                        width: 204px;
-                        height: 50px;
-                    }
-
-                    .button.submit {
-                        border-radius: 4px;
-                    }
-                }
             }
         }
     }
@@ -260,18 +274,18 @@ export default {
             .status {
                 border-bottom: 1px solid rgba(181, 181, 184, 0.5);;
             }
+        }
+    }
 
-            .pricelist {
-                background: #1A1A27;
+    .pricelist {
+        background: #1A1A27;
 
-                .item {
-                    border-bottom: 1px solid rgba(181, 181, 184, 0.5);
-                }
+        .item {
+            border-bottom: 1px solid rgba(181, 181, 184, 0.5);
+        }
 
-                .item:last-child {
-                    border-bottom: none;
-                }
-            }
+        .item:last-child {
+            border-bottom: none;
         }
     }
 }

@@ -62,6 +62,12 @@
                     </div>
                 </div>
                 <div class="right-panel" v-else>
+                    <div class="icon-mobile" @click="popupBanedVisible = true">
+                        <img
+                            :src="require('@/assets/img/svg/user-white.svg')"
+                        />
+                    </div>
+                    <popup-baned-function :visible="popupBanedVisible" @closePopup="popupBanedVisible = false"/>
                     <router-link class="auth" to="/auth">
                         <div class="icon">
                             <img
@@ -117,12 +123,18 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import PopupBanedFunction from "@/components/PopupBanedFunction";
 
 export default {
     name: "Header",
 
+    components: {
+        PopupBanedFunction
+    },
+
     data: () => ({
         showProfileMenu: false,
+        popupBanedVisible: false,
     }),
 
     props: ['screen'],
@@ -412,15 +424,12 @@ body.lock {
         .right-panel {
             display: flex;
             align-items: center;
-        }
 
-        .auth {
-            display: flex;
-            align-items: center;
+            .icon-mobile {
+                display: none;
 
-            .icon {
                 @media (max-width: 960px) {
-                    display: none; // потом вернуть (человечек авторизации)
+                    display: block;
                     width: 18px;
                     margin-right: 25px;
                 }
@@ -430,10 +439,29 @@ body.lock {
                     position: relative;
                     bottom: 2px;
                     width: 100%;
+                    cursor: pointer;
 
                     @media (max-width: 960px) {
                         bottom: 0;
                     }
+                }
+            }
+        }
+
+        .auth {
+            display: flex;
+            align-items: center;
+
+            .icon {
+                @media (max-width: 960px) {
+                    display: none;
+                }
+
+                img {
+                    display: block;
+                    position: relative;
+                    bottom: 2px;
+                    width: 100%;
                 }
 
                 img.active {
